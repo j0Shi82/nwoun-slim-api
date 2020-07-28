@@ -4,8 +4,15 @@ namespace App\Helpers;
 
 class RequestHelper
 {
-    private \Psr\Http\Message\ServerRequestInterface $request;
-    private \App\Services\DB $db;
+    /**
+     * @var \Psr\Http\Message\ServerRequestInterface
+     */
+    private $request;
+
+    /**
+     * @var \App\Services\DB
+     */
+    private $db;
 
     public function __construct(\App\Services\DB $db)
     {

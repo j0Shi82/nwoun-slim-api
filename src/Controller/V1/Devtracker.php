@@ -10,21 +10,42 @@ use JBBCode\DefaultCodeDefinitionSet;
 
 class Devtracker extends BaseController
 {
-    private \App\Services\DB $db;
-    private \JBBCode\Parser $jbb_parser;
+    /**
+     * @var \App\Services\DB
+     */
+    private $db;
 
+    /**
+     * @var \JBBCode\Parser
+     */
+    private $jbb_parser;
+    
+    /**
+     * @param \App\Services\DB $db
+     * @param \App\Helpers\RequestHelper $requestHelper
+     * @param \JBBCode\Parser $jbb_parser
+     *
+     * @return void
+     */
     public function __construct(\App\Services\DB $db, \App\Helpers\RequestHelper $requestHelper, \JBBCode\Parser $jbb_parser)
     {
         parent::__construct($requestHelper);
         $this->db = $db;
         $this->jbb_parser = $jbb_parser;
+        $this->jbb_parser->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
     }
-
+    
+    /**
+     * @param Request $request
+     * @param Response $response
+     *
+     * @return Response
+     */
     public function get(Request $request, Response $response)
     {
         $this->attachRequestToRequestHelper($request);
 
-        // grab possible GET data
+        // define all possible GET data
         $data_ary = array(
             'dev' => $this->requestHelper->variable('dev', ''),
             'discussion_id' => $this->requestHelper->variable('discussion_id', 0),
@@ -34,7 +55,7 @@ class Devtracker extends BaseController
             'callback' => $this->requestHelper->variable('callback', ''),
         );
 
-        // run checks
+        // run checks on data
         if ($data_ary['count'] > 50) {
             $data_ary['count'] = 50;
         }
@@ -45,7 +66,7 @@ class Devtracker extends BaseController
             $data_ary['start_page'] = 0;
         }
 
-        /* get tracker from db */
+        /* build tracker query for db */
         $sql = '
             SELECT
                 t.dev_name, t.discussion_id, t.discussion_name, t.body, UNIX_TIMESTAMP(t.date) as timestamp
@@ -77,25 +98,30 @@ class Devtracker extends BaseController
                 '.($data_ary['start_page']*$data_ary['count']).','.$data_ary['count'].'
         ';
         
+        // query database
         $result = $this->db->connection->query($sql);
 
-        $this->jbb_parser->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
-    
+        // populate results array
         $tracker_ary = array();
         while ($row = $result->fetch_array()) {
             $row['discussion_id'] = (int) $row['discussion_id'];
             $row['timestamp'] = (int) $row['timestamp'];
+
+            // replace some stuff that can lead to trouble
             $row['body'] = preg_replace("/\[quote=.*\].*\[\/quote\]\s+/mis", "", $row['body']);
             $row['body'] = preg_replace("/\<blockquote.*>.*\<\/blockquote>\s+/mis", "", $row['body']);
             $row['body'] = preg_replace("/\[url=\"(.*)\"\](.*)\[\/url\]/misU", "[url=\\1]\\2[/url]", $row['body']);
             $row['body'] = strip_tags($row['body']);
-            //$row['body'] = nl2br($row['body']);
-            //$row['body'] = str_replace(array("\r\n", "\r", "\n"), '', $row['body']);
+
+            // parse JBBCode
             $this->jbb_parser->parse($row['body']);
             $row['body'] = $this->jbb_parser->getAsText();
+
+            // add to results array
             $tracker_ary[] = $row;
         }
 
+        // return as JSON
         $payload = json_encode($tracker_ary);
 
         $response->getBody()->write($payload);
