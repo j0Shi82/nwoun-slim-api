@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\V1;
+namespace App\Controller\V1\Devtracker;
 
 use \App\Controller\BaseController;
 
@@ -28,7 +28,7 @@ class Devinfo extends BaseController
         // Will return the response, if false it print the response
         \curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         // Set the url
-        \curl_setopt($ch, CURLOPT_URL, "https://forum.arcgames.com/neverwinter/api/v1/users/get.json?User.Name=".$data_ary['dev']);
+        \curl_setopt($ch, CURLOPT_URL, "https://forum.arcgames.com/neverwinter/api/v1/users/get.json?User.ID=".$data_ary['dev']);
         \curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         // Execute
         $payload=\curl_exec($ch);

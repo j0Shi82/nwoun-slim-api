@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\V1;
+namespace App\Controller\V1\Devtracker;
 
 use \App\Controller\BaseController;
 
@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JBBCode\DefaultCodeDefinitionSet;
 
-class Devtracker extends BaseController
+class Postlist extends BaseController
 {
     /**
      * @var \App\Services\DB
@@ -51,8 +51,7 @@ class Devtracker extends BaseController
             'discussion_id' => $this->requestHelper->variable('discussion_id', 0),
             'search_term' => $this->requestHelper->variable('search_term', ''),
             'count' => $this->requestHelper->variable('count', 20),
-            'start_page' => $this->requestHelper->variable('start_page', 0),
-            'callback' => $this->requestHelper->variable('callback', ''),
+            'start_page' => $this->requestHelper->variable('start_page', 0)
         );
 
         // run checks on data
@@ -69,7 +68,7 @@ class Devtracker extends BaseController
         /* build tracker query for db */
         $sql = '
             SELECT
-                t.dev_name, t.discussion_id, t.discussion_name, t.body, UNIX_TIMESTAMP(t.date) as timestamp
+                t.dev_name, t.dev_id, t.discussion_id, t.comment_id, t.discussion_name, t.body, UNIX_TIMESTAMP(t.date) as timestamp
             FROM 
                 nwoun_devtracker as t
             WHERE
@@ -111,9 +110,9 @@ class Devtracker extends BaseController
             $row['body'] = preg_replace("/\[quote=.*\].*\[\/quote\]\s+/mis", "", $row['body']);
             $row['body'] = preg_replace("/\<blockquote.*>.*\<\/blockquote>\s+/mis", "", $row['body']);
             $row['body'] = preg_replace("/\[url=\"(.*)\"\](.*)\[\/url\]/misU", "[url=\\1]\\2[/url]", $row['body']);
-            $row['body'] = strip_tags($row['body']);
+            // $row['body'] = strip_tags($row['body']);
 
-            // parse JBBCode
+            // // parse JBBCode
             $this->jbb_parser->parse($row['body']);
             $row['body'] = $this->jbb_parser->getAsText();
 

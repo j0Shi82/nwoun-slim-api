@@ -27,4 +27,22 @@ class DB
     {
         return $this->connection->real_escape_string($s);
     }
+
+    /**
+     * simple function that queries the db and returns the results array
+     *
+     * @param String $query
+     *
+     * @return Array
+     */
+    public function sql_fetch_array(String $query)
+    {
+        $result = $this->connection->query($query);
+        $results_ary = array();
+        while ($row = $result->fetch_array()) {
+            $results_ary[] = $row;
+        }
+
+        return $results_ary;
+    }
 }

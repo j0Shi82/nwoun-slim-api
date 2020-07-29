@@ -1,11 +1,7 @@
 <?php
 use DI\Bridge\Slim\Bridge as DIBridge;
 use Dotenv\Dotenv;
-use App\Controller\V1\Devtracker;
-use App\Controller\V1\Devinfo;
-use App\Services\DB;
-use Slim\Exception\HttpNotFoundException;
-use App\Middleware\Cors;
+use App\Application\Routes;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -15,20 +11,6 @@ $app = DIBridge::create();
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
-$app->group('/v1', function (Slim\Routing\RouteCollectorProxy $group) {
-    $group->get('/devtracker/list', [Devtracker::class, 'get']);
-    $group->get('/devtracker/devinfo', [Devinfo::class, 'get']);
-    $group->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
-        throw new HttpNotFoundException($request);
-    });
-})->add(new Cors());
-
-$app->options('/{routes:.+}', function ($request, $response, $args) {
-    return $response;
-})->add(new Cors());
-
-$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
-    throw new HttpNotFoundException($request);
-});
+Routes::add($app);
 
 $app->run();
