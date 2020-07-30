@@ -111,6 +111,8 @@ class Postlist extends BaseController
             $row['body'] = preg_replace("/\<blockquote.*>.*\<\/blockquote>\s+/mis", "", $row['body']);
             $row['body'] = preg_replace("/\[url=\"(.*)\"\](.*)\[\/url\]/misU", "[url=\\1]\\2[/url]", $row['body']);
             // $row['body'] = strip_tags($row['body']);
+            $row['body'] = preg_replace('/<[^>]*>/', '', $row['body']);
+            $row['body'] = preg_replace('/\\r\\n/', '<br />', $row['body']);
 
             // // parse JBBCode
             $this->jbb_parser->parse($row['body']);
