@@ -7,6 +7,7 @@ use App\Controller\V1\Devtracker\Postlist;
 use App\Controller\V1\Devtracker\Devinfo;
 use App\Controller\V1\Devtracker\Devlist;
 use App\Controller\V1\Devtracker\Topiclist;
+use App\Controller\V1\Neverwinterfeeds;
 use App\Services\DB;
 use App\Middleware\Cors;
 
@@ -47,6 +48,15 @@ class Routes
             $devtracker_group->get('/devinfo', [Devinfo::class, 'get']);
             $devtracker_group->get('/devlist', [Devlist::class, 'get']);
             $devtracker_group->get('/topiclist', [Topiclist::class, 'get']);
+            Routes::add404CatchAll($devtracker_group);
+        });
+
+        $v1_group->group('/nwfeeds', function (\Slim\Routing\RouteCollectorProxy $devtracker_group) {
+            $devtracker_group->get('/arcgamespc', [Neverwinterfeeds::class, 'get_pc']);
+            $devtracker_group->get('/arcgamesxbox', [Neverwinterfeeds::class, 'get_xbox']);
+            $devtracker_group->get('/arcgamesps4', [Neverwinterfeeds::class, 'get_ps4']);
+            $devtracker_group->get('/arcgamesforum', [Neverwinterfeeds::class, 'get_forum']);
+            $devtracker_group->get('/officialreddit', [Neverwinterfeeds::class, 'get_reddit']);
             Routes::add404CatchAll($devtracker_group);
         });
     }

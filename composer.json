@@ -4,12 +4,16 @@
         "slim/psr7": "^1.1",
         "jbbcode/jbbcode": "^1.4",
         "vlucas/phpdotenv": "^5.1",
-        "php-di/slim-bridge": "^3.0"
+        "php-di/slim-bridge": "^3.0",
+        "dg/rss-php": "^1.4"
     },
     "autoload": {
         "psr-4": {
             "App\\": "src/"
-        }
+        },
+        "classmap": [
+            "vendor/dg/rss-php/src/"
+        ]
     },
     "scripts": {
         "start": [
