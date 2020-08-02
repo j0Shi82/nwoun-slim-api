@@ -12,7 +12,6 @@
             "App\\": "src/"
         },
         "classmap": [
-            "vendor/dg/rss-php/src/"
         ]
     },
     "scripts": {

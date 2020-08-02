@@ -35,6 +35,7 @@ class Neverwinterfeeds extends BaseController
      * executes stuff that's needed for all get functions
      *
      * @param Request $request
+     * @param String $feedUrl
      *
      * @return void
      */
@@ -46,9 +47,16 @@ class Neverwinterfeeds extends BaseController
         $this->feed->init();
     }
 
-    public function get_pc(Request $request, Response $response)
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param String $feedUrl
+     *
+     * @return Response
+     */
+    private function get_arcgames_feeds(Request $request, Response $response, String $feedUrl) :Response
     {
-        $this->get_all($request, "https://www.arcgames.com/en/games/neverwinter/news/rss");
+        $this->get_all($request, $feedUrl);
 
         // define all possible GET data
         $data_ary = array(
@@ -80,5 +88,20 @@ class Neverwinterfeeds extends BaseController
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');
+    }
+
+    public function get_pc(Request $request, Response $response) :Response
+    {
+        return $this->get_arcgames_feeds($request, $response, "https://www.arcgames.com/en/games/neverwinter/news/rss");
+    }
+
+    public function get_xbox(Request $request, Response $response) :Response
+    {
+        return $this->get_arcgames_feeds($request, $response, "https://www.arcgames.com/en/games/xbox/neverwinter/news/rss");
+    }
+
+    public function get_ps4(Request $request, Response $response) :Response
+    {
+        return $this->get_arcgames_feeds($request, $response, "https://www.arcgames.com/en/games/playstation/neverwinter/news/rss");
     }
 }
