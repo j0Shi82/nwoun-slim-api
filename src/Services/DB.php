@@ -12,7 +12,11 @@ class DB
         $servername = $_ENV['MYSQL_SERVERNAME'];
         $username = $_ENV['MYSQL_USERNAME'];
         $password = $_ENV['MYSQL_PASSWORD'];
-        $this->connection = new \mysqli($servername, $username, $password);
+        try {
+            $this->connection = new \mysqli($servername, $username, $password);
+        } catch (Exception $e) {
+            $this->error = true;
+        }
 
         // Check connection
         if ($conn->connect_error) {
