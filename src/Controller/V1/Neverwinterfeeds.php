@@ -64,7 +64,8 @@ class Neverwinterfeeds extends BaseController
             $response->getBody()->write(
                 json_encode(
                     [
-                        'errorDesc' => 'unable to fetch feed'
+                        'errorType' => 'feedFetch',
+                        'errorDesc' => $this->feed->error(),
                     ]
                 )
             );
@@ -73,7 +74,7 @@ class Neverwinterfeeds extends BaseController
 
         $data = call_user_func(array($this, $dataCallbackFunc), $data_ary['limit']);
         
-        $response->getBody()->write(json_encode($data));
+        $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');
@@ -105,6 +106,13 @@ class Neverwinterfeeds extends BaseController
         return $data;
     }
 
+    /**
+     * structures and returns data for arcgames forum
+     *
+     * @param int $limit
+     *
+     * @return array
+     */
     private function get_arcgames_forum_data(int $limit) :array
     {
         $data = array();
@@ -116,8 +124,34 @@ class Neverwinterfeeds extends BaseController
             }
             $data[] = [
                     'link'            => $item->get_permalink(),
-                    'title'             => strlen($item->get_title()) > 30 ? substr($item->get_title(), 0, 30) . ' ...' : $item->get_title(),
+                    'title'             => mb_strlen($item->get_title(), $this->feed->get_encoding()) > 30 ? mb_substr($item->get_title(), 0, 30, $this->feed->get_encoding()) . ' ...' : $item->get_title(),
                     'cat'       => $item->get_item_tags('', 'category')[0]['data']
+            ];
+            $count++;
+        }
+
+        return $data;
+    }
+
+    /**
+     * structures and returns data for subreddits
+     *
+     * @param int $limit
+     *
+     * @return array
+     */
+    private function get_reddit_data(int $limit) :array
+    {
+        $data = array();
+
+        $count = 0;
+        foreach ($this->feed->get_items() as $item) {
+            if ($count > $limit) {
+                break;
+            }
+            $data[] = [
+                    'link'            => $item->get_permalink(),
+                    'title'           => mb_strlen($item->get_title(), $this->feed->get_encoding()) > 30 ? mb_substr($item->get_title(), 0, 30, $this->feed->get_encoding()) . ' ...' : $item->get_title(),
             ];
             $count++;
         }
@@ -143,5 +177,10 @@ class Neverwinterfeeds extends BaseController
     public function get_forum(Request $request, Response $response) :Response
     {
         return $this->get($request, $response, "https://forum.arcgames.com/neverwinter/discussions/feed.rss", "get_arcgames_forum_data");
+    }
+
+    public function get_reddit(Request $request, Response $response) :Response
+    {
+        return $this->get($request, $response, "https://www.reddit.com/r/Neverwinter.rss", "get_reddit_data");
     }
 }
