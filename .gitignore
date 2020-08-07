@@ -1,4 +1,3 @@
-dev
 vendor
 cache/*
 .env
