@@ -98,7 +98,8 @@ class Neverwinterfeeds extends BaseController
             }
             $data[] = [
                     'link'            => $item->get_permalink(),
-                    'title'             => $item->get_title(),
+                    'title'             => html_entity_decode($item->get_title()),
+                    'ts'            => $item->get_date("U"),
             ];
             $count++;
         }
@@ -124,8 +125,9 @@ class Neverwinterfeeds extends BaseController
             }
             $data[] = [
                     'link'            => $item->get_permalink(),
-                    'title'             => mb_strlen($item->get_title(), $this->feed->get_encoding()) > 30 ? mb_substr($item->get_title(), 0, 30, $this->feed->get_encoding()) . ' ...' : $item->get_title(),
-                    'cat'       => $item->get_item_tags('', 'category')[0]['data']
+                    'title'             => html_entity_decode($item->get_title()),
+                    'cat'       => $item->get_item_tags('', 'category')[0]['data'],
+                    'ts'            => $item->get_date("U"),
             ];
             $count++;
         }
@@ -151,7 +153,8 @@ class Neverwinterfeeds extends BaseController
             }
             $data[] = [
                     'link'            => $item->get_permalink(),
-                    'title'           => mb_strlen($item->get_title(), $this->feed->get_encoding()) > 30 ? mb_substr($item->get_title(), 0, 30, $this->feed->get_encoding()) . ' ...' : $item->get_title(),
+                    'title'           => html_entity_decode($item->get_title()),
+                    'ts'            => $item->get_date("U"),
             ];
             $count++;
         }

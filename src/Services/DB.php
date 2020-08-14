@@ -7,11 +7,18 @@ class DB
     public $connection = null;
     public $error = false;
 
-    public function __construct()
+    private function checkConnection()
     {
-        $servername = $_ENV['MYSQL_SERVERNAME'];
-        $username = $_ENV['MYSQL_USERNAME'];
-        $password = $_ENV['MYSQL_PASSWORD'];
+        if ($this->connection === null) {
+            $this->connect();
+        }
+    }
+
+    public function connect(String $configSetIdent = "NWOUN")
+    {
+        $servername = $_ENV['MYSQL_SERVERNAME_' . $configSetIdent];
+        $username = $_ENV['MYSQL_USERNAME_' . $configSetIdent];
+        $password = $_ENV['MYSQL_PASSWORD_' . $configSetIdent];
         try {
             $this->connection = new \mysqli($servername, $username, $password);
         } catch (Exception $e) {
@@ -22,13 +29,14 @@ class DB
         if ($conn->connect_error) {
             $this->error = true;
         } else {
-            $this->connection->select_db($_ENV['MYSQL_DB']);
+            $this->connection->select_db($_ENV['MYSQL_DB_' . $configSetIdent]);
             $this->connection->query('SET NAMES utf8');
         }
     }
 
     public function escape(String $s)
     {
+        $this->checkConnection();
         return $this->connection->real_escape_string($s);
     }
 
@@ -39,8 +47,9 @@ class DB
      *
      * @return Array
      */
-    public function sql_fetch_array(String $query)
+    public function sql_fetch_array(String $query) :array
     {
+        $this->checkConnection();
         $result = $this->connection->query($query);
         $results_ary = array();
         while ($row = $result->fetch_array()) {
@@ -48,5 +57,11 @@ class DB
         }
 
         return $results_ary;
+    }
+
+    public function query(String $sql)
+    {
+        $this->checkConnection();
+        return $this->connection->query($sql);
     }
 }

@@ -98,7 +98,7 @@ class Postlist extends BaseController
         ';
         
         // query database
-        $result = $this->db->connection->query($sql);
+        $result = $this->db->query($sql);
 
         // populate results array
         $tracker_ary = array();
