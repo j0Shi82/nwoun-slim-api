@@ -8,7 +8,7 @@ use App\Controller\V1\Devtracker\Devinfo;
 use App\Controller\V1\Devtracker\Devlist;
 use App\Controller\V1\Devtracker\Topiclist;
 use App\Controller\V1\Neverwinterfeeds;
-use App\Controller\V1\Infoaggregates\Discussion;
+use App\Controller\V1\Infoaggregates\Infoaggregates;
 use App\Services\DB;
 use App\Middleware\Cors;
 
@@ -62,8 +62,10 @@ class Routes
         });
 
         $v1Group->group('/infoaggregates', function (\Slim\Routing\RouteCollectorProxy $infoaggrGroup) {
-            $infoaggrGroup->get('/discussion', [Discussion::class, 'get']);
-            $infoaggrGroup->get('/discussiontags', [Discussion::class, 'get_tags']);
+            $infoaggrGroup->get('/discussion', [Infoaggregates::class, 'get_discussions']);
+            $infoaggrGroup->get('/news', [Infoaggregates::class, 'get_news']);
+            $infoaggrGroup->get('/guides', [Infoaggregates::class, 'get_guides']);
+            $infoaggrGroup->get('/discussiontags', [Infoaggregates::class, 'get_tags']);
             Routes::add404CatchAll($infoaggrGroup);
         });
     }

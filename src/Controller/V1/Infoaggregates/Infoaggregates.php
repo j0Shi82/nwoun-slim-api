@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JBBCode\DefaultCodeDefinitionSet;
 
-class Discussion extends BaseController
+class Infoaggregates extends BaseController
 {
     /**
      * @var \App\Services\DB
@@ -23,7 +23,7 @@ class Discussion extends BaseController
         $this->db->connect('CRAWL');
     }
 
-    public function get(Request $request, Response $response)
+    public function get(Request $request, Response $response, String $type = 'discussion')
     {
         $this->attachRequestToRequestHelper($request);
 
@@ -51,11 +51,12 @@ class Discussion extends BaseController
         if (count($data_ary['tags']) > 0) {
             $sql = "
                 SELECT a.site, a.link, a.title, COUNT(*) as count
-                FROM article as a, article_tags as atags, tag as t
+                FROM article as a, article_tags as atags, article_title_tags as ttags, tag as t
                 WHERE 
-                    atags.article_id = a.id 
+                    (atags.article_id = a.id OR ttags.article_id = a.id)
                     AND atags.tag_id = t.id 
-                    AND a.type = 'discussion'
+                    AND ttags.tag_id = t.id 
+                    AND a.type = '" . $type . "'
                     AND t.id IN (" . implode(",", $data_ary['tags']) . ")
                 GROUP BY a.id
                 HAVING count >= " . count($data_ary['tags']) . "
@@ -63,7 +64,7 @@ class Discussion extends BaseController
                 LIMIT " . $data_ary['limit'] . "
             ";
         } else {
-            $sql = "SELECT a.site, a.link, a.title FROM article as a WHERE a.type = 'discussion' ORDER BY a.ts DESC LIMIT " . $data_ary['limit'];
+            $sql = "SELECT a.site, a.link, a.title FROM article as a WHERE a.type = '" . $type . "' ORDER BY a.ts DESC LIMIT " . $data_ary['limit'];
         }
 
         $results = $this->db->sql_fetch_array($sql);
@@ -76,6 +77,21 @@ class Discussion extends BaseController
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');
+    }
+
+    public function get_discussions(Request $request, Response $response)
+    {
+        return $this->get($request, $response, 'discussion');
+    }
+
+    public function get_news(Request $request, Response $response)
+    {
+        return $this->get($request, $response, 'news');
+    }
+
+    public function get_guides(Request $request, Response $response)
+    {
+        return $this->get($request, $response, 'guides');
     }
 
     public function get_tags(Request $request, Response $response)
