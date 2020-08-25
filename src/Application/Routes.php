@@ -62,8 +62,8 @@ class Routes
         });
 
         $v1Group->group('/infoaggregates', function (\Slim\Routing\RouteCollectorProxy $infoaggrGroup) {
-            $infoaggrGroup->get('/discussion', [Infoaggregates::class, 'get_discussions']);
-            $infoaggrGroup->get('/news', [Infoaggregates::class, 'get_news']);
+            $infoaggrGroup->get('/discussions', [Infoaggregates::class, 'get_discussions']);
+            $infoaggrGroup->get('/mmonews', [Infoaggregates::class, 'get_news']);
             $infoaggrGroup->get('/guides', [Infoaggregates::class, 'get_guides']);
             $infoaggrGroup->get('/discussiontags', [Infoaggregates::class, 'get_tags']);
             Routes::add404CatchAll($infoaggrGroup);

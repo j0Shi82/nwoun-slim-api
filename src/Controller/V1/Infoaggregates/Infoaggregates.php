@@ -44,8 +44,8 @@ class Infoaggregates extends BaseController
         if ($data_ary['limit'] > 100) {
             $data_ary['limit'] = 100;
         }
-        if ($data_ary['limit'] < 20) {
-            $data_ary['limit'] = 20;
+        if ($data_ary['limit'] < 10) {
+            $data_ary['limit'] = 10;
         }
 
         if (count($data_ary['tags']) > 0) {
