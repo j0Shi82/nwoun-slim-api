@@ -72,7 +72,6 @@ class Routes
 
         $v1Group->group('/infohub', function (\Slim\Routing\RouteCollectorProxy $infohubGroup) {
             $infohubGroup->post('/source', [Infohub::class, 'post_source']);
-            $infohubGroup->get('/source', [Infohub::class, 'post_source']);
             Routes::add404CatchAll($infohubGroup);
         });
     }

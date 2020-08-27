@@ -42,9 +42,17 @@ class Infohub
 
         $validationSuccess = $this->validator->validate();
 
-        $response->getBody()->write(json_encode(['query' => $request->getParsedBody(), 'success' => $validationSuccess, 'error' => $this->validator->errors()]));
-        return $response
+        if ($validationSuccess) {
+            $response->getBody()->write(json_encode(['success' => $validationSuccess, 'error' => []]));
+            return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');
+        } else {
+            $response->getBody()->write(json_encode(['success' => $validationSuccess, 'error' => $this->validator->errors()]));
+            return $response
+            ->withStatus(400)
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('charset', 'utf-8');
+        }
     }
 }

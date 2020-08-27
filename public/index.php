@@ -5,6 +5,7 @@ error_reporting(E_ERROR | E_PARSE);
 use DI\Bridge\Slim\Bridge as DIBridge;
 use Dotenv\Dotenv;
 use App\Application\Routes;
+use App\Application\CorsErrorHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -15,8 +16,17 @@ $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 $app->addBodyParsingMiddleware();
-$app->addRoutingMiddleware();
+
+
+if ($_ENV['ENV'] === 'dev') {
+}
 
 Routes::add($app);
+
+// Instantiate Custom Error Handler
+$errorHandler = new CorsErrorHandler($app->getCallableResolver(), $app->getResponseFactory());
+
+$errorMiddleware = $app->addErrorMiddleware($_ENV['ENV'] === 'dev', true, true);
+$errorMiddleware->setDefaultErrorHandler($errorHandler);
 
 $app->run();
