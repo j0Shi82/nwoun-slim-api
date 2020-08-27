@@ -8,7 +8,8 @@ use App\Controller\V1\Devtracker\Devinfo;
 use App\Controller\V1\Devtracker\Devlist;
 use App\Controller\V1\Devtracker\Topiclist;
 use App\Controller\V1\Neverwinterfeeds;
-use App\Controller\V1\Infoaggregates\Infoaggregates;
+use App\Controller\V1\Infohub\Infoaggregates;
+use App\Controller\V1\Infohub\Infohub;
 use App\Services\DB;
 use App\Middleware\Cors;
 
@@ -28,7 +29,7 @@ class Routes
             Routes::add404CatchAll($v1Group);
         })->add(new Cors());
         
-        $app->options('/{routes:.+}', function ($request, $response, $args) {
+        $app->options('/{routes:.+}', function ($request, $response) {
             return $response;
         })->add(new Cors());
         
@@ -67,6 +68,12 @@ class Routes
             $infoaggrGroup->get('/guides', [Infoaggregates::class, 'get_guides']);
             $infoaggrGroup->get('/discussiontags', [Infoaggregates::class, 'get_tags']);
             Routes::add404CatchAll($infoaggrGroup);
+        });
+
+        $v1Group->group('/infohub', function (\Slim\Routing\RouteCollectorProxy $infohubGroup) {
+            $infohubGroup->post('/source', [Infohub::class, 'post_source']);
+            $infohubGroup->get('/source', [Infohub::class, 'post_source']);
+            Routes::add404CatchAll($infohubGroup);
         });
     }
 

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\V1\Infoaggregates;
+namespace App\Controller\V1\Infohub;
 
 use \App\Controller\BaseController;
 
