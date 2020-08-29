@@ -28,7 +28,7 @@ class RequestHelper
     {
         $value = $default;
         $queryParams = $this->request->getQueryParams();
-        if (isset($queryParams[$name])) {
+        if (isset($queryParams[$name]) && !empty($queryParams[$name])) {
             $value = $queryParams[$name];
         }
 
