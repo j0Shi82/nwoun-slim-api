@@ -69,9 +69,10 @@ class Articles extends BaseController
         }
 
         if (count($data_ary['tags']) > 0) {
+            $this->db->query("SET SQL_BIG_SELECTS=1");
             $sql = "
                 (
-                    SELECT GROUP_CONCAT(DISTINCT a.site) as site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts
+                    SELECT GROUP_CONCAT(DISTINCT a.site) as site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts, a.type
                     FROM article as a, article_tags as atags, article_title_tags as ttags, tag as t
                     WHERE 
                         (atags.article_id = a.id OR ttags.article_id = a.id)
@@ -80,12 +81,12 @@ class Articles extends BaseController
                         AND a.type IN ('" . implode("','", $types) . "')
                         AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4')
                         AND t.id IN (" . implode(",", $data_ary['tags']) . ")
-                    GROUP BY a.id, a.ts, a.title
+                    GROUP BY a.ts, a.title
                     HAVING count >= " . count($data_ary['tags']) . "
                 )
                     UNION
                 (
-                    SELECT a.site, a.link, a.title, COUNT(*) as count, a.ts
+                    SELECT a.site, a.link, a.title, COUNT(*) as count, a.ts, a.type
                     FROM article as a, article_tags as atags, article_title_tags as ttags, tag as t
                     WHERE 
                         (atags.article_id = a.id OR ttags.article_id = a.id)
@@ -98,19 +99,19 @@ class Articles extends BaseController
                     HAVING count >= " . count($data_ary['tags']) . "
                 )
                 ORDER BY ts DESC
-                LIMIT " . ($data_ary['limit'] * ($data_ary['page'] - 1)) . "," . $data_ary['limit'] . "
+                LIMIT " . ($data_ary['limit'] * ($data_ary['page'] - 1)) . "," . $data_ary['limit'] . ";
             ";
         } else {
             $sql = "
                 (
-                    SELECT GROUP_CONCAT(site) as site, link, title, ts 
+                    SELECT GROUP_CONCAT(site) as site, link, title, ts, type
                     FROM article as a 
                     WHERE a.type IN ('" . implode("','", $types) . "') AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4')
                     GROUP BY ts, title
                 )
                     UNION
                 (
-                    SELECT site, link, title, ts 
+                    SELECT site, link, title, ts, type
                     FROM article as a
                     WHERE a.type IN ('" . implode("','", $types) . "') AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4')
                 ) 
