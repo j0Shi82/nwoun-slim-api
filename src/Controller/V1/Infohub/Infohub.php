@@ -47,7 +47,7 @@ class Infohub
         $this->validator->rule('ascii', 'desc');
         $this->validator->rule('lengthBetween', 'email', 5, 100);
         $this->validator->rule('lengthBetween', 'url', 10, 200);
-        $this->validator->rules(['lengthBetween' => ['desc', 20, 1000]]);
+        $this->validator->rule('lengthBetween', 'desc', 20, 1000);
 
         $validationSuccess = $this->validator->validate();
 

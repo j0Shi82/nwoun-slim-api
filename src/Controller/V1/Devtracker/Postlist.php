@@ -104,6 +104,7 @@ class Postlist extends BaseController
         $tracker_ary = array();
         while ($row = $result->fetch_array()) {
             $row['discussion_id'] = (int) $row['discussion_id'];
+            $row['discussion_name'] = html_entity_decode($row['discussion_name']);
             $row['timestamp'] = (int) $row['timestamp'];
 
             // replace some stuff that can lead to trouble
