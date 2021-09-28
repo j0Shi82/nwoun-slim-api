@@ -30,7 +30,7 @@ class Topiclist extends BaseController
             'threshold' => $this->requestHelper->variable('threshold', 2),
         );
         
-        $sql = 'SELECT COUNT(*) as post_count, discussion_id, discussion_name, MAX(UNIX_TIMESTAMP(t.date)) as last_active FROM nwoun_devtracker as t GROUP BY discussion_id HAVING post_count >= ' . $data_ary['threshold'] . ' ORDER BY MAX(UNIX_TIMESTAMP(t.date)) DESC';
+        $sql = 'SELECT COUNT(*) as post_count, discussion_id, discussion_name, MAX(UNIX_TIMESTAMP(t.date)) as last_active FROM devtracker as t GROUP BY discussion_id HAVING post_count >= ' . $data_ary['threshold'] . ' ORDER BY MAX(UNIX_TIMESTAMP(t.date)) DESC';
 
         $response->getBody()->write(json_encode($this->db->sql_fetch_array($sql)));
         return $response

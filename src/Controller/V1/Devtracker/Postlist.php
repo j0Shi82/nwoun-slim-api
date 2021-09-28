@@ -70,7 +70,7 @@ class Postlist extends BaseController
             SELECT
                 t.dev_name, t.dev_id, t.discussion_id, t.comment_id, t.discussion_name, t.body, UNIX_TIMESTAMP(t.date) as timestamp
             FROM 
-                nwoun_devtracker as t
+                devtracker as t
             WHERE
                 (
                     t.dev_name = \''.$data_ary['dev'].'\' 

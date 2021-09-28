@@ -22,7 +22,7 @@ class Devlist
 
     public function get(Request $request, Response $response)
     {
-        $sql = 'SELECT COUNT(*) as post_count, MAX(UNIX_TIMESTAMP(t.date)) as last_active, t.dev_name, t.dev_id FROM nwoun_devtracker as t GROUP BY dev_name ORDER BY dev_name';
+        $sql = 'SELECT COUNT(*) as post_count, MAX(UNIX_TIMESTAMP(t.date)) as last_active, t.dev_name, t.dev_id FROM devtracker as t GROUP BY dev_name ORDER BY dev_name';
 
         $response->getBody()->write(json_encode($this->db->sql_fetch_array($sql)));
         return $response
