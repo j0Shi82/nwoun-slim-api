@@ -13,13 +13,12 @@
         "psr-4": {
             "App\\": "src/"
         },
-        "classmap": [
-        ]
+        "classmap": []
     },
     "scripts": {
         "start": [
             "Composer\\Config::disableProcessTimeout",
-            "php -S localhost:8080 -t public -c dev/php.ini"
+            "php -S localhost:8084 -t public -c dev/php.ini"
         ]
     }
 }
