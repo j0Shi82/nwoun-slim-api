@@ -1,4 +1,4 @@
-<Files ~ "\.env">
-Order allow,deny
+# Refuse direct access to all files
+Order deny,allow
 Deny from all
-</Files>
+Allow from 127.0.0.1

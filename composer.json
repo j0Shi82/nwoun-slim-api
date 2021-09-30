@@ -1,4 +1,15 @@
 {
+    "name": "nwoun/api",
+    "description": "API for the corresponding nwo-uncensored.com project",
+    "type": "project",
+    "authors": [
+        {
+            "name": "j0Shi82",
+            "email": "j0shi.webdev@gmail.com"
+        }
+    ],
+    "version": "1.0.0",
+    "license": "GPL-3.0-or-later",
     "require": {
         "slim/slim": "4.*",
         "slim/psr7": "^1.2",
