@@ -72,52 +72,50 @@ class Articles extends BaseController
             $this->db->query("SET SQL_BIG_SELECTS=1");
             $sql = "
                 (
-                    (
-                        SELECT GROUP_CONCAT(DISTINCT a.site) as site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts, a.type 
-                        FROM 
-                            (
-                                    SELECT article_tags.* 
-                                    FROM article_tags, tag 
-                                    WHERE tag.id IN (" . implode(",", $data_ary['tags']) . ") AND tag.id = article_tags.tag_id 
-                                    GROUP BY article_tags.tag_id, article_tags.article_id 
-                                UNION DISTINCT 
-                                    SELECT article_title_tags.* 
-                                    FROM article_title_tags, tag 
-                                    WHERE tag.id IN (" . implode(",", $data_ary['tags']) . ") AND tag.id = article_title_tags.tag_id 
-                                    GROUP BY article_title_tags.tag_id, article_title_tags.article_id
-                            ) as atags, 
-                            article as a 
-                        WHERE 
-                            atags.article_id = a.id 
-                            AND a.type IN ('" . implode("','", $types) . "')
-                            AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4') 
-                        GROUP BY a.ts, a.title 
-                        HAVING count >= " . count($data_ary['tags']) . "
-                    )
-                    UNION 
-                    (
-                        SELECT a.site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts, a.type 
-                        FROM 
-                            (
-                                    SELECT article_tags.* 
-                                    FROM article_tags, tag 
-                                    WHERE tag.id IN (" . implode(",", $data_ary['tags']) . ") AND tag.id = article_tags.tag_id 
-                                    GROUP BY article_tags.tag_id, article_tags.article_id 
-                                UNION DISTINCT 
-                                    SELECT article_title_tags.* 
-                                    FROM article_title_tags, tag 
-                                    WHERE tag.id IN (" . implode(",", $data_ary['tags']) . ") AND tag.id = article_title_tags.tag_id 
-                                    GROUP BY article_title_tags.tag_id, article_title_tags.article_id
-                            ) as atags, 
-                            article as a 
-                        WHERE 
-                            atags.article_id = a.id 
-                            AND a.type IN ('" . implode("','", $types) . "')
-                            AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4') 
-                        GROUP BY a.id 
-                        HAVING count >= " . count($data_ary['tags']) . "
-                    )
-                ) 
+                    SELECT GROUP_CONCAT(DISTINCT a.site) as site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts, a.type 
+                    FROM 
+                        (
+                                SELECT article_tags.* 
+                                FROM article_tags, tag 
+                                WHERE tag.id IN (" . implode(",", $data_ary['tags']) . ") AND tag.id = article_tags.tag_id 
+                                GROUP BY article_tags.tag_id, article_tags.article_id 
+                            UNION DISTINCT 
+                                SELECT article_title_tags.* 
+                                FROM article_title_tags, tag 
+                                WHERE tag.id IN (" . implode(",", $data_ary['tags']) . ") AND tag.id = article_title_tags.tag_id 
+                                GROUP BY article_title_tags.tag_id, article_title_tags.article_id
+                        ) as atags, 
+                        article as a 
+                    WHERE 
+                        atags.article_id = a.id 
+                        AND a.type IN ('" . implode("','", $types) . "')
+                        AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4') 
+                    GROUP BY a.ts, a.title 
+                    HAVING count >= " . count($data_ary['tags']) . "
+                )
+                UNION 
+                (
+                    SELECT a.site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts, a.type 
+                    FROM 
+                        (
+                                SELECT article_tags.* 
+                                FROM article_tags, tag 
+                                WHERE tag.id IN (" . implode(",", $data_ary['tags']) . ") AND tag.id = article_tags.tag_id 
+                                GROUP BY article_tags.tag_id, article_tags.article_id 
+                            UNION DISTINCT 
+                                SELECT article_title_tags.* 
+                                FROM article_title_tags, tag 
+                                WHERE tag.id IN (" . implode(",", $data_ary['tags']) . ") AND tag.id = article_title_tags.tag_id 
+                                GROUP BY article_title_tags.tag_id, article_title_tags.article_id
+                        ) as atags, 
+                        article as a 
+                    WHERE 
+                        atags.article_id = a.id 
+                        AND a.type IN ('" . implode("','", $types) . "')
+                        AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4') 
+                    GROUP BY a.id 
+                    HAVING count >= " . count($data_ary['tags']) . "
+                )
                 ORDER BY ts DESC 
                 LIMIT " . ($data_ary['limit'] * ($data_ary['page'] - 1)) . "," . $data_ary['limit'] . ";
             ";
