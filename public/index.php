@@ -8,6 +8,7 @@ use App\Application\Routes;
 use App\Application\CorsErrorHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
+require_once  __DIR__ . '/../src/Schema/generated-conf/config.php';
 
 $app = DIBridge::create();
 

@@ -7,6 +7,7 @@ use \App\Controller\BaseController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JBBCode\DefaultCodeDefinitionSet;
+use App\Schema\Crawl\Devtracker\DevtrackerQuery;
 
 class Devlist
 {
@@ -22,9 +23,15 @@ class Devlist
 
     public function get(Request $request, Response $response)
     {
-        $sql = 'SELECT COUNT(*) as post_count, MAX(UNIX_TIMESTAMP(t.date)) as last_active, t.dev_name, t.dev_id FROM devtracker as t GROUP BY dev_name ORDER BY dev_name';
-
-        $response->getBody()->write(json_encode($this->db->sql_fetch_array($sql)));
+        $devs = DevtrackerQuery::create()
+            ->withColumn('Count(*)', 'post_count')
+            ->withColumn('MAX(UNIX_TIMESTAMP(date))', 'last_active')
+            ->groupByDevName()
+            ->orderByDevName()
+            ->select(array('post_count', 'last_active', 'dev_name', 'dev_id'))
+            ->find();
+            
+        $response->getBody()->write(json_encode($devs->getData()));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');

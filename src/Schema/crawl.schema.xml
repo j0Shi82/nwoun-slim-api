@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database name="crawl" defaultIdMethod="native" defaultPhpNamingMethod="underscore" namespace="App\Schema\Crawl">
+  <table name="article" idMethod="native" phpName="Article" namespace="Article">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="article_id" phpName="ArticleId" type="VARCHAR" size="200" required="true"/>
+    <column name="link" phpName="Link" type="LONGVARCHAR" required="true"/>
+    <column name="site" phpName="Site" type="VARCHAR" size="50" required="true"/>
+    <column name="ts" phpName="Ts" type="INTEGER" required="true"/>
+    <column name="title" phpName="Title" type="VARCHAR" size="100" required="true"/>
+    <column name="content" phpName="Content" type="LONGVARCHAR" required="true"/>
+    <column name="cats" phpName="Cats" type="VARCHAR" sqlType="json" required="true"/>
+    <column name="last_tagged" phpName="LastTagged" type="INTEGER" required="true"/>
+    <column name="type" phpName="Type" type="CHAR" sqlType="enum('official','news','discussion','guides','media')" required="true"/>
+    <index name="ts">
+      <index-column name="ts"/>
+    </index>
+    <index name="last_tagged">
+      <index-column name="last_tagged"/>
+    </index>
+    <index name="type">
+      <index-column name="type"/>
+    </index>
+    <index name="site">
+      <index-column name="site"/>
+      <index-column name="ts"/>
+      <index-column name="title"/>
+    </index>
+    <unique name="article_id">
+      <unique-column name="article_id"/>
+      <unique-column name="site"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="article_tags" idMethod="native" phpName="ArticleTags" namespace="ArticleTags">
+    <column name="article_id" phpName="ArticleId" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="tag_id" phpName="TagId" type="INTEGER" primaryKey="true" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="article_title_tags" idMethod="native" phpName="ArticleTitleTags" namespace="ArticleTitleTags">
+    <column name="article_id" phpName="ArticleId" type="INTEGER" primaryKey="true" required="true"/>
+    <column name="tag_id" phpName="TagId" type="INTEGER" primaryKey="true" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="auction_aggregates" idMethod="native" phpName="AuctionAggregates" namespace="AuctionAggregates">
+    <column name="item_def" phpName="ItemDef" type="VARCHAR" size="100" required="true"/>
+    <column name="server" phpName="Server" type="CHAR" sqlType="enum('GLOBAL','RU')" required="true"/>
+    <column name="low" phpName="Low" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="mean" phpName="Mean" type="DOUBLE" sqlType="double unsigned" required="true"/>
+    <column name="median" phpName="Median" type="DOUBLE" sqlType="double unsigned" required="true"/>
+    <column name="count" phpName="Count" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="inserted" phpName="Inserted" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <index name="item_def">
+      <index-column name="item_def"/>
+      <index-column name="server"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="auction_details" idMethod="native" phpName="AuctionDetails" namespace="AuctionDetails">
+    <column name="item_def" phpName="ItemDef" type="VARCHAR" size="100" primaryKey="true" required="true"/>
+    <column name="server" phpName="Server" type="CHAR" sqlType="enum('GLOBAL','RU')" primaryKey="true" required="true"/>
+    <column name="seller_name" phpName="SellerName" type="VARCHAR" size="50" primaryKey="true" required="true"/>
+    <column name="seller_handle" phpName="SellerHandle" type="VARCHAR" size="50" primaryKey="true" required="true"/>
+    <column name="expire_time" phpName="ExpireTime" type="BIGINT" primaryKey="true" required="true"/>
+    <column name="price" phpName="Price" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="count" phpName="Count" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
+    <column name="price_per" phpName="PricePer" type="FLOAT" sqlType="float unsigned" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="auction_items" idMethod="native" phpName="AuctionItems" namespace="AuctionItems">
+    <column name="item_def" phpName="ItemDef" type="VARCHAR" size="100" primaryKey="true" required="true"/>
+    <column name="item_name" phpName="ItemName" type="VARCHAR" size="100" required="true"/>
+    <column name="category" phpName="Category" type="CHAR" sqlType="enum('Miscellaneous','Bags','Companions','Consumables','Equipment','Fashion','Mounts','Professions','Refinement','Stronghold')"/>
+    <column name="allow_auto" phpName="AllowAuto" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
+    <column name="server" phpName="Server" type="CHAR" sqlType="enum('GLOBAL','RU')" primaryKey="true" required="true" defaultValue="GLOBAL"/>
+    <column name="update_date" phpName="UpdateDate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="devtracker" idMethod="native" phpName="Devtracker" namespace="Devtracker">
+    <column name="ID" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="dev_name" phpName="DevName" type="VARCHAR" size="30" required="true"/>
+    <column name="dev_id" phpName="DevId" type="INTEGER" required="true"/>
+    <column name="category_id" phpName="CategoryId" type="INTEGER" required="true"/>
+    <column name="discussion_id" phpName="DiscussionId" type="INTEGER" required="true"/>
+    <column name="discussion_name" phpName="DiscussionName" type="LONGVARCHAR" required="true"/>
+    <column name="comment_id" phpName="CommentId" type="INTEGER" required="true" defaultValue="0"/>
+    <column name="body" phpName="Body" type="LONGVARCHAR" required="true"/>
+    <column name="date" phpName="Date" type="TIMESTAMP" required="true"/>
+    <column name="is_poll" phpName="IsPoll" type="BOOLEAN" size="1" required="true"/>
+    <column name="is_announce" phpName="IsAnnounce" type="BOOLEAN" size="1" required="true"/>
+    <column name="is_closed" phpName="IsClosed" type="BOOLEAN" size="1" required="true"/>
+    <index name="date">
+      <index-column name="date"/>
+      <index-column name="dev_id"/>
+      <index-column name="category_id"/>
+    </index>
+    <unique name="discussionID">
+      <unique-column name="discussion_id"/>
+      <unique-column name="comment_id"/>
+    </unique>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="settings" idMethod="native" phpName="Settings" namespace="Settings">
+    <column name="name" phpName="Name" type="VARCHAR" size="20" primaryKey="true" required="true"/>
+    <column name="value" phpName="Value" type="VARCHAR" sqlType="json" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+  <table name="tag" idMethod="native" phpName="Tag" namespace="Tag">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="term" phpName="Term" type="VARCHAR" size="100" required="true"/>
+    <index name="id">
+      <index-column name="id"/>
+      <index-column name="term"/>
+    </index>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
+</database>

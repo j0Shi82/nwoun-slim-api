@@ -7,6 +7,7 @@ use \App\Controller\BaseController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JBBCode\DefaultCodeDefinitionSet;
+use App\Schema\Crawl\Devtracker\DevtrackerQuery;
 
 class Postlist extends BaseController
 {
@@ -65,66 +66,48 @@ class Postlist extends BaseController
             $data_ary['start_page'] = 0;
         }
 
-        /* build tracker query for db */
-        $sql = '
-            SELECT
-                t.dev_name, t.dev_id, t.discussion_id, t.comment_id, t.discussion_name, t.body, UNIX_TIMESTAMP(t.date) as timestamp
-            FROM 
-                devtracker as t
-            WHERE
-                (
-                    t.dev_name = \''.$data_ary['dev'].'\' 
-                        OR 
-                    t.dev_id = \''.$data_ary['dev'].'\' 
-                        OR 
-                    \''.$data_ary['dev'].'\' = \'\'
-                )
-                    AND
-                (
-                    discussion_id = '.$data_ary['discussion_id'].' 
-                        OR 
-                    '.$data_ary['discussion_id'].' = 0
-                )
-                    AND
-                (
-                    discussion_name LIKE \'%'.$data_ary['search_term'].'%\' 
-                        OR 
-                    body LIKE \'%'.$data_ary['search_term'].'%\'
-                )
-            ORDER BY
-                t.date DESC
-            LIMIT 
-                '.($data_ary['start_page']*$data_ary['count']).','.$data_ary['count'].'
-        ';
-        
-        // query database
-        $result = $this->db->query($sql);
+        $posts = DevtrackerQuery::create()
+            ->withColumn('UNIX_TIMESTAMP(date)', 'timestamp')
+            ->_if($data_ary['dev'] !== "")
+                ->condition('dev_name', 'Devtracker.DevName = ?', $data_ary['dev'])
+                ->condition('dev_id', 'Devtracker.DevId = ?', $data_ary['dev'])
+                ->where(array('dev_name', 'dev_id'), 'or')
+            ->_endif()
+            ->_if($data_ary['discussion_id'] !== 0)
+                ->filterByDiscussionId($data_ary['discussion_id'])
+            ->_endif()
+            ->_if($data_ary['search_term'] !== '')
+                ->condition('discussion_name', 'Devtracker.DiscussionName LIKE ?', '%'.$data_ary['search_term'].'%')
+                ->condition('body', 'Devtracker.Body LIKE ?', '%'.$data_ary['search_term'].'%')
+                ->where(array('dev_name', 'dev_id'), 'or')
+            ->_endif()
+            ->orderByDate('desc')
+            ->limit($data_ary['count'])
+            ->offset($data_ary['start_page']*$data_ary['count'])
+            ->select(array('dev_name', 'dev_id', 'discussion_id', 'comment_id', 'discussion_name', 'body', 'timestamp'))
+            ->find()
+            ->getData();
 
-        // populate results array
-        $tracker_ary = array();
-        while ($row = $result->fetch_array()) {
-            $row['discussion_id'] = (int) $row['discussion_id'];
-            $row['discussion_name'] = html_entity_decode($row['discussion_name']);
-            $row['timestamp'] = (int) $row['timestamp'];
+        array_walk($posts, function (&$post) {
+            $post['discussion_id'] = (int) $post['discussion_id'];
+            $post['discussion_name'] = html_entity_decode($post['discussion_name']);
+            $post['timestamp'] = (int) $post['timestamp'];
 
             // replace some stuff that can lead to trouble
-            $row['body'] = preg_replace("/\[quote=.*\].*\[\/quote\]\s+/mis", "", $row['body']);
-            $row['body'] = preg_replace("/\<blockquote.*>.*\<\/blockquote>\s+/mis", "", $row['body']);
-            $row['body'] = preg_replace("/\[url=\"(.*)\"\](.*)\[\/url\]/misU", "[url=\\1]\\2[/url]", $row['body']);
+            $post['body'] = preg_replace("/\[quote=.*\].*\[\/quote\]\s+/mis", "", $post['body']);
+            $post['body'] = preg_replace("/\<blockquote.*>.*\<\/blockquote>\s+/mis", "", $post['body']);
+            $post['body'] = preg_replace("/\[url=\"(.*)\"\](.*)\[\/url\]/misU", "[url=\\1]\\2[/url]", $post['body']);
             // $row['body'] = strip_tags($row['body']);
-            $row['body'] = preg_replace('/<[^>]*>/', '', $row['body']);
-            $row['body'] = preg_replace('/\\r\\n/', '<br />', $row['body']);
+            $post['body'] = preg_replace('/<[^>]*>/', '', $post['body']);
+            $post['body'] = preg_replace('/\\r\\n/', '<br />', $post['body']);
 
             // // parse JBBCode
-            $this->jbb_parser->parse($row['body']);
-            $row['body'] = $this->jbb_parser->getAsText();
-
-            // add to results array
-            $tracker_ary[] = $row;
-        }
+            $this->jbb_parser->parse($post['body']);
+            $post['body'] = $this->jbb_parser->getAsText();
+        });
 
         // return as JSON
-        $payload = json_encode($tracker_ary);
+        $payload = json_encode($posts);
 
         $response->getBody()->write($payload);
         return $response
