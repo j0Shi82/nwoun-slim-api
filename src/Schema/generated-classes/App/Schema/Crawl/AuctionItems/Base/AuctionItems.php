@@ -76,11 +76,25 @@ abstract class AuctionItems implements ActiveRecordInterface
     protected $item_name;
 
     /**
-     * The value for the category field.
+     * The value for the quality field.
+     *
+     * @var        string
+     */
+    protected $quality;
+
+    /**
+     * The value for the categories field.
+     *
+     * @var        string
+     */
+    protected $categories;
+
+    /**
+     * The value for the crawl_category field.
      *
      * @var        string|null
      */
-    protected $category;
+    protected $crawl_category;
 
     /**
      * The value for the allow_auto field.
@@ -373,13 +387,35 @@ abstract class AuctionItems implements ActiveRecordInterface
     }
 
     /**
-     * Get the [category] column value.
+     * Get the [quality] column value.
+     *
+     * @return string
+     */
+    public function getQuality()
+    {
+        return $this->quality;
+    }
+
+    /**
+     * Get the [categories] column value.
+     *
+     * @param bool $asArray Returns the JSON data as array instead of object
+
+     * @return object|array
+     */
+    public function getCategories($asArray = true)
+    {
+        return json_decode($this->categories, $asArray);
+    }
+
+    /**
+     * Get the [crawl_category] column value.
      *
      * @return string|null
      */
-    public function getCategory()
+    public function getCrawlCategory()
     {
-        return $this->category;
+        return $this->crawl_category;
     }
 
     /**
@@ -475,24 +511,65 @@ abstract class AuctionItems implements ActiveRecordInterface
     } // setItemName()
 
     /**
-     * Set the value of [category] column.
+     * Set the value of [quality] column.
      *
-     * @param string|null $v New value
+     * @param string $v New value
      * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
      */
-    public function setCategory($v)
+    public function setQuality($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->category !== $v) {
-            $this->category = $v;
-            $this->modifiedColumns[AuctionItemsTableMap::COL_CATEGORY] = true;
+        if ($this->quality !== $v) {
+            $this->quality = $v;
+            $this->modifiedColumns[AuctionItemsTableMap::COL_QUALITY] = true;
         }
 
         return $this;
-    } // setCategory()
+    } // setQuality()
+
+    /**
+     * Set the value of [categories] column.
+     *
+     * @param string|array|object $v new value
+     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     */
+    public function setCategories($v)
+    {
+        if (is_string($v)) {
+            // JSON as string needs to be decoded/encoded to get a reliable comparison (spaces, ...)
+            $v = json_decode($v);
+        }
+        $encodedValue = json_encode($v);
+        if ($encodedValue !== $this->categories) {
+            $this->categories = $encodedValue;
+            $this->modifiedColumns[AuctionItemsTableMap::COL_CATEGORIES] = true;
+        }
+
+        return $this;
+    } // setCategories()
+
+    /**
+     * Set the value of [crawl_category] column.
+     *
+     * @param string|null $v New value
+     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     */
+    public function setCrawlCategory($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->crawl_category !== $v) {
+            $this->crawl_category = $v;
+            $this->modifiedColumns[AuctionItemsTableMap::COL_CRAWL_CATEGORY] = true;
+        }
+
+        return $this;
+    } // setCrawlCategory()
 
     /**
      * Sets the value of the [allow_auto] column.
@@ -612,16 +689,22 @@ abstract class AuctionItems implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AuctionItemsTableMap::translateFieldName('ItemName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->item_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AuctionItemsTableMap::translateFieldName('Category', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->category = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AuctionItemsTableMap::translateFieldName('Quality', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->quality = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AuctionItemsTableMap::translateFieldName('AllowAuto', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AuctionItemsTableMap::translateFieldName('Categories', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->categories = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AuctionItemsTableMap::translateFieldName('CrawlCategory', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->crawl_category = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AuctionItemsTableMap::translateFieldName('AllowAuto', TableMap::TYPE_PHPNAME, $indexType)];
             $this->allow_auto = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AuctionItemsTableMap::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : AuctionItemsTableMap::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)];
             $this->server = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AuctionItemsTableMap::translateFieldName('UpdateDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : AuctionItemsTableMap::translateFieldName('UpdateDate', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -634,7 +717,7 @@ abstract class AuctionItems implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = AuctionItemsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = AuctionItemsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Schema\\Crawl\\AuctionItems\\AuctionItems'), 0, $e);
@@ -837,8 +920,14 @@ abstract class AuctionItems implements ActiveRecordInterface
         if ($this->isColumnModified(AuctionItemsTableMap::COL_ITEM_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'item_name';
         }
-        if ($this->isColumnModified(AuctionItemsTableMap::COL_CATEGORY)) {
-            $modifiedColumns[':p' . $index++]  = 'category';
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_QUALITY)) {
+            $modifiedColumns[':p' . $index++]  = 'quality';
+        }
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_CATEGORIES)) {
+            $modifiedColumns[':p' . $index++]  = 'categories';
+        }
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_CRAWL_CATEGORY)) {
+            $modifiedColumns[':p' . $index++]  = 'crawl_category';
         }
         if ($this->isColumnModified(AuctionItemsTableMap::COL_ALLOW_AUTO)) {
             $modifiedColumns[':p' . $index++]  = 'allow_auto';
@@ -866,8 +955,14 @@ abstract class AuctionItems implements ActiveRecordInterface
                     case 'item_name':
                         $stmt->bindValue($identifier, $this->item_name, PDO::PARAM_STR);
                         break;
-                    case 'category':
-                        $stmt->bindValue($identifier, $this->category, PDO::PARAM_STR);
+                    case 'quality':
+                        $stmt->bindValue($identifier, $this->quality, PDO::PARAM_STR);
+                        break;
+                    case 'categories':
+                        $stmt->bindValue($identifier, $this->categories, PDO::PARAM_STR);
+                        break;
+                    case 'crawl_category':
+                        $stmt->bindValue($identifier, $this->crawl_category, PDO::PARAM_STR);
                         break;
                     case 'allow_auto':
                         $stmt->bindValue($identifier, (int) $this->allow_auto, PDO::PARAM_INT);
@@ -940,15 +1035,21 @@ abstract class AuctionItems implements ActiveRecordInterface
                 return $this->getItemName();
                 break;
             case 2:
-                return $this->getCategory();
+                return $this->getQuality();
                 break;
             case 3:
-                return $this->getAllowAuto();
+                return $this->getCategories();
                 break;
             case 4:
-                return $this->getServer();
+                return $this->getCrawlCategory();
                 break;
             case 5:
+                return $this->getAllowAuto();
+                break;
+            case 6:
+                return $this->getServer();
+                break;
+            case 7:
                 return $this->getUpdateDate();
                 break;
             default:
@@ -982,13 +1083,15 @@ abstract class AuctionItems implements ActiveRecordInterface
         $result = array(
             $keys[0] => $this->getItemDef(),
             $keys[1] => $this->getItemName(),
-            $keys[2] => $this->getCategory(),
-            $keys[3] => $this->getAllowAuto(),
-            $keys[4] => $this->getServer(),
-            $keys[5] => $this->getUpdateDate(),
+            $keys[2] => $this->getQuality(),
+            $keys[3] => $this->getCategories(),
+            $keys[4] => $this->getCrawlCategory(),
+            $keys[5] => $this->getAllowAuto(),
+            $keys[6] => $this->getServer(),
+            $keys[7] => $this->getUpdateDate(),
         );
-        if ($result[$keys[5]] instanceof \DateTimeInterface) {
-            $result[$keys[5]] = $result[$keys[5]]->format('Y-m-d H:i:s.u');
+        if ($result[$keys[7]] instanceof \DateTimeInterface) {
+            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1036,15 +1139,21 @@ abstract class AuctionItems implements ActiveRecordInterface
                 $this->setItemName($value);
                 break;
             case 2:
-                $this->setCategory($value);
+                $this->setQuality($value);
                 break;
             case 3:
-                $this->setAllowAuto($value);
+                $this->setCategories($value);
                 break;
             case 4:
-                $this->setServer($value);
+                $this->setCrawlCategory($value);
                 break;
             case 5:
+                $this->setAllowAuto($value);
+                break;
+            case 6:
+                $this->setServer($value);
+                break;
+            case 7:
                 $this->setUpdateDate($value);
                 break;
         } // switch()
@@ -1080,16 +1189,22 @@ abstract class AuctionItems implements ActiveRecordInterface
             $this->setItemName($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setCategory($arr[$keys[2]]);
+            $this->setQuality($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setAllowAuto($arr[$keys[3]]);
+            $this->setCategories($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setServer($arr[$keys[4]]);
+            $this->setCrawlCategory($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setUpdateDate($arr[$keys[5]]);
+            $this->setAllowAuto($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setServer($arr[$keys[6]]);
+        }
+        if (array_key_exists($keys[7], $arr)) {
+            $this->setUpdateDate($arr[$keys[7]]);
         }
 
         return $this;
@@ -1140,8 +1255,14 @@ abstract class AuctionItems implements ActiveRecordInterface
         if ($this->isColumnModified(AuctionItemsTableMap::COL_ITEM_NAME)) {
             $criteria->add(AuctionItemsTableMap::COL_ITEM_NAME, $this->item_name);
         }
-        if ($this->isColumnModified(AuctionItemsTableMap::COL_CATEGORY)) {
-            $criteria->add(AuctionItemsTableMap::COL_CATEGORY, $this->category);
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_QUALITY)) {
+            $criteria->add(AuctionItemsTableMap::COL_QUALITY, $this->quality);
+        }
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_CATEGORIES)) {
+            $criteria->add(AuctionItemsTableMap::COL_CATEGORIES, $this->categories);
+        }
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_CRAWL_CATEGORY)) {
+            $criteria->add(AuctionItemsTableMap::COL_CRAWL_CATEGORY, $this->crawl_category);
         }
         if ($this->isColumnModified(AuctionItemsTableMap::COL_ALLOW_AUTO)) {
             $criteria->add(AuctionItemsTableMap::COL_ALLOW_AUTO, $this->allow_auto);
@@ -1248,7 +1369,9 @@ abstract class AuctionItems implements ActiveRecordInterface
     {
         $copyObj->setItemDef($this->getItemDef());
         $copyObj->setItemName($this->getItemName());
-        $copyObj->setCategory($this->getCategory());
+        $copyObj->setQuality($this->getQuality());
+        $copyObj->setCategories($this->getCategories());
+        $copyObj->setCrawlCategory($this->getCrawlCategory());
         $copyObj->setAllowAuto($this->getAllowAuto());
         $copyObj->setServer($this->getServer());
         $copyObj->setUpdateDate($this->getUpdateDate());
@@ -1288,7 +1411,9 @@ abstract class AuctionItems implements ActiveRecordInterface
     {
         $this->item_def = null;
         $this->item_name = null;
-        $this->category = null;
+        $this->quality = null;
+        $this->categories = null;
+        $this->crawl_category = null;
         $this->allow_auto = null;
         $this->server = null;
         $this->update_date = null;

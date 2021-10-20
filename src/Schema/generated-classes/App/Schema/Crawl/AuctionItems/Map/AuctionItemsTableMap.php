@@ -58,7 +58,7 @@ class AuctionItemsTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class AuctionItemsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the item_def field
@@ -81,9 +81,19 @@ class AuctionItemsTableMap extends TableMap
     const COL_ITEM_NAME = 'auction_items.item_name';
 
     /**
-     * the column name for the category field
+     * the column name for the quality field
      */
-    const COL_CATEGORY = 'auction_items.category';
+    const COL_QUALITY = 'auction_items.quality';
+
+    /**
+     * the column name for the categories field
+     */
+    const COL_CATEGORIES = 'auction_items.categories';
+
+    /**
+     * the column name for the crawl_category field
+     */
+    const COL_CRAWL_CATEGORY = 'auction_items.crawl_category';
 
     /**
      * the column name for the allow_auto field
@@ -112,11 +122,11 @@ class AuctionItemsTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('ItemDef', 'ItemName', 'Category', 'AllowAuto', 'Server', 'UpdateDate', ),
-        self::TYPE_CAMELNAME     => array('itemDef', 'itemName', 'category', 'allowAuto', 'server', 'updateDate', ),
-        self::TYPE_COLNAME       => array(AuctionItemsTableMap::COL_ITEM_DEF, AuctionItemsTableMap::COL_ITEM_NAME, AuctionItemsTableMap::COL_CATEGORY, AuctionItemsTableMap::COL_ALLOW_AUTO, AuctionItemsTableMap::COL_SERVER, AuctionItemsTableMap::COL_UPDATE_DATE, ),
-        self::TYPE_FIELDNAME     => array('item_def', 'item_name', 'category', 'allow_auto', 'server', 'update_date', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('ItemDef', 'ItemName', 'Quality', 'Categories', 'CrawlCategory', 'AllowAuto', 'Server', 'UpdateDate', ),
+        self::TYPE_CAMELNAME     => array('itemDef', 'itemName', 'quality', 'categories', 'crawlCategory', 'allowAuto', 'server', 'updateDate', ),
+        self::TYPE_COLNAME       => array(AuctionItemsTableMap::COL_ITEM_DEF, AuctionItemsTableMap::COL_ITEM_NAME, AuctionItemsTableMap::COL_QUALITY, AuctionItemsTableMap::COL_CATEGORIES, AuctionItemsTableMap::COL_CRAWL_CATEGORY, AuctionItemsTableMap::COL_ALLOW_AUTO, AuctionItemsTableMap::COL_SERVER, AuctionItemsTableMap::COL_UPDATE_DATE, ),
+        self::TYPE_FIELDNAME     => array('item_def', 'item_name', 'quality', 'categories', 'crawl_category', 'allow_auto', 'server', 'update_date', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -126,11 +136,11 @@ class AuctionItemsTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('ItemDef' => 0, 'ItemName' => 1, 'Category' => 2, 'AllowAuto' => 3, 'Server' => 4, 'UpdateDate' => 5, ),
-        self::TYPE_CAMELNAME     => array('itemDef' => 0, 'itemName' => 1, 'category' => 2, 'allowAuto' => 3, 'server' => 4, 'updateDate' => 5, ),
-        self::TYPE_COLNAME       => array(AuctionItemsTableMap::COL_ITEM_DEF => 0, AuctionItemsTableMap::COL_ITEM_NAME => 1, AuctionItemsTableMap::COL_CATEGORY => 2, AuctionItemsTableMap::COL_ALLOW_AUTO => 3, AuctionItemsTableMap::COL_SERVER => 4, AuctionItemsTableMap::COL_UPDATE_DATE => 5, ),
-        self::TYPE_FIELDNAME     => array('item_def' => 0, 'item_name' => 1, 'category' => 2, 'allow_auto' => 3, 'server' => 4, 'update_date' => 5, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, )
+        self::TYPE_PHPNAME       => array('ItemDef' => 0, 'ItemName' => 1, 'Quality' => 2, 'Categories' => 3, 'CrawlCategory' => 4, 'AllowAuto' => 5, 'Server' => 6, 'UpdateDate' => 7, ),
+        self::TYPE_CAMELNAME     => array('itemDef' => 0, 'itemName' => 1, 'quality' => 2, 'categories' => 3, 'crawlCategory' => 4, 'allowAuto' => 5, 'server' => 6, 'updateDate' => 7, ),
+        self::TYPE_COLNAME       => array(AuctionItemsTableMap::COL_ITEM_DEF => 0, AuctionItemsTableMap::COL_ITEM_NAME => 1, AuctionItemsTableMap::COL_QUALITY => 2, AuctionItemsTableMap::COL_CATEGORIES => 3, AuctionItemsTableMap::COL_CRAWL_CATEGORY => 4, AuctionItemsTableMap::COL_ALLOW_AUTO => 5, AuctionItemsTableMap::COL_SERVER => 6, AuctionItemsTableMap::COL_UPDATE_DATE => 7, ),
+        self::TYPE_FIELDNAME     => array('item_def' => 0, 'item_name' => 1, 'quality' => 2, 'categories' => 3, 'crawl_category' => 4, 'allow_auto' => 5, 'server' => 6, 'update_date' => 7, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -155,13 +165,28 @@ class AuctionItemsTableMap extends TableMap
         'COL_ITEM_NAME' => 'ITEM_NAME',
         'item_name' => 'ITEM_NAME',
         'auction_items.item_name' => 'ITEM_NAME',
-        'Category' => 'CATEGORY',
-        'AuctionItems.Category' => 'CATEGORY',
-        'category' => 'CATEGORY',
-        'auctionItems.category' => 'CATEGORY',
-        'AuctionItemsTableMap::COL_CATEGORY' => 'CATEGORY',
-        'COL_CATEGORY' => 'CATEGORY',
-        'auction_items.category' => 'CATEGORY',
+        'Quality' => 'QUALITY',
+        'AuctionItems.Quality' => 'QUALITY',
+        'quality' => 'QUALITY',
+        'auctionItems.quality' => 'QUALITY',
+        'AuctionItemsTableMap::COL_QUALITY' => 'QUALITY',
+        'COL_QUALITY' => 'QUALITY',
+        'auction_items.quality' => 'QUALITY',
+        'Categories' => 'CATEGORIES',
+        'AuctionItems.Categories' => 'CATEGORIES',
+        'categories' => 'CATEGORIES',
+        'auctionItems.categories' => 'CATEGORIES',
+        'AuctionItemsTableMap::COL_CATEGORIES' => 'CATEGORIES',
+        'COL_CATEGORIES' => 'CATEGORIES',
+        'auction_items.categories' => 'CATEGORIES',
+        'CrawlCategory' => 'CRAWL_CATEGORY',
+        'AuctionItems.CrawlCategory' => 'CRAWL_CATEGORY',
+        'crawlCategory' => 'CRAWL_CATEGORY',
+        'auctionItems.crawlCategory' => 'CRAWL_CATEGORY',
+        'AuctionItemsTableMap::COL_CRAWL_CATEGORY' => 'CRAWL_CATEGORY',
+        'COL_CRAWL_CATEGORY' => 'CRAWL_CATEGORY',
+        'crawl_category' => 'CRAWL_CATEGORY',
+        'auction_items.crawl_category' => 'CRAWL_CATEGORY',
         'AllowAuto' => 'ALLOW_AUTO',
         'AuctionItems.AllowAuto' => 'ALLOW_AUTO',
         'allowAuto' => 'ALLOW_AUTO',
@@ -206,7 +231,9 @@ class AuctionItemsTableMap extends TableMap
         // columns
         $this->addPrimaryKey('item_def', 'ItemDef', 'VARCHAR', true, 100, null);
         $this->addColumn('item_name', 'ItemName', 'VARCHAR', true, 100, null);
-        $this->addColumn('category', 'Category', 'CHAR', false, null, null);
+        $this->addColumn('quality', 'Quality', 'VARCHAR', true, 20, null);
+        $this->addColumn('categories', 'Categories', 'JSON', true, null, null);
+        $this->addColumn('crawl_category', 'CrawlCategory', 'CHAR', false, null, null);
         $this->addColumn('allow_auto', 'AllowAuto', 'BOOLEAN', true, 1, true);
         $this->addPrimaryKey('server', 'Server', 'CHAR', true, null, 'GLOBAL');
         $this->addColumn('update_date', 'UpdateDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
@@ -288,11 +315,11 @@ class AuctionItemsTableMap extends TableMap
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 4 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -318,7 +345,7 @@ class AuctionItemsTableMap extends TableMap
         ];
         $pks[] = (string) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 4 + $offset
+                ? 6 + $offset
                 : self::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -424,14 +451,18 @@ class AuctionItemsTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_ITEM_DEF);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_ITEM_NAME);
-            $criteria->addSelectColumn(AuctionItemsTableMap::COL_CATEGORY);
+            $criteria->addSelectColumn(AuctionItemsTableMap::COL_QUALITY);
+            $criteria->addSelectColumn(AuctionItemsTableMap::COL_CATEGORIES);
+            $criteria->addSelectColumn(AuctionItemsTableMap::COL_CRAWL_CATEGORY);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_ALLOW_AUTO);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_SERVER);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_UPDATE_DATE);
         } else {
             $criteria->addSelectColumn($alias . '.item_def');
             $criteria->addSelectColumn($alias . '.item_name');
-            $criteria->addSelectColumn($alias . '.category');
+            $criteria->addSelectColumn($alias . '.quality');
+            $criteria->addSelectColumn($alias . '.categories');
+            $criteria->addSelectColumn($alias . '.crawl_category');
             $criteria->addSelectColumn($alias . '.allow_auto');
             $criteria->addSelectColumn($alias . '.server');
             $criteria->addSelectColumn($alias . '.update_date');
@@ -454,14 +485,18 @@ class AuctionItemsTableMap extends TableMap
         if (null === $alias) {
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_ITEM_DEF);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_ITEM_NAME);
-            $criteria->removeSelectColumn(AuctionItemsTableMap::COL_CATEGORY);
+            $criteria->removeSelectColumn(AuctionItemsTableMap::COL_QUALITY);
+            $criteria->removeSelectColumn(AuctionItemsTableMap::COL_CATEGORIES);
+            $criteria->removeSelectColumn(AuctionItemsTableMap::COL_CRAWL_CATEGORY);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_ALLOW_AUTO);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_SERVER);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_UPDATE_DATE);
         } else {
             $criteria->removeSelectColumn($alias . '.item_def');
             $criteria->removeSelectColumn($alias . '.item_name');
-            $criteria->removeSelectColumn($alias . '.category');
+            $criteria->removeSelectColumn($alias . '.quality');
+            $criteria->removeSelectColumn($alias . '.categories');
+            $criteria->removeSelectColumn($alias . '.crawl_category');
             $criteria->removeSelectColumn($alias . '.allow_auto');
             $criteria->removeSelectColumn($alias . '.server');
             $criteria->removeSelectColumn($alias . '.update_date');

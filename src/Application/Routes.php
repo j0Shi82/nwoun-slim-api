@@ -10,6 +10,8 @@ use App\Controller\V1\Devtracker\Topiclist;
 use App\Controller\V1\Neverwinterfeeds;
 use App\Controller\V1\Infohub\Articles;
 use App\Controller\V1\Infohub\Infohub;
+use App\Controller\V1\Auctions\Assignment;
+use App\Controller\V1\Auctions\Data;
 use App\Services\DB;
 use App\Middleware\Cors;
 
@@ -25,7 +27,7 @@ class Routes
     public static function add(\Slim\App $app)
     {
         $app->group('/v1', function (\Slim\Routing\RouteCollectorProxy $v1Group) {
-            Routes::addDevtracker($v1Group);
+            Routes::addRoutes($v1Group);
             Routes::add404CatchAll($v1Group);
         })->add(new Cors());
         
@@ -43,7 +45,7 @@ class Routes
      *
      * @return void
      */
-    private static function addDevtracker(\Slim\Routing\RouteCollectorProxy $v1Group)
+    private static function addRoutes(\Slim\Routing\RouteCollectorProxy $v1Group)
     {
         $v1Group->group('/devtracker', function (\Slim\Routing\RouteCollectorProxy $devtrackerGroup) {
             $devtrackerGroup->get('/list', [Postlist::class, 'get']);
@@ -51,6 +53,12 @@ class Routes
             $devtrackerGroup->get('/devlist', [Devlist::class, 'get']);
             $devtrackerGroup->get('/topiclist', [Topiclist::class, 'get']);
             Routes::add404CatchAll($devtrackerGroup);
+        });
+
+        $v1Group->group('/auctions', function (\Slim\Routing\RouteCollectorProxy $auctionsGroup) {
+            $auctionsGroup->get('/assignment', [Assignment::class, 'get']);
+            $auctionsGroup->post('/data', [Data::class, 'post']);
+            Routes::add404CatchAll($auctionsGroup);
         });
 
         $v1Group->group('/nwfeeds', function (\Slim\Routing\RouteCollectorProxy $nwfeedsGroup) {

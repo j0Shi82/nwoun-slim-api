@@ -12,26 +12,19 @@ use App\Schema\Crawl\Devtracker\DevtrackerQuery;
 class Postlist extends BaseController
 {
     /**
-     * @var \App\Services\DB
-     */
-    private $db;
-
-    /**
      * @var \JBBCode\Parser
      */
     private $jbb_parser;
     
     /**
-     * @param \App\Services\DB $db
      * @param \App\Helpers\RequestHelper $requestHelper
      * @param \JBBCode\Parser $jbb_parser
      *
      * @return void
      */
-    public function __construct(\App\Services\DB $db, \App\Helpers\RequestHelper $requestHelper, \JBBCode\Parser $jbb_parser)
+    public function __construct(\App\Helpers\RequestHelper $requestHelper, \JBBCode\Parser $jbb_parser)
     {
         parent::__construct($requestHelper);
-        $this->db = $db;
         $this->jbb_parser = $jbb_parser;
         $this->jbb_parser->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
     }

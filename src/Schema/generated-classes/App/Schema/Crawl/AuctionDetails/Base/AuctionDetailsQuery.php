@@ -187,6 +187,7 @@ abstract class AuctionDetailsQuery extends ModelCriteria
     protected function findPkSimple($key, ConnectionInterface $con)
     {
         $sql = 'SELECT item_def, server, seller_name, seller_handle, expire_time, price, count, price_per FROM auction_details WHERE item_def = :p0 AND server = :p1 AND seller_name = :p2 AND seller_handle = :p3 AND expire_time = :p4';
+
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_STR);
@@ -645,5 +646,4 @@ abstract class AuctionDetailsQuery extends ModelCriteria
             return $affectedRows;
         });
     }
-
 } // AuctionDetailsQuery

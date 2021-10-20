@@ -11,16 +11,6 @@ use App\Schema\Crawl\Devtracker\DevtrackerQuery;
 
 class Devlist
 {
-    /**
-     * @var \App\Services\DB
-     */
-    private $db;
-
-    public function __construct(\App\Services\DB $db)
-    {
-        $this->db = $db;
-    }
-
     public function get(Request $request, Response $response)
     {
         $devs = DevtrackerQuery::create()
@@ -30,7 +20,7 @@ class Devlist
             ->orderByDevName()
             ->select(array('post_count', 'last_active', 'dev_name', 'dev_id'))
             ->find();
-            
+
         $response->getBody()->write(json_encode($devs->getData()));
         return $response
             ->withHeader('Content-Type', 'application/json')
