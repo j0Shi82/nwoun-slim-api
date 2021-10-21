@@ -3,6 +3,7 @@
 namespace App\Schema\Crawl\AuctionAggregates\Base;
 
 use \Exception;
+use \PDO;
 use App\Schema\Crawl\AuctionAggregates\AuctionAggregates as ChildAuctionAggregates;
 use App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery as ChildAuctionAggregatesQuery;
 use App\Schema\Crawl\AuctionAggregates\Map\AuctionAggregatesTableMap;
@@ -13,7 +14,6 @@ use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
-use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 
 /**
@@ -145,17 +145,95 @@ abstract class AuctionAggregatesQuery extends ModelCriteria
      * Go fast if the query is untouched.
      *
      * <code>
-     * $obj  = $c->findPk(12, $con);
+     * $obj = $c->findPk(array(12, 34, 56), $con);
      * </code>
      *
-     * @param mixed $key Primary key to use for the query
+     * @param array[$item_def, $server, $inserted] $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
      * @return ChildAuctionAggregates|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, ConnectionInterface $con = null)
     {
-        throw new LogicException('The AuctionAggregates object has no primary key');
+        if ($key === null) {
+            return null;
+        }
+
+        if ($con === null) {
+            $con = Propel::getServiceContainer()->getReadConnection(AuctionAggregatesTableMap::DATABASE_NAME);
+        }
+
+        $this->basePreSelect($con);
+
+        if (
+            $this->formatter || $this->modelAlias || $this->with || $this->select
+            || $this->selectColumns || $this->asColumns || $this->selectModifiers
+            || $this->map || $this->having || $this->joins
+        ) {
+            return $this->findPkComplex($key, $con);
+        }
+
+        if ((null !== ($obj = AuctionAggregatesTableMap::getInstanceFromPool(serialize([(null === $key[0] || is_scalar($key[0]) || is_callable([$key[0], '__toString']) ? (string) $key[0] : $key[0]), (null === $key[1] || is_scalar($key[1]) || is_callable([$key[1], '__toString']) ? (string) $key[1] : $key[1]), (null === $key[2] || is_scalar($key[2]) || is_callable([$key[2], '__toString']) ? (string) $key[2] : $key[2])]))))) {
+            // the object is already in the instance pool
+            return $obj;
+        }
+
+        return $this->findPkSimple($key, $con);
+    }
+
+    /**
+     * Find object by primary key using raw SQL to go fast.
+     * Bypass doSelect() and the object formatter by using generated code.
+     *
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
+     *
+     * @throws \Propel\Runtime\Exception\PropelException
+     *
+     * @return ChildAuctionAggregates A model object, or null if the key is not found
+     */
+    protected function findPkSimple($key, ConnectionInterface $con)
+    {
+        $sql = 'SELECT item_def, server, low, mean, median, count, inserted FROM auction_aggregates WHERE item_def = :p0 AND server = :p1 AND inserted = :p2';
+        try {
+            $stmt = $con->prepare($sql);
+            $stmt->bindValue(':p0', $key[0], PDO::PARAM_STR);
+            $stmt->bindValue(':p1', $key[1], PDO::PARAM_STR);
+            $stmt->bindValue(':p2', $key[2] ? $key[2]->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+            $stmt->execute();
+        } catch (Exception $e) {
+            Propel::log($e->getMessage(), Propel::LOG_ERR);
+            throw new PropelException(sprintf('Unable to execute SELECT statement [%s]', $sql), 0, $e);
+        }
+        $obj = null;
+        if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
+            /** @var ChildAuctionAggregates $obj */
+            $obj = new ChildAuctionAggregates();
+            $obj->hydrate($row);
+            AuctionAggregatesTableMap::addInstanceToPool($obj, serialize([(null === $key[0] || is_scalar($key[0]) || is_callable([$key[0], '__toString']) ? (string) $key[0] : $key[0]), (null === $key[1] || is_scalar($key[1]) || is_callable([$key[1], '__toString']) ? (string) $key[1] : $key[1]), (null === $key[2] || is_scalar($key[2]) || is_callable([$key[2], '__toString']) ? (string) $key[2] : $key[2])]));
+        }
+        $stmt->closeCursor();
+
+        return $obj;
+    }
+
+    /**
+     * Find object by primary key.
+     *
+     * @param     mixed $key Primary key to use for the query
+     * @param     ConnectionInterface $con A connection object
+     *
+     * @return ChildAuctionAggregates|array|mixed the result, formatted by the current formatter
+     */
+    protected function findPkComplex($key, ConnectionInterface $con)
+    {
+        // As the query uses a PK condition, no limit(1) is necessary.
+        $criteria = $this->isKeepQuery() ? clone $this : $this;
+        $dataFetcher = $criteria
+            ->filterByPrimaryKey($key)
+            ->doSelect($con);
+
+        return $criteria->getFormatter()->init($criteria)->formatOne($dataFetcher);
     }
 
     /**
@@ -170,7 +248,16 @@ abstract class AuctionAggregatesQuery extends ModelCriteria
      */
     public function findPks($keys, ConnectionInterface $con = null)
     {
-        throw new LogicException('The AuctionAggregates object has no primary key');
+        if (null === $con) {
+            $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
+        }
+        $this->basePreSelect($con);
+        $criteria = $this->isKeepQuery() ? clone $this : $this;
+        $dataFetcher = $criteria
+            ->filterByPrimaryKeys($keys)
+            ->doSelect($con);
+
+        return $criteria->getFormatter()->init($criteria)->format($dataFetcher);
     }
 
     /**
@@ -182,7 +269,11 @@ abstract class AuctionAggregatesQuery extends ModelCriteria
      */
     public function filterByPrimaryKey($key)
     {
-        throw new LogicException('The AuctionAggregates object has no primary key');
+        $this->addUsingAlias(AuctionAggregatesTableMap::COL_ITEM_DEF, $key[0], Criteria::EQUAL);
+        $this->addUsingAlias(AuctionAggregatesTableMap::COL_SERVER, $key[1], Criteria::EQUAL);
+        $this->addUsingAlias(AuctionAggregatesTableMap::COL_INSERTED, $key[2], Criteria::EQUAL);
+
+        return $this;
     }
 
     /**
@@ -194,7 +285,19 @@ abstract class AuctionAggregatesQuery extends ModelCriteria
      */
     public function filterByPrimaryKeys($keys)
     {
-        throw new LogicException('The AuctionAggregates object has no primary key');
+        if (empty($keys)) {
+            return $this->add(null, '1<>1', Criteria::CUSTOM);
+        }
+        foreach ($keys as $key) {
+            $cton0 = $this->getNewCriterion(AuctionAggregatesTableMap::COL_ITEM_DEF, $key[0], Criteria::EQUAL);
+            $cton1 = $this->getNewCriterion(AuctionAggregatesTableMap::COL_SERVER, $key[1], Criteria::EQUAL);
+            $cton0->addAnd($cton1);
+            $cton2 = $this->getNewCriterion(AuctionAggregatesTableMap::COL_INSERTED, $key[2], Criteria::EQUAL);
+            $cton0->addAnd($cton2);
+            $this->addOr($cton0);
+        }
+
+        return $this;
     }
 
     /**
@@ -590,8 +693,10 @@ abstract class AuctionAggregatesQuery extends ModelCriteria
     public function prune($auctionAggregates = null)
     {
         if ($auctionAggregates) {
-            throw new LogicException('AuctionAggregates object has no primary key');
-
+            $this->addCond('pruneCond0', $this->getAliasedColName(AuctionAggregatesTableMap::COL_ITEM_DEF), $auctionAggregates->getItemDef(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond1', $this->getAliasedColName(AuctionAggregatesTableMap::COL_SERVER), $auctionAggregates->getServer(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond2', $this->getAliasedColName(AuctionAggregatesTableMap::COL_INSERTED), $auctionAggregates->getInserted(), Criteria::NOT_EQUAL);
+            $this->combine(array('pruneCond0', 'pruneCond1', 'pruneCond2'), Criteria::LOGICAL_OR);
         }
 
         return $this;

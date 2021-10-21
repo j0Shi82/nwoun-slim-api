@@ -9,7 +9,6 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\DataFetcher\DataFetcherInterface;
-use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
@@ -214,13 +213,13 @@ class AuctionAggregatesTableMap extends TableMap
         $this->setPackage('App.Schema.Crawl.AuctionAggregates');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addForeignKey('item_def', 'ItemDef', 'VARCHAR', 'auction_items', 'item_def', true, 100, null);
-        $this->addForeignKey('server', 'Server', 'CHAR', 'auction_items', 'server', true, null, null);
+        $this->addForeignPrimaryKey('item_def', 'ItemDef', 'VARCHAR' , 'auction_items', 'item_def', true, 100, null);
+        $this->addForeignPrimaryKey('server', 'Server', 'CHAR' , 'auction_items', 'server', true, null, null);
         $this->addColumn('low', 'Low', 'INTEGER', true, 10, null);
         $this->addColumn('mean', 'Mean', 'DOUBLE', true, null, null);
         $this->addColumn('median', 'Median', 'DOUBLE', true, null, null);
         $this->addColumn('count', 'Count', 'INTEGER', true, 10, null);
-        $this->addColumn('inserted', 'Inserted', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
+        $this->addPrimaryKey('inserted', 'Inserted', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
     } // initialize()
 
     /**
@@ -243,6 +242,59 @@ class AuctionAggregatesTableMap extends TableMap
     } // buildRelations()
 
     /**
+     * Adds an object to the instance pool.
+     *
+     * Propel keeps cached copies of objects in an instance pool when they are retrieved
+     * from the database. In some cases you may need to explicitly add objects
+     * to the cache in order to ensure that the same objects are always returned by find*()
+     * and findPk*() calls.
+     *
+     * @param \App\Schema\Crawl\AuctionAggregates\AuctionAggregates $obj A \App\Schema\Crawl\AuctionAggregates\AuctionAggregates object.
+     * @param string $key             (optional) key to use for instance map (for performance boost if key was already calculated externally).
+     */
+    public static function addInstanceToPool($obj, $key = null)
+    {
+        if (Propel::isInstancePoolingEnabled()) {
+            if (null === $key) {
+                $key = serialize([(null === $obj->getItemDef() || is_scalar($obj->getItemDef()) || is_callable([$obj->getItemDef(), '__toString']) ? (string) $obj->getItemDef() : $obj->getItemDef()), (null === $obj->getServer() || is_scalar($obj->getServer()) || is_callable([$obj->getServer(), '__toString']) ? (string) $obj->getServer() : $obj->getServer()), (null === $obj->getInserted() || is_scalar($obj->getInserted()) || is_callable([$obj->getInserted(), '__toString']) ? (string) $obj->getInserted() : $obj->getInserted())]);
+            } // if key === null
+            self::$instances[$key] = $obj;
+        }
+    }
+
+    /**
+     * Removes an object from the instance pool.
+     *
+     * Propel keeps cached copies of objects in an instance pool when they are retrieved
+     * from the database.  In some cases -- especially when you override doDelete
+     * methods in your stub classes -- you may need to explicitly remove objects
+     * from the cache in order to prevent returning objects that no longer exist.
+     *
+     * @param mixed $value A \App\Schema\Crawl\AuctionAggregates\AuctionAggregates object or a primary key value.
+     */
+    public static function removeInstanceFromPool($value)
+    {
+        if (Propel::isInstancePoolingEnabled() && null !== $value) {
+            if (is_object($value) && $value instanceof \App\Schema\Crawl\AuctionAggregates\AuctionAggregates) {
+                $key = serialize([(null === $value->getItemDef() || is_scalar($value->getItemDef()) || is_callable([$value->getItemDef(), '__toString']) ? (string) $value->getItemDef() : $value->getItemDef()), (null === $value->getServer() || is_scalar($value->getServer()) || is_callable([$value->getServer(), '__toString']) ? (string) $value->getServer() : $value->getServer()), (null === $value->getInserted() || is_scalar($value->getInserted()) || is_callable([$value->getInserted(), '__toString']) ? (string) $value->getInserted() : $value->getInserted())]);
+
+            } elseif (is_array($value) && count($value) === 3) {
+                // assume we've been passed a primary key";
+                $key = serialize([(null === $value[0] || is_scalar($value[0]) || is_callable([$value[0], '__toString']) ? (string) $value[0] : $value[0]), (null === $value[1] || is_scalar($value[1]) || is_callable([$value[1], '__toString']) ? (string) $value[1] : $value[1]), (null === $value[2] || is_scalar($value[2]) || is_callable([$value[2], '__toString']) ? (string) $value[2] : $value[2])]);
+            } elseif ($value instanceof Criteria) {
+                self::$instances = [];
+
+                return;
+            } else {
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \App\Schema\Crawl\AuctionAggregates\AuctionAggregates object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
+                throw $e;
+            }
+
+            unset(self::$instances[$key]);
+        }
+    }
+
+    /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
      *
      * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
@@ -257,7 +309,12 @@ class AuctionAggregatesTableMap extends TableMap
      */
     public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return null;
+        // If the PK cannot be derived from the row, return NULL.
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Inserted', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+            return null;
+        }
+
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 1 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Inserted', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Inserted', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Inserted', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Inserted', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Inserted', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -274,7 +331,25 @@ class AuctionAggregatesTableMap extends TableMap
      */
     public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        return '';
+            $pks = [];
+
+        $pks[] = (string) $row[
+            $indexType == TableMap::TYPE_NUM
+                ? 0 + $offset
+                : self::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)
+        ];
+        $pks[] = (string) $row[
+            $indexType == TableMap::TYPE_NUM
+                ? 1 + $offset
+                : self::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)
+        ];
+        $pks[] = (string) $row[
+            $indexType == TableMap::TYPE_NUM
+                ? 6 + $offset
+                : self::translateFieldName('Inserted', TableMap::TYPE_PHPNAME, $indexType)
+        ];
+
+        return $pks;
     }
 
     /**
@@ -457,10 +532,22 @@ class AuctionAggregatesTableMap extends TableMap
             // rename for clarity
             $criteria = $values;
         } elseif ($values instanceof \App\Schema\Crawl\AuctionAggregates\AuctionAggregates) { // it's a model object
-            // create criteria based on pk value
-            $criteria = $values->buildCriteria();
+            // create criteria based on pk values
+            $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            throw new LogicException('The AuctionAggregates object has no primary key');
+            $criteria = new Criteria(AuctionAggregatesTableMap::DATABASE_NAME);
+            // primary key is composite; we therefore, expect
+            // the primary key passed to be an array of pkey values
+            if (count($values) == count($values, COUNT_RECURSIVE)) {
+                // array is not multi-dimensional
+                $values = array($values);
+            }
+            foreach ($values as $value) {
+                $criterion = $criteria->getNewCriterion(AuctionAggregatesTableMap::COL_ITEM_DEF, $value[0]);
+                $criterion->addAnd($criteria->getNewCriterion(AuctionAggregatesTableMap::COL_SERVER, $value[1]));
+                $criterion->addAnd($criteria->getNewCriterion(AuctionAggregatesTableMap::COL_INSERTED, $value[2]));
+                $criteria->addOr($criterion);
+            }
         }
 
         $query = AuctionAggregatesQuery::create()->mergeWith($criteria);

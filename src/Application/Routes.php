@@ -12,6 +12,8 @@ use App\Controller\V1\Infohub\Articles;
 use App\Controller\V1\Infohub\Infohub;
 use App\Controller\V1\Auctions\Assignment;
 use App\Controller\V1\Auctions\Data;
+use App\Controller\V1\Auctions\Items;
+use App\Controller\V1\Auctions\ItemDetails;
 use App\Services\DB;
 use App\Middleware\Cors;
 
@@ -57,6 +59,8 @@ class Routes
 
         $v1Group->group('/auctions', function (\Slim\Routing\RouteCollectorProxy $auctionsGroup) {
             $auctionsGroup->get('/assignment', [Assignment::class, 'get']);
+            $auctionsGroup->get('/items', [Items::class, 'get']);
+            $auctionsGroup->get('/itemdetails', [ItemDetails::class, 'get']);
             $auctionsGroup->post('/data', [Data::class, 'post']);
             Routes::add404CatchAll($auctionsGroup);
         });

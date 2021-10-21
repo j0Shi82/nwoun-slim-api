@@ -48,22 +48,17 @@
     </vendor>
   </table>
   <table name="auction_aggregates" idMethod="native" phpName="AuctionAggregates" namespace="AuctionAggregates">
-    <column name="item_def" phpName="ItemDef" type="VARCHAR" size="100" required="true"/>
-    <column name="server" phpName="Server" type="CHAR" sqlType="enum('GLOBAL','RU')" required="true"/>
+    <column name="item_def" phpName="ItemDef" type="VARCHAR" primaryKey="true" size="100" required="true"/>
+    <column name="server" phpName="Server" type="CHAR" primaryKey="true" sqlType="enum('GLOBAL','RU')" required="true"/>
     <column name="low" phpName="Low" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
     <column name="mean" phpName="Mean" type="DOUBLE" sqlType="double unsigned" required="true"/>
     <column name="median" phpName="Median" type="DOUBLE" sqlType="double unsigned" required="true"/>
     <column name="count" phpName="Count" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
-    <column name="inserted" phpName="Inserted" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
-    <index name="item_def">
+    <column name="inserted" phpName="Inserted" type="TIMESTAMP" primaryKey="true" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <index name="composite_foreign">
       <index-column name="item_def"/>
       <index-column name="server"/>
     </index>
-    <unique name="item_def_2">
-      <unique-column name="item_def"/>
-      <unique-column name="server"/>
-      <unique-column name="inserted"/>
-    </unique>
     <foreign-key foreignTable="auction_items">
       <reference local="item_def" foreign="item_def" />
       <reference local="server" foreign="server" />
