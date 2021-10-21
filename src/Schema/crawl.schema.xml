@@ -64,6 +64,10 @@
       <unique-column name="server"/>
       <unique-column name="inserted"/>
     </unique>
+    <foreign-key foreignTable="auction_items">
+      <reference local="item_def" foreign="item_def" />
+      <reference local="server" foreign="server" />
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
@@ -77,6 +81,10 @@
     <column name="price" phpName="Price" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
     <column name="count" phpName="Count" type="INTEGER" size="10" sqlType="int(10) unsigned" required="true"/>
     <column name="price_per" phpName="PricePer" type="FLOAT" sqlType="float unsigned" required="true"/>
+    <foreign-key foreignTable="auction_items">
+      <reference local="item_def" foreign="item_def" />
+      <reference local="server" foreign="server" />
+    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>

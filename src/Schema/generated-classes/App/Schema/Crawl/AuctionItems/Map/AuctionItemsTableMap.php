@@ -244,6 +244,30 @@ class AuctionItemsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('AuctionAggregates', '\\App\\Schema\\Crawl\\AuctionAggregates\\AuctionAggregates', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':item_def',
+    1 => ':item_def',
+  ),
+  1 =>
+  array (
+    0 => ':server',
+    1 => ':server',
+  ),
+), null, null, 'AuctionAggregatess', false);
+        $this->addRelation('AuctionDetails', '\\App\\Schema\\Crawl\\AuctionDetails\\AuctionDetails', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':item_def',
+    1 => ':item_def',
+  ),
+  1 =>
+  array (
+    0 => ':server',
+    1 => ':server',
+  ),
+), null, null, 'AuctionDetailss', false);
     } // buildRelations()
 
     /**

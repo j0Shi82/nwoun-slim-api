@@ -214,8 +214,8 @@ class AuctionAggregatesTableMap extends TableMap
         $this->setPackage('App.Schema.Crawl.AuctionAggregates');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addColumn('item_def', 'ItemDef', 'VARCHAR', true, 100, null);
-        $this->addColumn('server', 'Server', 'CHAR', true, null, null);
+        $this->addForeignKey('item_def', 'ItemDef', 'VARCHAR', 'auction_items', 'item_def', true, 100, null);
+        $this->addForeignKey('server', 'Server', 'CHAR', 'auction_items', 'server', true, null, null);
         $this->addColumn('low', 'Low', 'INTEGER', true, 10, null);
         $this->addColumn('mean', 'Mean', 'DOUBLE', true, null, null);
         $this->addColumn('median', 'Median', 'DOUBLE', true, null, null);
@@ -228,6 +228,18 @@ class AuctionAggregatesTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('AuctionItems', '\\App\\Schema\\Crawl\\AuctionItems\\AuctionItems', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':item_def',
+    1 => ':item_def',
+  ),
+  1 =>
+  array (
+    0 => ':server',
+    1 => ':server',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

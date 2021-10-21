@@ -229,8 +229,8 @@ class AuctionDetailsTableMap extends TableMap
         $this->setPackage('App.Schema.Crawl.AuctionDetails');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('item_def', 'ItemDef', 'VARCHAR', true, 100, null);
-        $this->addPrimaryKey('server', 'Server', 'CHAR', true, null, null);
+        $this->addForeignPrimaryKey('item_def', 'ItemDef', 'VARCHAR' , 'auction_items', 'item_def', true, 100, null);
+        $this->addForeignPrimaryKey('server', 'Server', 'CHAR' , 'auction_items', 'server', true, null, null);
         $this->addPrimaryKey('seller_name', 'SellerName', 'VARCHAR', true, 50, null);
         $this->addPrimaryKey('seller_handle', 'SellerHandle', 'VARCHAR', true, 50, null);
         $this->addPrimaryKey('expire_time', 'ExpireTime', 'BIGINT', true, null, null);
@@ -244,6 +244,18 @@ class AuctionDetailsTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('AuctionItems', '\\App\\Schema\\Crawl\\AuctionItems\\AuctionItems', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':item_def',
+    1 => ':item_def',
+  ),
+  1 =>
+  array (
+    0 => ':server',
+    1 => ':server',
+  ),
+), null, null, null, false);
     } // buildRelations()
 
     /**

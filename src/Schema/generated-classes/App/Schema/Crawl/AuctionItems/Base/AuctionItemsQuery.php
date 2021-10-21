@@ -4,12 +4,15 @@ namespace App\Schema\Crawl\AuctionItems\Base;
 
 use \Exception;
 use \PDO;
+use App\Schema\Crawl\AuctionAggregates\AuctionAggregates;
+use App\Schema\Crawl\AuctionDetails\AuctionDetails;
 use App\Schema\Crawl\AuctionItems\AuctionItems as ChildAuctionItems;
 use App\Schema\Crawl\AuctionItems\AuctionItemsQuery as ChildAuctionItemsQuery;
 use App\Schema\Crawl\AuctionItems\Map\AuctionItemsTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
@@ -44,6 +47,28 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuctionItemsQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
  * @method     ChildAuctionItemsQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildAuctionItemsQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ *
+ * @method     ChildAuctionItemsQuery leftJoinAuctionAggregates($relationAlias = null) Adds a LEFT JOIN clause to the query using the AuctionAggregates relation
+ * @method     ChildAuctionItemsQuery rightJoinAuctionAggregates($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AuctionAggregates relation
+ * @method     ChildAuctionItemsQuery innerJoinAuctionAggregates($relationAlias = null) Adds a INNER JOIN clause to the query using the AuctionAggregates relation
+ *
+ * @method     ChildAuctionItemsQuery joinWithAuctionAggregates($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the AuctionAggregates relation
+ *
+ * @method     ChildAuctionItemsQuery leftJoinWithAuctionAggregates() Adds a LEFT JOIN clause and with to the query using the AuctionAggregates relation
+ * @method     ChildAuctionItemsQuery rightJoinWithAuctionAggregates() Adds a RIGHT JOIN clause and with to the query using the AuctionAggregates relation
+ * @method     ChildAuctionItemsQuery innerJoinWithAuctionAggregates() Adds a INNER JOIN clause and with to the query using the AuctionAggregates relation
+ *
+ * @method     ChildAuctionItemsQuery leftJoinAuctionDetails($relationAlias = null) Adds a LEFT JOIN clause to the query using the AuctionDetails relation
+ * @method     ChildAuctionItemsQuery rightJoinAuctionDetails($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AuctionDetails relation
+ * @method     ChildAuctionItemsQuery innerJoinAuctionDetails($relationAlias = null) Adds a INNER JOIN clause to the query using the AuctionDetails relation
+ *
+ * @method     ChildAuctionItemsQuery joinWithAuctionDetails($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the AuctionDetails relation
+ *
+ * @method     ChildAuctionItemsQuery leftJoinWithAuctionDetails() Adds a LEFT JOIN clause and with to the query using the AuctionDetails relation
+ * @method     ChildAuctionItemsQuery rightJoinWithAuctionDetails() Adds a RIGHT JOIN clause and with to the query using the AuctionDetails relation
+ * @method     ChildAuctionItemsQuery innerJoinWithAuctionDetails() Adds a INNER JOIN clause and with to the query using the AuctionDetails relation
+ *
+ * @method     \App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery|\App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildAuctionItems|null findOne(ConnectionInterface $con = null) Return the first ChildAuctionItems matching the query
  * @method     ChildAuctionItems findOneOrCreate(ConnectionInterface $con = null) Return the first ChildAuctionItems matching the query, or a new ChildAuctionItems object populated from the query conditions when no match is found
@@ -508,6 +533,254 @@ abstract class AuctionItemsQuery extends ModelCriteria
         return $this->addUsingAlias(AuctionItemsTableMap::COL_UPDATE_DATE, $updateDate, $comparison);
     }
 
+    /**
+     * Filter the query by a related \App\Schema\Crawl\AuctionAggregates\AuctionAggregates object
+     *
+     * @param \App\Schema\Crawl\AuctionAggregates\AuctionAggregates|ObjectCollection $auctionAggregates the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildAuctionItemsQuery The current query, for fluid interface
+     */
+    public function filterByAuctionAggregates($auctionAggregates, $comparison = null)
+    {
+        if ($auctionAggregates instanceof \App\Schema\Crawl\AuctionAggregates\AuctionAggregates) {
+            return $this
+                ->addUsingAlias(AuctionItemsTableMap::COL_ITEM_DEF, $auctionAggregates->getItemDef(), $comparison)
+                ->addUsingAlias(AuctionItemsTableMap::COL_SERVER, $auctionAggregates->getServer(), $comparison);
+        } else {
+            throw new PropelException('filterByAuctionAggregates() only accepts arguments of type \App\Schema\Crawl\AuctionAggregates\AuctionAggregates');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the AuctionAggregates relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildAuctionItemsQuery The current query, for fluid interface
+     */
+    public function joinAuctionAggregates($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('AuctionAggregates');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'AuctionAggregates');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the AuctionAggregates relation AuctionAggregates object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery A secondary query class using the current class as primary query
+     */
+    public function useAuctionAggregatesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinAuctionAggregates($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'AuctionAggregates', '\App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery');
+    }
+
+    /**
+     * Use the AuctionAggregates relation AuctionAggregates object
+     *
+     * @param callable(\App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery):\App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withAuctionAggregatesQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useAuctionAggregatesQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to AuctionAggregates table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery The inner query object of the EXISTS statement
+     */
+    public function useAuctionAggregatesExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('AuctionAggregates', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to AuctionAggregates table for a NOT EXISTS query.
+     *
+     * @see useAuctionAggregatesExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useAuctionAggregatesNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('AuctionAggregates', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \App\Schema\Crawl\AuctionDetails\AuctionDetails object
+     *
+     * @param \App\Schema\Crawl\AuctionDetails\AuctionDetails|ObjectCollection $auctionDetails the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildAuctionItemsQuery The current query, for fluid interface
+     */
+    public function filterByAuctionDetails($auctionDetails, $comparison = null)
+    {
+        if ($auctionDetails instanceof \App\Schema\Crawl\AuctionDetails\AuctionDetails) {
+            return $this
+                ->addUsingAlias(AuctionItemsTableMap::COL_ITEM_DEF, $auctionDetails->getItemDef(), $comparison)
+                ->addUsingAlias(AuctionItemsTableMap::COL_SERVER, $auctionDetails->getServer(), $comparison);
+        } else {
+            throw new PropelException('filterByAuctionDetails() only accepts arguments of type \App\Schema\Crawl\AuctionDetails\AuctionDetails');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the AuctionDetails relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this|ChildAuctionItemsQuery The current query, for fluid interface
+     */
+    public function joinAuctionDetails($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('AuctionDetails');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'AuctionDetails');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the AuctionDetails relation AuctionDetails object
+     *
+     * @see useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery A secondary query class using the current class as primary query
+     */
+    public function useAuctionDetailsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinAuctionDetails($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'AuctionDetails', '\App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery');
+    }
+
+    /**
+     * Use the AuctionDetails relation AuctionDetails object
+     *
+     * @param callable(\App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery):\App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withAuctionDetailsQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useAuctionDetailsQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the relation to AuctionDetails table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery The inner query object of the EXISTS statement
+     */
+    public function useAuctionDetailsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('AuctionDetails', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the relation to AuctionDetails table for a NOT EXISTS query.
+     *
+     * @see useAuctionDetailsExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useAuctionDetailsNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('AuctionDetails', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
     /**
      * Exclude object from result
      *

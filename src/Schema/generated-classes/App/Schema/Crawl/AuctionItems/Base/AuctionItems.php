@@ -5,6 +5,15 @@ namespace App\Schema\Crawl\AuctionItems\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
+use App\Schema\Crawl\AuctionAggregates\AuctionAggregates;
+use App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery;
+use App\Schema\Crawl\AuctionAggregates\Base\AuctionAggregates as BaseAuctionAggregates;
+use App\Schema\Crawl\AuctionAggregates\Map\AuctionAggregatesTableMap;
+use App\Schema\Crawl\AuctionDetails\AuctionDetails;
+use App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery;
+use App\Schema\Crawl\AuctionDetails\Base\AuctionDetails as BaseAuctionDetails;
+use App\Schema\Crawl\AuctionDetails\Map\AuctionDetailsTableMap;
+use App\Schema\Crawl\AuctionItems\AuctionItems as ChildAuctionItems;
 use App\Schema\Crawl\AuctionItems\AuctionItemsQuery as ChildAuctionItemsQuery;
 use App\Schema\Crawl\AuctionItems\Map\AuctionItemsTableMap;
 use Propel\Runtime\Propel;
@@ -12,6 +21,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -121,12 +131,40 @@ abstract class AuctionItems implements ActiveRecordInterface
     protected $update_date;
 
     /**
+     * @var        ObjectCollection|AuctionAggregates[] Collection to store aggregation of AuctionAggregates objects.
+     * @phpstan-var ObjectCollection&\Traversable<AuctionAggregates> Collection to store aggregation of AuctionAggregates objects.
+     */
+    protected $collAuctionAggregatess;
+    protected $collAuctionAggregatessPartial;
+
+    /**
+     * @var        ObjectCollection|AuctionDetails[] Collection to store aggregation of AuctionDetails objects.
+     * @phpstan-var ObjectCollection&\Traversable<AuctionDetails> Collection to store aggregation of AuctionDetails objects.
+     */
+    protected $collAuctionDetailss;
+    protected $collAuctionDetailssPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var boolean
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|AuctionAggregates[]
+     * @phpstan-var ObjectCollection&\Traversable<AuctionAggregates>
+     */
+    protected $auctionAggregatessScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|AuctionDetails[]
+     * @phpstan-var ObjectCollection&\Traversable<AuctionDetails>
+     */
+    protected $auctionDetailssScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -778,6 +816,10 @@ abstract class AuctionItems implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collAuctionAggregatess = null;
+
+            $this->collAuctionDetailss = null;
+
         } // if (deep)
     }
 
@@ -890,6 +932,40 @@ abstract class AuctionItems implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->auctionAggregatessScheduledForDeletion !== null) {
+                if (!$this->auctionAggregatessScheduledForDeletion->isEmpty()) {
+                    \App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery::create()
+                        ->filterByPrimaryKeys($this->auctionAggregatessScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->auctionAggregatessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collAuctionAggregatess !== null) {
+                foreach ($this->collAuctionAggregatess as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->auctionDetailssScheduledForDeletion !== null) {
+                if (!$this->auctionDetailssScheduledForDeletion->isEmpty()) {
+                    \App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery::create()
+                        ->filterByPrimaryKeys($this->auctionDetailssScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->auctionDetailssScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collAuctionDetailss !== null) {
+                foreach ($this->collAuctionDetailss as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -1069,10 +1145,11 @@ abstract class AuctionItems implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
 
         if (isset($alreadyDumpedObjects['AuctionItems'][$this->hashCode()])) {
@@ -1099,6 +1176,38 @@ abstract class AuctionItems implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->collAuctionAggregatess) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'auctionAggregatess';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'auction_aggregatess';
+                        break;
+                    default:
+                        $key = 'AuctionAggregatess';
+                }
+
+                $result[$key] = $this->collAuctionAggregatess->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collAuctionDetailss) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'auctionDetailss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'auction_detailss';
+                        break;
+                    default:
+                        $key = 'AuctionDetailss';
+                }
+
+                $result[$key] = $this->collAuctionDetailss->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -1375,6 +1484,26 @@ abstract class AuctionItems implements ActiveRecordInterface
         $copyObj->setAllowAuto($this->getAllowAuto());
         $copyObj->setServer($this->getServer());
         $copyObj->setUpdateDate($this->getUpdateDate());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getAuctionAggregatess() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addAuctionAggregates($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getAuctionDetailss() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addAuctionDetails($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1400,6 +1529,500 @@ abstract class AuctionItems implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param      string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('AuctionAggregates' === $relationName) {
+            $this->initAuctionAggregatess();
+            return;
+        }
+        if ('AuctionDetails' === $relationName) {
+            $this->initAuctionDetailss();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collAuctionAggregatess collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addAuctionAggregatess()
+     */
+    public function clearAuctionAggregatess()
+    {
+        $this->collAuctionAggregatess = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collAuctionAggregatess collection loaded partially.
+     */
+    public function resetPartialAuctionAggregatess($v = true)
+    {
+        $this->collAuctionAggregatessPartial = $v;
+    }
+
+    /**
+     * Initializes the collAuctionAggregatess collection.
+     *
+     * By default this just sets the collAuctionAggregatess collection to an empty array (like clearcollAuctionAggregatess());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initAuctionAggregatess($overrideExisting = true)
+    {
+        if (null !== $this->collAuctionAggregatess && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = AuctionAggregatesTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collAuctionAggregatess = new $collectionClassName;
+        $this->collAuctionAggregatess->setModel('\App\Schema\Crawl\AuctionAggregates\AuctionAggregates');
+    }
+
+    /**
+     * Gets an array of AuctionAggregates objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildAuctionItems is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|AuctionAggregates[] List of AuctionAggregates objects
+     * @phpstan-return ObjectCollection&\Traversable<AuctionAggregates> List of AuctionAggregates objects
+     * @throws PropelException
+     */
+    public function getAuctionAggregatess(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collAuctionAggregatessPartial && !$this->isNew();
+        if (null === $this->collAuctionAggregatess || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collAuctionAggregatess) {
+                    $this->initAuctionAggregatess();
+                } else {
+                    $collectionClassName = AuctionAggregatesTableMap::getTableMap()->getCollectionClassName();
+
+                    $collAuctionAggregatess = new $collectionClassName;
+                    $collAuctionAggregatess->setModel('\App\Schema\Crawl\AuctionAggregates\AuctionAggregates');
+
+                    return $collAuctionAggregatess;
+                }
+            } else {
+                $collAuctionAggregatess = AuctionAggregatesQuery::create(null, $criteria)
+                    ->filterByAuctionItems($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collAuctionAggregatessPartial && count($collAuctionAggregatess)) {
+                        $this->initAuctionAggregatess(false);
+
+                        foreach ($collAuctionAggregatess as $obj) {
+                            if (false == $this->collAuctionAggregatess->contains($obj)) {
+                                $this->collAuctionAggregatess->append($obj);
+                            }
+                        }
+
+                        $this->collAuctionAggregatessPartial = true;
+                    }
+
+                    return $collAuctionAggregatess;
+                }
+
+                if ($partial && $this->collAuctionAggregatess) {
+                    foreach ($this->collAuctionAggregatess as $obj) {
+                        if ($obj->isNew()) {
+                            $collAuctionAggregatess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collAuctionAggregatess = $collAuctionAggregatess;
+                $this->collAuctionAggregatessPartial = false;
+            }
+        }
+
+        return $this->collAuctionAggregatess;
+    }
+
+    /**
+     * Sets a collection of AuctionAggregates objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $auctionAggregatess A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildAuctionItems The current object (for fluent API support)
+     */
+    public function setAuctionAggregatess(Collection $auctionAggregatess, ConnectionInterface $con = null)
+    {
+        /** @var AuctionAggregates[] $auctionAggregatessToDelete */
+        $auctionAggregatessToDelete = $this->getAuctionAggregatess(new Criteria(), $con)->diff($auctionAggregatess);
+
+
+        $this->auctionAggregatessScheduledForDeletion = $auctionAggregatessToDelete;
+
+        foreach ($auctionAggregatessToDelete as $auctionAggregatesRemoved) {
+            $auctionAggregatesRemoved->setAuctionItems(null);
+        }
+
+        $this->collAuctionAggregatess = null;
+        foreach ($auctionAggregatess as $auctionAggregates) {
+            $this->addAuctionAggregates($auctionAggregates);
+        }
+
+        $this->collAuctionAggregatess = $auctionAggregatess;
+        $this->collAuctionAggregatessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related BaseAuctionAggregates objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related BaseAuctionAggregates objects.
+     * @throws PropelException
+     */
+    public function countAuctionAggregatess(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collAuctionAggregatessPartial && !$this->isNew();
+        if (null === $this->collAuctionAggregatess || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAuctionAggregatess) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getAuctionAggregatess());
+            }
+
+            $query = AuctionAggregatesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByAuctionItems($this)
+                ->count($con);
+        }
+
+        return count($this->collAuctionAggregatess);
+    }
+
+    /**
+     * Method called to associate a AuctionAggregates object to this object
+     * through the AuctionAggregates foreign key attribute.
+     *
+     * @param  AuctionAggregates $l AuctionAggregates
+     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     */
+    public function addAuctionAggregates(AuctionAggregates $l)
+    {
+        if ($this->collAuctionAggregatess === null) {
+            $this->initAuctionAggregatess();
+            $this->collAuctionAggregatessPartial = true;
+        }
+
+        if (!$this->collAuctionAggregatess->contains($l)) {
+            $this->doAddAuctionAggregates($l);
+
+            if ($this->auctionAggregatessScheduledForDeletion and $this->auctionAggregatessScheduledForDeletion->contains($l)) {
+                $this->auctionAggregatessScheduledForDeletion->remove($this->auctionAggregatessScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AuctionAggregates $auctionAggregates The AuctionAggregates object to add.
+     */
+    protected function doAddAuctionAggregates(AuctionAggregates $auctionAggregates)
+    {
+        $this->collAuctionAggregatess[]= $auctionAggregates;
+        $auctionAggregates->setAuctionItems($this);
+    }
+
+    /**
+     * @param  AuctionAggregates $auctionAggregates The AuctionAggregates object to remove.
+     * @return $this|ChildAuctionItems The current object (for fluent API support)
+     */
+    public function removeAuctionAggregates(AuctionAggregates $auctionAggregates)
+    {
+        if ($this->getAuctionAggregatess()->contains($auctionAggregates)) {
+            $pos = $this->collAuctionAggregatess->search($auctionAggregates);
+            $this->collAuctionAggregatess->remove($pos);
+            if (null === $this->auctionAggregatessScheduledForDeletion) {
+                $this->auctionAggregatessScheduledForDeletion = clone $this->collAuctionAggregatess;
+                $this->auctionAggregatessScheduledForDeletion->clear();
+            }
+            $this->auctionAggregatessScheduledForDeletion[]= clone $auctionAggregates;
+            $auctionAggregates->setAuctionItems(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collAuctionDetailss collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addAuctionDetailss()
+     */
+    public function clearAuctionDetailss()
+    {
+        $this->collAuctionDetailss = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Reset is the collAuctionDetailss collection loaded partially.
+     */
+    public function resetPartialAuctionDetailss($v = true)
+    {
+        $this->collAuctionDetailssPartial = $v;
+    }
+
+    /**
+     * Initializes the collAuctionDetailss collection.
+     *
+     * By default this just sets the collAuctionDetailss collection to an empty array (like clearcollAuctionDetailss());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param      boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initAuctionDetailss($overrideExisting = true)
+    {
+        if (null !== $this->collAuctionDetailss && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = AuctionDetailsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collAuctionDetailss = new $collectionClassName;
+        $this->collAuctionDetailss->setModel('\App\Schema\Crawl\AuctionDetails\AuctionDetails');
+    }
+
+    /**
+     * Gets an array of AuctionDetails objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildAuctionItems is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      ConnectionInterface $con optional connection object
+     * @return ObjectCollection|AuctionDetails[] List of AuctionDetails objects
+     * @phpstan-return ObjectCollection&\Traversable<AuctionDetails> List of AuctionDetails objects
+     * @throws PropelException
+     */
+    public function getAuctionDetailss(Criteria $criteria = null, ConnectionInterface $con = null)
+    {
+        $partial = $this->collAuctionDetailssPartial && !$this->isNew();
+        if (null === $this->collAuctionDetailss || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collAuctionDetailss) {
+                    $this->initAuctionDetailss();
+                } else {
+                    $collectionClassName = AuctionDetailsTableMap::getTableMap()->getCollectionClassName();
+
+                    $collAuctionDetailss = new $collectionClassName;
+                    $collAuctionDetailss->setModel('\App\Schema\Crawl\AuctionDetails\AuctionDetails');
+
+                    return $collAuctionDetailss;
+                }
+            } else {
+                $collAuctionDetailss = AuctionDetailsQuery::create(null, $criteria)
+                    ->filterByAuctionItems($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collAuctionDetailssPartial && count($collAuctionDetailss)) {
+                        $this->initAuctionDetailss(false);
+
+                        foreach ($collAuctionDetailss as $obj) {
+                            if (false == $this->collAuctionDetailss->contains($obj)) {
+                                $this->collAuctionDetailss->append($obj);
+                            }
+                        }
+
+                        $this->collAuctionDetailssPartial = true;
+                    }
+
+                    return $collAuctionDetailss;
+                }
+
+                if ($partial && $this->collAuctionDetailss) {
+                    foreach ($this->collAuctionDetailss as $obj) {
+                        if ($obj->isNew()) {
+                            $collAuctionDetailss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collAuctionDetailss = $collAuctionDetailss;
+                $this->collAuctionDetailssPartial = false;
+            }
+        }
+
+        return $this->collAuctionDetailss;
+    }
+
+    /**
+     * Sets a collection of AuctionDetails objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param      Collection $auctionDetailss A Propel collection.
+     * @param      ConnectionInterface $con Optional connection object
+     * @return $this|ChildAuctionItems The current object (for fluent API support)
+     */
+    public function setAuctionDetailss(Collection $auctionDetailss, ConnectionInterface $con = null)
+    {
+        /** @var AuctionDetails[] $auctionDetailssToDelete */
+        $auctionDetailssToDelete = $this->getAuctionDetailss(new Criteria(), $con)->diff($auctionDetailss);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->auctionDetailssScheduledForDeletion = clone $auctionDetailssToDelete;
+
+        foreach ($auctionDetailssToDelete as $auctionDetailsRemoved) {
+            $auctionDetailsRemoved->setAuctionItems(null);
+        }
+
+        $this->collAuctionDetailss = null;
+        foreach ($auctionDetailss as $auctionDetails) {
+            $this->addAuctionDetails($auctionDetails);
+        }
+
+        $this->collAuctionDetailss = $auctionDetailss;
+        $this->collAuctionDetailssPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related BaseAuctionDetails objects.
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct
+     * @param      ConnectionInterface $con
+     * @return int             Count of related BaseAuctionDetails objects.
+     * @throws PropelException
+     */
+    public function countAuctionDetailss(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    {
+        $partial = $this->collAuctionDetailssPartial && !$this->isNew();
+        if (null === $this->collAuctionDetailss || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collAuctionDetailss) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getAuctionDetailss());
+            }
+
+            $query = AuctionDetailsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByAuctionItems($this)
+                ->count($con);
+        }
+
+        return count($this->collAuctionDetailss);
+    }
+
+    /**
+     * Method called to associate a AuctionDetails object to this object
+     * through the AuctionDetails foreign key attribute.
+     *
+     * @param  AuctionDetails $l AuctionDetails
+     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     */
+    public function addAuctionDetails(AuctionDetails $l)
+    {
+        if ($this->collAuctionDetailss === null) {
+            $this->initAuctionDetailss();
+            $this->collAuctionDetailssPartial = true;
+        }
+
+        if (!$this->collAuctionDetailss->contains($l)) {
+            $this->doAddAuctionDetails($l);
+
+            if ($this->auctionDetailssScheduledForDeletion and $this->auctionDetailssScheduledForDeletion->contains($l)) {
+                $this->auctionDetailssScheduledForDeletion->remove($this->auctionDetailssScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param AuctionDetails $auctionDetails The AuctionDetails object to add.
+     */
+    protected function doAddAuctionDetails(AuctionDetails $auctionDetails)
+    {
+        $this->collAuctionDetailss[]= $auctionDetails;
+        $auctionDetails->setAuctionItems($this);
+    }
+
+    /**
+     * @param  AuctionDetails $auctionDetails The AuctionDetails object to remove.
+     * @return $this|ChildAuctionItems The current object (for fluent API support)
+     */
+    public function removeAuctionDetails(AuctionDetails $auctionDetails)
+    {
+        if ($this->getAuctionDetailss()->contains($auctionDetails)) {
+            $pos = $this->collAuctionDetailss->search($auctionDetails);
+            $this->collAuctionDetailss->remove($pos);
+            if (null === $this->auctionDetailssScheduledForDeletion) {
+                $this->auctionDetailssScheduledForDeletion = clone $this->collAuctionDetailss;
+                $this->auctionDetailssScheduledForDeletion->clear();
+            }
+            $this->auctionDetailssScheduledForDeletion[]= clone $auctionDetails;
+            $auctionDetails->setAuctionItems(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1436,8 +2059,20 @@ abstract class AuctionItems implements ActiveRecordInterface
     public function clearAllReferences($deep = false)
     {
         if ($deep) {
+            if ($this->collAuctionAggregatess) {
+                foreach ($this->collAuctionAggregatess as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collAuctionDetailss) {
+                foreach ($this->collAuctionDetailss as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collAuctionAggregatess = null;
+        $this->collAuctionDetailss = null;
     }
 
     /**

@@ -70,6 +70,7 @@ CREATE TABLE `auction_aggregates`
     `median` double unsigned NOT NULL,
     `count` int(10) unsigned NOT NULL,
     `inserted` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE INDEX `item_def_2` (`item_def`, `server`, `inserted`),
     INDEX `item_def` (`item_def`, `server`)
 ) ENGINE=MyISAM;
 
@@ -102,7 +103,9 @@ CREATE TABLE `auction_items`
 (
     `item_def` VARCHAR(100) NOT NULL,
     `item_name` VARCHAR(100) NOT NULL,
-    `category` enum('Miscellaneous','Bags','Companions','Consumables','Equipment','Fashion','Mounts','Professions','Refinement','Stronghold'),
+    `quality` VARCHAR(20) NOT NULL,
+    `categories` JSON NOT NULL,
+    `crawl_category` enum('Miscellaneous','Bags','Companions','Consumables','Equipment','Fashion','Mounts','Professions','Refinement','Stronghold'),
     `allow_auto` TINYINT(1) DEFAULT 1 NOT NULL,
     `server` enum('GLOBAL','RU') DEFAULT 'GLOBAL' NOT NULL,
     `update_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
