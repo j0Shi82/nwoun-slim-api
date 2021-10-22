@@ -37,7 +37,11 @@ class ItemDetails extends BaseController
         $result = AuctionAggregatesQuery::create()
             ->filterByItemDef($data_ary['item_def'])
             ->filterByServer($data_ary['server'])
-            ->orderByInserted()
+            ->withColumn("DATE_FORMAT(inserted, '%Y-%m-%d')", 'InsertedDate')
+            ->withColumn("ROUND(AVG(Low))", 'AvgLow')
+            ->withColumn("ROUND(AVG(Count))", 'AvgCount')
+            ->orderBy('InsertedDate', 'asc')
+            ->groupBy('InsertedDate')
             ->find();
 
         $response->getBody()->write(json_encode($result->toArray()));
