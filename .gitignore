@@ -2,5 +2,6 @@ vendor
 cache/*
 .env
 .env.prod
+src/Schema/generated-conf/*
 dev/php.ini
 !cache/.gitkeep
