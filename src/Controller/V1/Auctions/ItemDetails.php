@@ -38,6 +38,7 @@ class ItemDetails extends BaseController
             ->filterByItemDef($data_ary['item_def'])
             ->filterByServer($data_ary['server'])
             ->withColumn("DATE_FORMAT(inserted, '%Y-%m-%d')", 'InsertedDate')
+            ->withColumn('UNIX_TIMESTAMP(inserted)', 'InsertedTimestamp')
             ->withColumn("ROUND(AVG(Low))", 'AvgLow')
             ->withColumn("ROUND(AVG(Count))", 'AvgCount')
             ->orderBy('InsertedDate', 'asc')

@@ -28,11 +28,13 @@ class Data extends BaseController
         $parseBody = $request->getParsedBody();
 
         if ($parseBody['Count'] === -1) {
+            // item can't be crawled automatically
             $auctionItem = AuctionItemsQuery::create()->findPk(array($parseBody['ItemDef'], $parseBody['Server']));
             $auctionItem->setUpdateDate(new \DateTime("now", new \DateTimeZone("UTC")));
             $auctionItem->setAllowAuto(false);
             $auctionItem->save();
         } else {
+            // limit aggregates to four per day
             $lastAuctionAggregate = AuctionAggregatesQuery::create()
                 ->filterByItemDef($parseBody['ItemDef'])
                 ->filterByServer($parseBody['Server'])
@@ -40,7 +42,7 @@ class Data extends BaseController
                 ->findOne();
 
             $now = new \DateTime("now", new \DateTimeZone("UTC"));
-            $now->sub(new \DateInterval("PT1H"));
+            $now->sub(new \DateInterval("PT6H"));
 
             if ($lastAuctionAggregate === null || $lastAuctionAggregate->getInserted() < $now) {
                 $newAuctionAggregate = new AuctionAggregates();
@@ -54,32 +56,32 @@ class Data extends BaseController
                 $newAuctionAggregate->save();
             }
 
-            array_walk($parseBody['Items'], function ($item, $i, $server) {
-                if ($item['Price']) {
-                    $auctionDetail = AuctionDetailsQuery::create()->findPk(
-                        array(
-                            $item['InternalName'],
-                            $server,
-                            explode("@", $item['Seller'])[0],
-                            explode("@", $item['Seller'])[1],
-                            $item['ExpireTime']
-                        )
-                    );
+            // use custom sql to bulk insert new auctions
+            // much faster than using propel objects and queries
+            $con = \Propel\Runtime\Propel::getWriteConnection('crawl');
+            $auctionInserts = [];
 
-                    if ($auctionDetail === null) {
-                        $newAuctionDetail = new AuctionDetails();
-                        $newAuctionDetail->setItemDef($item['InternalName']);
-                        $newAuctionDetail->setServer($server);
-                        $newAuctionDetail->setSellerName(explode("@", $item['Seller'])[0]);
-                        $newAuctionDetail->setSellerHandle(explode("@", $item['Seller'])[1]);
-                        $newAuctionDetail->setExpireTime($item['ExpireTime']);
-                        $newAuctionDetail->setPrice($item['Price']);
-                        $newAuctionDetail->setCount($item['Count']);
-                        $newAuctionDetail->setPricePer($item['Price'] / $item['Count']);
-                        $newAuctionDetail->save();
-                    }
+            foreach ($parseBody['Items'] as $item) {
+                if ($item['Price']) {
+                    $auctionInserts[] = "
+                        (
+                            \"" . $item['InternalName'] . "\",
+                            \"" . $parseBody['Server'] . "\",
+                            \"" . explode("@", $item['Seller'])[0] . "\",
+                            \"" . explode("@", $item['Seller'])[1] . "\",
+                            " . $item['ExpireTime'] . ",
+                            " . $item['Price'] . ",
+                            " . $item['ExpireTime'] . ",
+                            " . ($item['Price'] / $item['Count']) . "
+                        )
+                    ";
                 }
-            }, $parseBody['Server']);
+            };
+
+            if (count($auctionInserts)) {
+                $stmt = $con->prepare("INSERT IGNORE INTO auction_details (item_def, server, seller_name, seller_handle, expire_time, price, count, price_per) VALUES " . implode(",", $auctionInserts));
+                $stmt->execute();
+            }
 
             $auctionItem = AuctionItemsQuery::create()->findPk(array($parseBody['ItemDef'], $parseBody['Server']));
             $auctionItem->setUpdateDate(new \DateTime("now", new \DateTimeZone("UTC")));

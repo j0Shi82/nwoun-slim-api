@@ -20,7 +20,7 @@ class Items extends BaseController
             ->withColumn('AuctionAggregates.Mean', 'Mean')
             ->withColumn('UNIX_TIMESTAMP(AuctionAggregates.Inserted)', 'Inserted')
             ->where("AuctionAggregates.Inserted = (SELECT MAX(inserted) FROM auction_aggregates WHERE server = auction_items.server AND item_def = auction_items.item_def)")
-            ->orderBy('AuctionAggregates.Inserted', 'desc')
+            ->orderBy('AuctionItems.ItemName', 'asc')
             ->find();
 
         $response->getBody()->write(json_encode($result->toArray()));
