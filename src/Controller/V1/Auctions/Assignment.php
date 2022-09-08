@@ -13,9 +13,21 @@ class Assignment extends BaseController
 {
     public function get(Request $request, Response $response)
     {
-        $result = AuctionItemsQuery::create()->filterByServer('GLOBAL')->filterByAllowAuto(true)->orderByUpdateDate('asc')->findOne();
+        $result = AuctionItemsQuery::create()
+            ->filterByServer('GLOBAL')
+            ->filterByAllowAuto(true)
+            ->filterByLockedDate(array('max' => new \DateTime("now", new \DateTimeZone("UTC"))))
+            ->orderByUpdateDate('asc')
+            ->findOne();
 
-        $response->getBody()->write(json_encode($result->toArray()));
+        $result->setLockedDate(date_add(new \DateTime("now", new \DateTimeZone("UTC")), new \DateInterval("PT1M")));
+        $result->save();
+
+        $result = $result->toArray();
+        $result['ItemName'] = $result['SearchTerm'];
+                  
+        $response->getBody()->write(
+            str_replace("\/", "/", json_encode($result)));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');

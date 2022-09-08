@@ -12,7 +12,7 @@ use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveQuery\ModelJoin;
-use Propel\Runtime\Collection\ObjectCollection;
+use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
@@ -59,8 +59,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     \App\Schema\Crawl\AuctionItems\AuctionItemsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildAuctionDetails|null findOne(ConnectionInterface $con = null) Return the first ChildAuctionDetails matching the query
- * @method     ChildAuctionDetails findOneOrCreate(ConnectionInterface $con = null) Return the first ChildAuctionDetails matching the query, or a new ChildAuctionDetails object populated from the query conditions when no match is found
+ * @method     ChildAuctionDetails|null findOne(?ConnectionInterface $con = null) Return the first ChildAuctionDetails matching the query
+ * @method     ChildAuctionDetails findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildAuctionDetails matching the query, or a new ChildAuctionDetails object populated from the query conditions when no match is found
  *
  * @method     ChildAuctionDetails|null findOneByItemDef(string $item_def) Return the first ChildAuctionDetails filtered by the item_def column
  * @method     ChildAuctionDetails|null findOneByServer(string $server) Return the first ChildAuctionDetails filtered by the server column
@@ -71,8 +71,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuctionDetails|null findOneByCount(int $count) Return the first ChildAuctionDetails filtered by the count column
  * @method     ChildAuctionDetails|null findOneByPricePer(double $price_per) Return the first ChildAuctionDetails filtered by the price_per column *
 
- * @method     ChildAuctionDetails requirePk($key, ConnectionInterface $con = null) Return the ChildAuctionDetails by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildAuctionDetails requireOne(ConnectionInterface $con = null) Return the first ChildAuctionDetails matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAuctionDetails requirePk($key, ?ConnectionInterface $con = null) Return the ChildAuctionDetails by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildAuctionDetails requireOne(?ConnectionInterface $con = null) Return the first ChildAuctionDetails matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildAuctionDetails requireOneByItemDef(string $item_def) Return the first ChildAuctionDetails filtered by the item_def column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuctionDetails requireOneByServer(string $server) Return the first ChildAuctionDetails filtered by the server column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -83,26 +83,26 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuctionDetails requireOneByCount(int $count) Return the first ChildAuctionDetails filtered by the count column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuctionDetails requireOneByPricePer(double $price_per) Return the first ChildAuctionDetails filtered by the price_per column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildAuctionDetails[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildAuctionDetails objects based on current ModelCriteria
- * @psalm-method ObjectCollection&\Traversable<ChildAuctionDetails> find(ConnectionInterface $con = null) Return ChildAuctionDetails objects based on current ModelCriteria
- * @method     ChildAuctionDetails[]|ObjectCollection findByItemDef(string $item_def) Return ChildAuctionDetails objects filtered by the item_def column
- * @psalm-method ObjectCollection&\Traversable<ChildAuctionDetails> findByItemDef(string $item_def) Return ChildAuctionDetails objects filtered by the item_def column
- * @method     ChildAuctionDetails[]|ObjectCollection findByServer(string $server) Return ChildAuctionDetails objects filtered by the server column
- * @psalm-method ObjectCollection&\Traversable<ChildAuctionDetails> findByServer(string $server) Return ChildAuctionDetails objects filtered by the server column
- * @method     ChildAuctionDetails[]|ObjectCollection findBySellerName(string $seller_name) Return ChildAuctionDetails objects filtered by the seller_name column
- * @psalm-method ObjectCollection&\Traversable<ChildAuctionDetails> findBySellerName(string $seller_name) Return ChildAuctionDetails objects filtered by the seller_name column
- * @method     ChildAuctionDetails[]|ObjectCollection findBySellerHandle(string $seller_handle) Return ChildAuctionDetails objects filtered by the seller_handle column
- * @psalm-method ObjectCollection&\Traversable<ChildAuctionDetails> findBySellerHandle(string $seller_handle) Return ChildAuctionDetails objects filtered by the seller_handle column
- * @method     ChildAuctionDetails[]|ObjectCollection findByExpireTime(string $expire_time) Return ChildAuctionDetails objects filtered by the expire_time column
- * @psalm-method ObjectCollection&\Traversable<ChildAuctionDetails> findByExpireTime(string $expire_time) Return ChildAuctionDetails objects filtered by the expire_time column
- * @method     ChildAuctionDetails[]|ObjectCollection findByPrice(int $price) Return ChildAuctionDetails objects filtered by the price column
- * @psalm-method ObjectCollection&\Traversable<ChildAuctionDetails> findByPrice(int $price) Return ChildAuctionDetails objects filtered by the price column
- * @method     ChildAuctionDetails[]|ObjectCollection findByCount(int $count) Return ChildAuctionDetails objects filtered by the count column
- * @psalm-method ObjectCollection&\Traversable<ChildAuctionDetails> findByCount(int $count) Return ChildAuctionDetails objects filtered by the count column
- * @method     ChildAuctionDetails[]|ObjectCollection findByPricePer(double $price_per) Return ChildAuctionDetails objects filtered by the price_per column
- * @psalm-method ObjectCollection&\Traversable<ChildAuctionDetails> findByPricePer(double $price_per) Return ChildAuctionDetails objects filtered by the price_per column
- * @method     ChildAuctionDetails[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildAuctionDetails> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildAuctionDetails[]|Collection find(?ConnectionInterface $con = null) Return ChildAuctionDetails objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> find(?ConnectionInterface $con = null) Return ChildAuctionDetails objects based on current ModelCriteria
+ * @method     ChildAuctionDetails[]|Collection findByItemDef(string $item_def) Return ChildAuctionDetails objects filtered by the item_def column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByItemDef(string $item_def) Return ChildAuctionDetails objects filtered by the item_def column
+ * @method     ChildAuctionDetails[]|Collection findByServer(string $server) Return ChildAuctionDetails objects filtered by the server column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByServer(string $server) Return ChildAuctionDetails objects filtered by the server column
+ * @method     ChildAuctionDetails[]|Collection findBySellerName(string $seller_name) Return ChildAuctionDetails objects filtered by the seller_name column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findBySellerName(string $seller_name) Return ChildAuctionDetails objects filtered by the seller_name column
+ * @method     ChildAuctionDetails[]|Collection findBySellerHandle(string $seller_handle) Return ChildAuctionDetails objects filtered by the seller_handle column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findBySellerHandle(string $seller_handle) Return ChildAuctionDetails objects filtered by the seller_handle column
+ * @method     ChildAuctionDetails[]|Collection findByExpireTime(string $expire_time) Return ChildAuctionDetails objects filtered by the expire_time column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByExpireTime(string $expire_time) Return ChildAuctionDetails objects filtered by the expire_time column
+ * @method     ChildAuctionDetails[]|Collection findByPrice(int $price) Return ChildAuctionDetails objects filtered by the price column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByPrice(int $price) Return ChildAuctionDetails objects filtered by the price column
+ * @method     ChildAuctionDetails[]|Collection findByCount(int $count) Return ChildAuctionDetails objects filtered by the count column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByCount(int $count) Return ChildAuctionDetails objects filtered by the count column
+ * @method     ChildAuctionDetails[]|Collection findByPricePer(double $price_per) Return ChildAuctionDetails objects filtered by the price_per column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByPricePer(double $price_per) Return ChildAuctionDetails objects filtered by the price_per column
+ * @method     ChildAuctionDetails[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildAuctionDetails> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class AuctionDetailsQuery extends ModelCriteria
@@ -112,9 +112,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
     /**
      * Initializes internal state of \App\Schema\Crawl\AuctionDetails\Base\AuctionDetailsQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName The database name
+     * @param string $modelName The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
     public function __construct($dbName = 'crawl', $modelName = '\\App\\Schema\\Crawl\\AuctionDetails\\AuctionDetails', $modelAlias = null)
     {
@@ -124,12 +124,12 @@ abstract class AuctionDetailsQuery extends ModelCriteria
     /**
      * Returns a new ChildAuctionDetailsQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string $modelAlias The alias of a model in the query
+     * @param Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildAuctionDetailsQuery
      */
-    public static function create($modelAlias = null, Criteria $criteria = null)
+    public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
         if ($criteria instanceof ChildAuctionDetailsQuery) {
             return $criteria;
@@ -159,7 +159,7 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      *
      * @return ChildAuctionDetails|array|mixed the result, formatted by the current formatter
      */
-    public function findPk($key, ConnectionInterface $con = null)
+    public function findPk($key, ?ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
@@ -191,8 +191,8 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
@@ -228,8 +228,8 @@ abstract class AuctionDetailsQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildAuctionDetails|array|mixed the result, formatted by the current formatter
      */
@@ -249,12 +249,12 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(array(12, 56), array(832, 123), array(123, 456)), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array $keys Primary keys to use for the query
+     * @param ConnectionInterface $con an optional connection object
      *
-     * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
+     * @return Collection|array|mixed the list of results, formatted by the current formatter
      */
-    public function findPks($keys, ConnectionInterface $con = null)
+    public function findPks($keys, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
@@ -271,9 +271,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
@@ -289,14 +289,16 @@ abstract class AuctionDetailsQuery extends ModelCriteria
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array|int $keys The list of primary key to use for the query
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
         if (empty($keys)) {
-            return $this->add(null, '1<>1', Criteria::CUSTOM);
+            $this->add(null, '1<>1', Criteria::CUSTOM);
+
+            return $this;
         }
         foreach ($keys as $key) {
             $cton0 = $this->getNewCriterion(AuctionDetailsTableMap::COL_ITEM_DEF, $key[0], Criteria::EQUAL);
@@ -321,14 +323,15 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * <code>
      * $query->filterByItemDef('fooValue');   // WHERE item_def = 'fooValue'
      * $query->filterByItemDef('%fooValue%', Criteria::LIKE); // WHERE item_def LIKE '%fooValue%'
+     * $query->filterByItemDef(['foo', 'bar']); // WHERE item_def IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $itemDef The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $itemDef The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByItemDef($itemDef = null, $comparison = null)
+    public function filterByItemDef($itemDef = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($itemDef)) {
@@ -336,7 +339,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(AuctionDetailsTableMap::COL_ITEM_DEF, $itemDef, $comparison);
+        $this->addUsingAlias(AuctionDetailsTableMap::COL_ITEM_DEF, $itemDef, $comparison);
+
+        return $this;
     }
 
     /**
@@ -346,14 +351,15 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * <code>
      * $query->filterByServer('fooValue');   // WHERE server = 'fooValue'
      * $query->filterByServer('%fooValue%', Criteria::LIKE); // WHERE server LIKE '%fooValue%'
+     * $query->filterByServer(['foo', 'bar']); // WHERE server IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $server The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $server The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByServer($server = null, $comparison = null)
+    public function filterByServer($server = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($server)) {
@@ -361,7 +367,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(AuctionDetailsTableMap::COL_SERVER, $server, $comparison);
+        $this->addUsingAlias(AuctionDetailsTableMap::COL_SERVER, $server, $comparison);
+
+        return $this;
     }
 
     /**
@@ -371,14 +379,15 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * <code>
      * $query->filterBySellerName('fooValue');   // WHERE seller_name = 'fooValue'
      * $query->filterBySellerName('%fooValue%', Criteria::LIKE); // WHERE seller_name LIKE '%fooValue%'
+     * $query->filterBySellerName(['foo', 'bar']); // WHERE seller_name IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $sellerName The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $sellerName The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterBySellerName($sellerName = null, $comparison = null)
+    public function filterBySellerName($sellerName = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($sellerName)) {
@@ -386,7 +395,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(AuctionDetailsTableMap::COL_SELLER_NAME, $sellerName, $comparison);
+        $this->addUsingAlias(AuctionDetailsTableMap::COL_SELLER_NAME, $sellerName, $comparison);
+
+        return $this;
     }
 
     /**
@@ -396,14 +407,15 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * <code>
      * $query->filterBySellerHandle('fooValue');   // WHERE seller_handle = 'fooValue'
      * $query->filterBySellerHandle('%fooValue%', Criteria::LIKE); // WHERE seller_handle LIKE '%fooValue%'
+     * $query->filterBySellerHandle(['foo', 'bar']); // WHERE seller_handle IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $sellerHandle The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $sellerHandle The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterBySellerHandle($sellerHandle = null, $comparison = null)
+    public function filterBySellerHandle($sellerHandle = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($sellerHandle)) {
@@ -411,7 +423,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(AuctionDetailsTableMap::COL_SELLER_HANDLE, $sellerHandle, $comparison);
+        $this->addUsingAlias(AuctionDetailsTableMap::COL_SELLER_HANDLE, $sellerHandle, $comparison);
+
+        return $this;
     }
 
     /**
@@ -424,15 +438,15 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * $query->filterByExpireTime(array('min' => 12)); // WHERE expire_time > 12
      * </code>
      *
-     * @param     mixed $expireTime The value to use as filter.
+     * @param mixed $expireTime The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByExpireTime($expireTime = null, $comparison = null)
+    public function filterByExpireTime($expireTime = null, ?string $comparison = null)
     {
         if (is_array($expireTime)) {
             $useMinMax = false;
@@ -452,7 +466,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(AuctionDetailsTableMap::COL_EXPIRE_TIME, $expireTime, $comparison);
+        $this->addUsingAlias(AuctionDetailsTableMap::COL_EXPIRE_TIME, $expireTime, $comparison);
+
+        return $this;
     }
 
     /**
@@ -465,15 +481,15 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * $query->filterByPrice(array('min' => 12)); // WHERE price > 12
      * </code>
      *
-     * @param     mixed $price The value to use as filter.
+     * @param mixed $price The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByPrice($price = null, $comparison = null)
+    public function filterByPrice($price = null, ?string $comparison = null)
     {
         if (is_array($price)) {
             $useMinMax = false;
@@ -493,7 +509,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(AuctionDetailsTableMap::COL_PRICE, $price, $comparison);
+        $this->addUsingAlias(AuctionDetailsTableMap::COL_PRICE, $price, $comparison);
+
+        return $this;
     }
 
     /**
@@ -506,15 +524,15 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * $query->filterByCount(array('min' => 12)); // WHERE count > 12
      * </code>
      *
-     * @param     mixed $count The value to use as filter.
+     * @param mixed $count The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByCount($count = null, $comparison = null)
+    public function filterByCount($count = null, ?string $comparison = null)
     {
         if (is_array($count)) {
             $useMinMax = false;
@@ -534,7 +552,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(AuctionDetailsTableMap::COL_COUNT, $count, $comparison);
+        $this->addUsingAlias(AuctionDetailsTableMap::COL_COUNT, $count, $comparison);
+
+        return $this;
     }
 
     /**
@@ -547,15 +567,15 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * $query->filterByPricePer(array('min' => 12)); // WHERE price_per > 12
      * </code>
      *
-     * @param     mixed $pricePer The value to use as filter.
+     * @param mixed $pricePer The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByPricePer($pricePer = null, $comparison = null)
+    public function filterByPricePer($pricePer = null, ?string $comparison = null)
     {
         if (is_array($pricePer)) {
             $useMinMax = false;
@@ -575,20 +595,22 @@ abstract class AuctionDetailsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(AuctionDetailsTableMap::COL_PRICE_PER, $pricePer, $comparison);
+        $this->addUsingAlias(AuctionDetailsTableMap::COL_PRICE_PER, $pricePer, $comparison);
+
+        return $this;
     }
 
     /**
      * Filter the query by a related \App\Schema\Crawl\AuctionItems\AuctionItems object
      *
      * @param \App\Schema\Crawl\AuctionItems\AuctionItems $auctionItems The related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
-     * @return ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByAuctionItems($auctionItems, $comparison = null)
+    public function filterByAuctionItems($auctionItems, ?string $comparison = null)
     {
         if ($auctionItems instanceof \App\Schema\Crawl\AuctionItems\AuctionItems) {
             return $this
@@ -602,12 +624,12 @@ abstract class AuctionDetailsQuery extends ModelCriteria
     /**
      * Adds a JOIN clause to the query using the AuctionItems relation
      *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function joinAuctionItems($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinAuctionItems(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('AuctionItems');
@@ -636,9 +658,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      *
      * @see useQuery()
      *
-     * @param     string $relationAlias optional alias for the relation,
+     * @param string $relationAlias optional alias for the relation,
      *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return \App\Schema\Crawl\AuctionItems\AuctionItemsQuery A secondary query class using the current class as primary query
      */
@@ -707,9 +729,9 @@ abstract class AuctionDetailsQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param   ChildAuctionDetails $auctionDetails Object to remove from the list of results
+     * @param ChildAuctionDetails $auctionDetails Object to remove from the list of results
      *
-     * @return $this|ChildAuctionDetailsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function prune($auctionDetails = null)
     {
@@ -731,7 +753,7 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public function doDeleteAll(ConnectionInterface $con = null)
+    public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(AuctionDetailsTableMap::DATABASE_NAME);
@@ -756,12 +778,12 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      * Performs a DELETE on the database based on the current ModelCriteria
      *
      * @param ConnectionInterface $con the connection to use
-     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
      *                         if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public function delete(ConnectionInterface $con = null)
+    public function delete(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(AuctionDetailsTableMap::DATABASE_NAME);
@@ -786,4 +808,4 @@ abstract class AuctionDetailsQuery extends ModelCriteria
         });
     }
 
-} // AuctionDetailsQuery
+}

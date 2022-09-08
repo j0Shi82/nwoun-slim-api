@@ -10,7 +10,7 @@ use App\Schema\Crawl\Settings\Map\SettingsTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\Collection\ObjectCollection;
+use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
@@ -33,26 +33,26 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSettingsQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildSettingsQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildSettings|null findOne(ConnectionInterface $con = null) Return the first ChildSettings matching the query
- * @method     ChildSettings findOneOrCreate(ConnectionInterface $con = null) Return the first ChildSettings matching the query, or a new ChildSettings object populated from the query conditions when no match is found
+ * @method     ChildSettings|null findOne(?ConnectionInterface $con = null) Return the first ChildSettings matching the query
+ * @method     ChildSettings findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildSettings matching the query, or a new ChildSettings object populated from the query conditions when no match is found
  *
  * @method     ChildSettings|null findOneByName(string $name) Return the first ChildSettings filtered by the name column
  * @method     ChildSettings|null findOneByValue(string $value) Return the first ChildSettings filtered by the value column *
 
- * @method     ChildSettings requirePk($key, ConnectionInterface $con = null) Return the ChildSettings by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildSettings requireOne(ConnectionInterface $con = null) Return the first ChildSettings matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSettings requirePk($key, ?ConnectionInterface $con = null) Return the ChildSettings by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildSettings requireOne(?ConnectionInterface $con = null) Return the first ChildSettings matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildSettings requireOneByName(string $name) Return the first ChildSettings filtered by the name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSettings requireOneByValue(string $value) Return the first ChildSettings filtered by the value column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildSettings[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildSettings objects based on current ModelCriteria
- * @psalm-method ObjectCollection&\Traversable<ChildSettings> find(ConnectionInterface $con = null) Return ChildSettings objects based on current ModelCriteria
- * @method     ChildSettings[]|ObjectCollection findByName(string $name) Return ChildSettings objects filtered by the name column
- * @psalm-method ObjectCollection&\Traversable<ChildSettings> findByName(string $name) Return ChildSettings objects filtered by the name column
- * @method     ChildSettings[]|ObjectCollection findByValue(string $value) Return ChildSettings objects filtered by the value column
- * @psalm-method ObjectCollection&\Traversable<ChildSettings> findByValue(string $value) Return ChildSettings objects filtered by the value column
- * @method     ChildSettings[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildSettings> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildSettings[]|Collection find(?ConnectionInterface $con = null) Return ChildSettings objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildSettings> find(?ConnectionInterface $con = null) Return ChildSettings objects based on current ModelCriteria
+ * @method     ChildSettings[]|Collection findByName(string $name) Return ChildSettings objects filtered by the name column
+ * @psalm-method Collection&\Traversable<ChildSettings> findByName(string $name) Return ChildSettings objects filtered by the name column
+ * @method     ChildSettings[]|Collection findByValue(string $value) Return ChildSettings objects filtered by the value column
+ * @psalm-method Collection&\Traversable<ChildSettings> findByValue(string $value) Return ChildSettings objects filtered by the value column
+ * @method     ChildSettings[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildSettings> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class SettingsQuery extends ModelCriteria
@@ -62,9 +62,9 @@ abstract class SettingsQuery extends ModelCriteria
     /**
      * Initializes internal state of \App\Schema\Crawl\Settings\Base\SettingsQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName The database name
+     * @param string $modelName The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
     public function __construct($dbName = 'crawl', $modelName = '\\App\\Schema\\Crawl\\Settings\\Settings', $modelAlias = null)
     {
@@ -74,12 +74,12 @@ abstract class SettingsQuery extends ModelCriteria
     /**
      * Returns a new ChildSettingsQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string $modelAlias The alias of a model in the query
+     * @param Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildSettingsQuery
      */
-    public static function create($modelAlias = null, Criteria $criteria = null)
+    public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
         if ($criteria instanceof ChildSettingsQuery) {
             return $criteria;
@@ -109,7 +109,7 @@ abstract class SettingsQuery extends ModelCriteria
      *
      * @return ChildSettings|array|mixed the result, formatted by the current formatter
      */
-    public function findPk($key, ConnectionInterface $con = null)
+    public function findPk($key, ?ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
@@ -141,8 +141,8 @@ abstract class SettingsQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
@@ -174,8 +174,8 @@ abstract class SettingsQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildSettings|array|mixed the result, formatted by the current formatter
      */
@@ -195,12 +195,12 @@ abstract class SettingsQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array $keys Primary keys to use for the query
+     * @param ConnectionInterface $con an optional connection object
      *
-     * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
+     * @return Collection|array|mixed the list of results, formatted by the current formatter
      */
-    public function findPks($keys, ConnectionInterface $con = null)
+    public function findPks($keys, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
@@ -217,27 +217,31 @@ abstract class SettingsQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
-     * @return $this|ChildSettingsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(SettingsTableMap::COL_NAME, $key, Criteria::EQUAL);
+        $this->addUsingAlias(SettingsTableMap::COL_NAME, $key, Criteria::EQUAL);
+
+        return $this;
     }
 
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array|int $keys The list of primary key to use for the query
      *
-     * @return $this|ChildSettingsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(SettingsTableMap::COL_NAME, $keys, Criteria::IN);
+        $this->addUsingAlias(SettingsTableMap::COL_NAME, $keys, Criteria::IN);
+
+        return $this;
     }
 
     /**
@@ -247,14 +251,15 @@ abstract class SettingsQuery extends ModelCriteria
      * <code>
      * $query->filterByName('fooValue');   // WHERE name = 'fooValue'
      * $query->filterByName('%fooValue%', Criteria::LIKE); // WHERE name LIKE '%fooValue%'
+     * $query->filterByName(['foo', 'bar']); // WHERE name IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $name The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $name The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildSettingsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByName($name = null, $comparison = null)
+    public function filterByName($name = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($name)) {
@@ -262,7 +267,9 @@ abstract class SettingsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SettingsTableMap::COL_NAME, $name, $comparison);
+        $this->addUsingAlias(SettingsTableMap::COL_NAME, $name, $comparison);
+
+        return $this;
     }
 
     /**
@@ -272,14 +279,15 @@ abstract class SettingsQuery extends ModelCriteria
      * <code>
      * $query->filterByValue('fooValue');   // WHERE value = 'fooValue'
      * $query->filterByValue('%fooValue%', Criteria::LIKE); // WHERE value LIKE '%fooValue%'
+     * $query->filterByValue(['foo', 'bar']); // WHERE value IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $value The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $value The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildSettingsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByValue($value = null, $comparison = null)
+    public function filterByValue($value = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($value)) {
@@ -287,15 +295,17 @@ abstract class SettingsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(SettingsTableMap::COL_VALUE, $value, $comparison);
+        $this->addUsingAlias(SettingsTableMap::COL_VALUE, $value, $comparison);
+
+        return $this;
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildSettings $settings Object to remove from the list of results
+     * @param ChildSettings $settings Object to remove from the list of results
      *
-     * @return $this|ChildSettingsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function prune($settings = null)
     {
@@ -312,7 +322,7 @@ abstract class SettingsQuery extends ModelCriteria
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public function doDeleteAll(ConnectionInterface $con = null)
+    public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(SettingsTableMap::DATABASE_NAME);
@@ -337,12 +347,12 @@ abstract class SettingsQuery extends ModelCriteria
      * Performs a DELETE on the database based on the current ModelCriteria
      *
      * @param ConnectionInterface $con the connection to use
-     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
      *                         if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public function delete(ConnectionInterface $con = null)
+    public function delete(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(SettingsTableMap::DATABASE_NAME);
@@ -367,4 +377,4 @@ abstract class SettingsQuery extends ModelCriteria
         });
     }
 
-} // SettingsQuery
+}

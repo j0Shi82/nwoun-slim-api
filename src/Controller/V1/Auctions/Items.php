@@ -19,7 +19,7 @@ class Items extends BaseController
             ->withColumn('AuctionAggregates.Low', 'Low')
             ->withColumn('AuctionAggregates.Mean', 'Mean')
             ->withColumn('UNIX_TIMESTAMP(AuctionAggregates.Inserted)', 'Inserted')
-            ->where("AuctionAggregates.Inserted = (SELECT MAX(inserted) FROM auction_aggregates WHERE server = auction_items.server AND item_def = auction_items.item_def)")
+            ->where("AuctionAggregates.Inserted = (SELECT MAX(inserted) FROM auction_aggregates WHERE server = auction_items.server AND count > 0 AND item_def = auction_items.item_def)")
             ->orderBy('AuctionItems.ItemName', 'asc')
             ->find();
 

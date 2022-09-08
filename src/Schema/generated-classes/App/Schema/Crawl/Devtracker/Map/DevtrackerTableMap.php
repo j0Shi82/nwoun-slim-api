@@ -33,140 +33,144 @@ class DevtrackerTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'App.Schema.Crawl.Devtracker.Map.DevtrackerTableMap';
+    public const CLASS_NAME = 'App.Schema.Crawl.Devtracker.Map.DevtrackerTableMap';
 
     /**
      * The default database name for this class
      */
-    const DATABASE_NAME = 'crawl';
+    public const DATABASE_NAME = 'crawl';
 
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'devtracker';
+    public const TABLE_NAME = 'devtracker';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\App\\Schema\\Crawl\\Devtracker\\Devtracker';
+    public const OM_CLASS = '\\App\\Schema\\Crawl\\Devtracker\\Devtracker';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'App.Schema.Crawl.Devtracker.Devtracker';
+    public const CLASS_DEFAULT = 'App.Schema.Crawl.Devtracker.Devtracker';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 12;
+    public const NUM_COLUMNS = 12;
 
     /**
      * The number of lazy-loaded columns
      */
-    const NUM_LAZY_LOAD_COLUMNS = 0;
+    public const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 12;
+    public const NUM_HYDRATE_COLUMNS = 12;
 
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'devtracker.ID';
+    public const COL_ID = 'devtracker.ID';
 
     /**
      * the column name for the dev_name field
      */
-    const COL_DEV_NAME = 'devtracker.dev_name';
+    public const COL_DEV_NAME = 'devtracker.dev_name';
 
     /**
      * the column name for the dev_id field
      */
-    const COL_DEV_ID = 'devtracker.dev_id';
+    public const COL_DEV_ID = 'devtracker.dev_id';
 
     /**
      * the column name for the category_id field
      */
-    const COL_CATEGORY_ID = 'devtracker.category_id';
+    public const COL_CATEGORY_ID = 'devtracker.category_id';
 
     /**
      * the column name for the discussion_id field
      */
-    const COL_DISCUSSION_ID = 'devtracker.discussion_id';
+    public const COL_DISCUSSION_ID = 'devtracker.discussion_id';
 
     /**
      * the column name for the discussion_name field
      */
-    const COL_DISCUSSION_NAME = 'devtracker.discussion_name';
+    public const COL_DISCUSSION_NAME = 'devtracker.discussion_name';
 
     /**
      * the column name for the comment_id field
      */
-    const COL_COMMENT_ID = 'devtracker.comment_id';
+    public const COL_COMMENT_ID = 'devtracker.comment_id';
 
     /**
      * the column name for the body field
      */
-    const COL_BODY = 'devtracker.body';
+    public const COL_BODY = 'devtracker.body';
 
     /**
      * the column name for the date field
      */
-    const COL_DATE = 'devtracker.date';
+    public const COL_DATE = 'devtracker.date';
 
     /**
      * the column name for the is_poll field
      */
-    const COL_IS_POLL = 'devtracker.is_poll';
+    public const COL_IS_POLL = 'devtracker.is_poll';
 
     /**
      * the column name for the is_announce field
      */
-    const COL_IS_ANNOUNCE = 'devtracker.is_announce';
+    public const COL_IS_ANNOUNCE = 'devtracker.is_announce';
 
     /**
      * the column name for the is_closed field
      */
-    const COL_IS_CLOSED = 'devtracker.is_closed';
+    public const COL_IS_CLOSED = 'devtracker.is_closed';
 
     /**
      * The default string format for model objects of the related table
      */
-    const DEFAULT_STRING_FORMAT = 'YAML';
+    public const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
      * holds an array of fieldnames
      *
      * first dimension keys are the type constants
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
+     *
+     * @var array<string, mixed>
      */
-    protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'DevName', 'DevId', 'CategoryId', 'DiscussionId', 'DiscussionName', 'CommentId', 'Body', 'Date', 'IsPoll', 'IsAnnounce', 'IsClosed', ),
-        self::TYPE_CAMELNAME     => array('id', 'devName', 'devId', 'categoryId', 'discussionId', 'discussionName', 'commentId', 'body', 'date', 'isPoll', 'isAnnounce', 'isClosed', ),
-        self::TYPE_COLNAME       => array(DevtrackerTableMap::COL_ID, DevtrackerTableMap::COL_DEV_NAME, DevtrackerTableMap::COL_DEV_ID, DevtrackerTableMap::COL_CATEGORY_ID, DevtrackerTableMap::COL_DISCUSSION_ID, DevtrackerTableMap::COL_DISCUSSION_NAME, DevtrackerTableMap::COL_COMMENT_ID, DevtrackerTableMap::COL_BODY, DevtrackerTableMap::COL_DATE, DevtrackerTableMap::COL_IS_POLL, DevtrackerTableMap::COL_IS_ANNOUNCE, DevtrackerTableMap::COL_IS_CLOSED, ),
-        self::TYPE_FIELDNAME     => array('ID', 'dev_name', 'dev_id', 'category_id', 'discussion_id', 'discussion_name', 'comment_id', 'body', 'date', 'is_poll', 'is_announce', 'is_closed', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
-    );
+    protected static $fieldNames = [
+        self::TYPE_PHPNAME       => ['Id', 'DevName', 'DevId', 'CategoryId', 'DiscussionId', 'DiscussionName', 'CommentId', 'Body', 'Date', 'IsPoll', 'IsAnnounce', 'IsClosed', ],
+        self::TYPE_CAMELNAME     => ['id', 'devName', 'devId', 'categoryId', 'discussionId', 'discussionName', 'commentId', 'body', 'date', 'isPoll', 'isAnnounce', 'isClosed', ],
+        self::TYPE_COLNAME       => [DevtrackerTableMap::COL_ID, DevtrackerTableMap::COL_DEV_NAME, DevtrackerTableMap::COL_DEV_ID, DevtrackerTableMap::COL_CATEGORY_ID, DevtrackerTableMap::COL_DISCUSSION_ID, DevtrackerTableMap::COL_DISCUSSION_NAME, DevtrackerTableMap::COL_COMMENT_ID, DevtrackerTableMap::COL_BODY, DevtrackerTableMap::COL_DATE, DevtrackerTableMap::COL_IS_POLL, DevtrackerTableMap::COL_IS_ANNOUNCE, DevtrackerTableMap::COL_IS_CLOSED, ],
+        self::TYPE_FIELDNAME     => ['ID', 'dev_name', 'dev_id', 'category_id', 'discussion_id', 'discussion_name', 'comment_id', 'body', 'date', 'is_poll', 'is_announce', 'is_closed', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
+    ];
 
     /**
      * holds an array of keys for quick access to the fieldnames array
      *
      * first dimension keys are the type constants
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
+     *
+     * @var array<string, mixed>
      */
-    protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'DevName' => 1, 'DevId' => 2, 'CategoryId' => 3, 'DiscussionId' => 4, 'DiscussionName' => 5, 'CommentId' => 6, 'Body' => 7, 'Date' => 8, 'IsPoll' => 9, 'IsAnnounce' => 10, 'IsClosed' => 11, ),
-        self::TYPE_CAMELNAME     => array('id' => 0, 'devName' => 1, 'devId' => 2, 'categoryId' => 3, 'discussionId' => 4, 'discussionName' => 5, 'commentId' => 6, 'body' => 7, 'date' => 8, 'isPoll' => 9, 'isAnnounce' => 10, 'isClosed' => 11, ),
-        self::TYPE_COLNAME       => array(DevtrackerTableMap::COL_ID => 0, DevtrackerTableMap::COL_DEV_NAME => 1, DevtrackerTableMap::COL_DEV_ID => 2, DevtrackerTableMap::COL_CATEGORY_ID => 3, DevtrackerTableMap::COL_DISCUSSION_ID => 4, DevtrackerTableMap::COL_DISCUSSION_NAME => 5, DevtrackerTableMap::COL_COMMENT_ID => 6, DevtrackerTableMap::COL_BODY => 7, DevtrackerTableMap::COL_DATE => 8, DevtrackerTableMap::COL_IS_POLL => 9, DevtrackerTableMap::COL_IS_ANNOUNCE => 10, DevtrackerTableMap::COL_IS_CLOSED => 11, ),
-        self::TYPE_FIELDNAME     => array('ID' => 0, 'dev_name' => 1, 'dev_id' => 2, 'category_id' => 3, 'discussion_id' => 4, 'discussion_name' => 5, 'comment_id' => 6, 'body' => 7, 'date' => 8, 'is_poll' => 9, 'is_announce' => 10, 'is_closed' => 11, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
-    );
+    protected static $fieldKeys = [
+        self::TYPE_PHPNAME       => ['Id' => 0, 'DevName' => 1, 'DevId' => 2, 'CategoryId' => 3, 'DiscussionId' => 4, 'DiscussionName' => 5, 'CommentId' => 6, 'Body' => 7, 'Date' => 8, 'IsPoll' => 9, 'IsAnnounce' => 10, 'IsClosed' => 11, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'devName' => 1, 'devId' => 2, 'categoryId' => 3, 'discussionId' => 4, 'discussionName' => 5, 'commentId' => 6, 'body' => 7, 'date' => 8, 'isPoll' => 9, 'isAnnounce' => 10, 'isClosed' => 11, ],
+        self::TYPE_COLNAME       => [DevtrackerTableMap::COL_ID => 0, DevtrackerTableMap::COL_DEV_NAME => 1, DevtrackerTableMap::COL_DEV_ID => 2, DevtrackerTableMap::COL_CATEGORY_ID => 3, DevtrackerTableMap::COL_DISCUSSION_ID => 4, DevtrackerTableMap::COL_DISCUSSION_NAME => 5, DevtrackerTableMap::COL_COMMENT_ID => 6, DevtrackerTableMap::COL_BODY => 7, DevtrackerTableMap::COL_DATE => 8, DevtrackerTableMap::COL_IS_POLL => 9, DevtrackerTableMap::COL_IS_ANNOUNCE => 10, DevtrackerTableMap::COL_IS_CLOSED => 11, ],
+        self::TYPE_FIELDNAME     => ['ID' => 0, 'dev_name' => 1, 'dev_id' => 2, 'category_id' => 3, 'discussion_id' => 4, 'discussion_name' => 5, 'comment_id' => 6, 'body' => 7, 'date' => 8, 'is_poll' => 9, 'is_announce' => 10, 'is_closed' => 11, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
+    ];
 
     /**
      * Holds a list of column names and their normalized version.
      *
-     * @var string[]
+     * @var array<string>
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
@@ -268,9 +272,9 @@ class DevtrackerTableMap extends TableMap
      * Relations are not initialized by this method since they are lazy loaded
      *
      * @return void
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function initialize()
+    public function initialize(): void
     {
         // attributes
         $this->setName('devtracker');
@@ -292,14 +296,16 @@ class DevtrackerTableMap extends TableMap
         $this->addColumn('is_poll', 'IsPoll', 'BOOLEAN', true, 1, null);
         $this->addColumn('is_announce', 'IsAnnounce', 'BOOLEAN', true, 1, null);
         $this->addColumn('is_closed', 'IsClosed', 'BOOLEAN', true, 1, null);
-    } // initialize()
+    }
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
-    public function buildRelations()
+    public function buildRelations(): void
     {
-    } // buildRelations()
+    }
 
     /**
      * Retrieves a string version of the primary key from the DB resultset row that can be used to uniquely identify a row in this table.
@@ -307,14 +313,14 @@ class DevtrackerTableMap extends TableMap
      * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
-     * @param array  $row       resultset row.
-     * @param int    $offset    The 0-based offset for reading from the resultset row.
+     * @param array $row Resultset row.
+     * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
-     * @return string The primary key hash of the row
+     * @return string|null The primary key hash of the row
      */
-    public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
+    public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
         if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)] === null) {
@@ -329,14 +335,14 @@ class DevtrackerTableMap extends TableMap
      * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
      * a multi-column primary key, an array of the primary key columns will be returned.
      *
-     * @param array  $row       resultset row.
-     * @param int    $offset    The 0-based offset for reading from the resultset row.
+     * @param array $row Resultset row.
+     * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
-    public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
+    public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
         return (int) $row[
             $indexType == TableMap::TYPE_NUM
@@ -353,10 +359,10 @@ class DevtrackerTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param bool $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
-    public static function getOMClass($withPrefix = true)
+    public static function getOMClass(bool $withPrefix = true): string
     {
         return $withPrefix ? DevtrackerTableMap::CLASS_DEFAULT : DevtrackerTableMap::OM_CLASS;
     }
@@ -364,17 +370,17 @@ class DevtrackerTableMap extends TableMap
     /**
      * Populates an object of the default type or an object that inherit from the default.
      *
-     * @param array  $row       row returned by DataFetcher->fetch().
-     * @param int    $offset    The 0-based offset for reading from the resultset row.
+     * @param array $row Row returned by DataFetcher->fetch().
+     * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (Devtracker object, last column rank)
+     * @return array (Devtracker object, last column rank)
      */
-    public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
+    public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
         $key = DevtrackerTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
         if (null !== ($obj = DevtrackerTableMap::getInstanceFromPool($key))) {
@@ -398,13 +404,13 @@ class DevtrackerTableMap extends TableMap
      * objects that inherit from the default.
      *
      * @param DataFetcherInterface $dataFetcher
-     * @return array
-     * @throws PropelException Any exceptions caught during processing will be
+     * @return array<object>
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public static function populateObjects(DataFetcherInterface $dataFetcher)
+    public static function populateObjects(DataFetcherInterface $dataFetcher): array
     {
-        $results = array();
+        $results = [];
 
         // set the class once to avoid overhead in the loop
         $cls = static::getOMClass(false);
@@ -434,12 +440,13 @@ class DevtrackerTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
-     * @throws PropelException Any exceptions caught during processing will be
+     * @param Criteria $criteria Object containing the columns to add.
+     * @param string|null $alias Optional table alias
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
+     * @return void
      */
-    public static function addSelectColumns(Criteria $criteria, $alias = null)
+    public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
             $criteria->addSelectColumn(DevtrackerTableMap::COL_ID);
@@ -476,12 +483,13 @@ class DevtrackerTableMap extends TableMap
      * Note: any columns that were marked with lazyLoad="true" in the
      * XML schema will not be removed as they are only loaded on demand.
      *
-     * @param Criteria $criteria object containing the columns to remove.
-     * @param string   $alias    optional table alias
-     * @throws PropelException Any exceptions caught during processing will be
+     * @param Criteria $criteria Object containing the columns to remove.
+     * @param string|null $alias Optional table alias
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
+     * @return void
      */
-    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
             $criteria->removeSelectColumn(DevtrackerTableMap::COL_ID);
@@ -516,10 +524,10 @@ class DevtrackerTableMap extends TableMap
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public static function getTableMap()
+    public static function getTableMap(): TableMap
     {
         return Propel::getServiceContainer()->getDatabaseMap(DevtrackerTableMap::DATABASE_NAME)->getTable(DevtrackerTableMap::TABLE_NAME);
     }
@@ -527,15 +535,15 @@ class DevtrackerTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a Devtracker or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or Devtracker object or primary key or array of primary keys
+     * @param mixed $values Criteria or Devtracker object or primary key or array of primary keys
      *              which is used to create the DELETE statement
-     * @param  ConnectionInterface $con the connection to use
-     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     * @param ConnectionInterface $con the connection to use
+     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
      *                         if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-     public static function doDelete($values, ConnectionInterface $con = null)
+     public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(DevtrackerTableMap::DATABASE_NAME);
@@ -571,7 +579,7 @@ class DevtrackerTableMap extends TableMap
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public static function doDeleteAll(ConnectionInterface $con = null)
+    public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
         return DevtrackerQuery::create()->doDeleteAll($con);
     }
@@ -579,13 +587,13 @@ class DevtrackerTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a Devtracker or Criteria object.
      *
-     * @param mixed               $criteria Criteria or Devtracker object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or Devtracker object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
+     * @return mixed The new primary key.
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public static function doInsert($criteria, ConnectionInterface $con = null)
+    public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(DevtrackerTableMap::DATABASE_NAME);
@@ -612,4 +620,4 @@ class DevtrackerTableMap extends TableMap
         });
     }
 
-} // DevtrackerTableMap
+}

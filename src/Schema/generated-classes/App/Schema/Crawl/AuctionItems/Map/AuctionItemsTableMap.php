@@ -33,120 +33,134 @@ class AuctionItemsTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'App.Schema.Crawl.AuctionItems.Map.AuctionItemsTableMap';
+    public const CLASS_NAME = 'App.Schema.Crawl.AuctionItems.Map.AuctionItemsTableMap';
 
     /**
      * The default database name for this class
      */
-    const DATABASE_NAME = 'crawl';
+    public const DATABASE_NAME = 'crawl';
 
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'auction_items';
+    public const TABLE_NAME = 'auction_items';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\App\\Schema\\Crawl\\AuctionItems\\AuctionItems';
+    public const OM_CLASS = '\\App\\Schema\\Crawl\\AuctionItems\\AuctionItems';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'App.Schema.Crawl.AuctionItems.AuctionItems';
+    public const CLASS_DEFAULT = 'App.Schema.Crawl.AuctionItems.AuctionItems';
 
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 8;
+    public const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
      */
-    const NUM_LAZY_LOAD_COLUMNS = 0;
+    public const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 8;
+    public const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the item_def field
      */
-    const COL_ITEM_DEF = 'auction_items.item_def';
+    public const COL_ITEM_DEF = 'auction_items.item_def';
 
     /**
      * the column name for the item_name field
      */
-    const COL_ITEM_NAME = 'auction_items.item_name';
+    public const COL_ITEM_NAME = 'auction_items.item_name';
+
+    /**
+     * the column name for the search_term field
+     */
+    public const COL_SEARCH_TERM = 'auction_items.search_term';
 
     /**
      * the column name for the quality field
      */
-    const COL_QUALITY = 'auction_items.quality';
+    public const COL_QUALITY = 'auction_items.quality';
 
     /**
      * the column name for the categories field
      */
-    const COL_CATEGORIES = 'auction_items.categories';
+    public const COL_CATEGORIES = 'auction_items.categories';
 
     /**
      * the column name for the crawl_category field
      */
-    const COL_CRAWL_CATEGORY = 'auction_items.crawl_category';
+    public const COL_CRAWL_CATEGORY = 'auction_items.crawl_category';
 
     /**
      * the column name for the allow_auto field
      */
-    const COL_ALLOW_AUTO = 'auction_items.allow_auto';
+    public const COL_ALLOW_AUTO = 'auction_items.allow_auto';
 
     /**
      * the column name for the server field
      */
-    const COL_SERVER = 'auction_items.server';
+    public const COL_SERVER = 'auction_items.server';
 
     /**
      * the column name for the update_date field
      */
-    const COL_UPDATE_DATE = 'auction_items.update_date';
+    public const COL_UPDATE_DATE = 'auction_items.update_date';
+
+    /**
+     * the column name for the locked_date field
+     */
+    public const COL_LOCKED_DATE = 'auction_items.locked_date';
 
     /**
      * The default string format for model objects of the related table
      */
-    const DEFAULT_STRING_FORMAT = 'YAML';
+    public const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
      * holds an array of fieldnames
      *
      * first dimension keys are the type constants
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
+     *
+     * @var array<string, mixed>
      */
-    protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('ItemDef', 'ItemName', 'Quality', 'Categories', 'CrawlCategory', 'AllowAuto', 'Server', 'UpdateDate', ),
-        self::TYPE_CAMELNAME     => array('itemDef', 'itemName', 'quality', 'categories', 'crawlCategory', 'allowAuto', 'server', 'updateDate', ),
-        self::TYPE_COLNAME       => array(AuctionItemsTableMap::COL_ITEM_DEF, AuctionItemsTableMap::COL_ITEM_NAME, AuctionItemsTableMap::COL_QUALITY, AuctionItemsTableMap::COL_CATEGORIES, AuctionItemsTableMap::COL_CRAWL_CATEGORY, AuctionItemsTableMap::COL_ALLOW_AUTO, AuctionItemsTableMap::COL_SERVER, AuctionItemsTableMap::COL_UPDATE_DATE, ),
-        self::TYPE_FIELDNAME     => array('item_def', 'item_name', 'quality', 'categories', 'crawl_category', 'allow_auto', 'server', 'update_date', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
-    );
+    protected static $fieldNames = [
+        self::TYPE_PHPNAME       => ['ItemDef', 'ItemName', 'SearchTerm', 'Quality', 'Categories', 'CrawlCategory', 'AllowAuto', 'Server', 'UpdateDate', 'LockedDate', ],
+        self::TYPE_CAMELNAME     => ['itemDef', 'itemName', 'searchTerm', 'quality', 'categories', 'crawlCategory', 'allowAuto', 'server', 'updateDate', 'lockedDate', ],
+        self::TYPE_COLNAME       => [AuctionItemsTableMap::COL_ITEM_DEF, AuctionItemsTableMap::COL_ITEM_NAME, AuctionItemsTableMap::COL_SEARCH_TERM, AuctionItemsTableMap::COL_QUALITY, AuctionItemsTableMap::COL_CATEGORIES, AuctionItemsTableMap::COL_CRAWL_CATEGORY, AuctionItemsTableMap::COL_ALLOW_AUTO, AuctionItemsTableMap::COL_SERVER, AuctionItemsTableMap::COL_UPDATE_DATE, AuctionItemsTableMap::COL_LOCKED_DATE, ],
+        self::TYPE_FIELDNAME     => ['item_def', 'item_name', 'search_term', 'quality', 'categories', 'crawl_category', 'allow_auto', 'server', 'update_date', 'locked_date', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
+    ];
 
     /**
      * holds an array of keys for quick access to the fieldnames array
      *
      * first dimension keys are the type constants
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
+     *
+     * @var array<string, mixed>
      */
-    protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('ItemDef' => 0, 'ItemName' => 1, 'Quality' => 2, 'Categories' => 3, 'CrawlCategory' => 4, 'AllowAuto' => 5, 'Server' => 6, 'UpdateDate' => 7, ),
-        self::TYPE_CAMELNAME     => array('itemDef' => 0, 'itemName' => 1, 'quality' => 2, 'categories' => 3, 'crawlCategory' => 4, 'allowAuto' => 5, 'server' => 6, 'updateDate' => 7, ),
-        self::TYPE_COLNAME       => array(AuctionItemsTableMap::COL_ITEM_DEF => 0, AuctionItemsTableMap::COL_ITEM_NAME => 1, AuctionItemsTableMap::COL_QUALITY => 2, AuctionItemsTableMap::COL_CATEGORIES => 3, AuctionItemsTableMap::COL_CRAWL_CATEGORY => 4, AuctionItemsTableMap::COL_ALLOW_AUTO => 5, AuctionItemsTableMap::COL_SERVER => 6, AuctionItemsTableMap::COL_UPDATE_DATE => 7, ),
-        self::TYPE_FIELDNAME     => array('item_def' => 0, 'item_name' => 1, 'quality' => 2, 'categories' => 3, 'crawl_category' => 4, 'allow_auto' => 5, 'server' => 6, 'update_date' => 7, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, )
-    );
+    protected static $fieldKeys = [
+        self::TYPE_PHPNAME       => ['ItemDef' => 0, 'ItemName' => 1, 'SearchTerm' => 2, 'Quality' => 3, 'Categories' => 4, 'CrawlCategory' => 5, 'AllowAuto' => 6, 'Server' => 7, 'UpdateDate' => 8, 'LockedDate' => 9, ],
+        self::TYPE_CAMELNAME     => ['itemDef' => 0, 'itemName' => 1, 'searchTerm' => 2, 'quality' => 3, 'categories' => 4, 'crawlCategory' => 5, 'allowAuto' => 6, 'server' => 7, 'updateDate' => 8, 'lockedDate' => 9, ],
+        self::TYPE_COLNAME       => [AuctionItemsTableMap::COL_ITEM_DEF => 0, AuctionItemsTableMap::COL_ITEM_NAME => 1, AuctionItemsTableMap::COL_SEARCH_TERM => 2, AuctionItemsTableMap::COL_QUALITY => 3, AuctionItemsTableMap::COL_CATEGORIES => 4, AuctionItemsTableMap::COL_CRAWL_CATEGORY => 5, AuctionItemsTableMap::COL_ALLOW_AUTO => 6, AuctionItemsTableMap::COL_SERVER => 7, AuctionItemsTableMap::COL_UPDATE_DATE => 8, AuctionItemsTableMap::COL_LOCKED_DATE => 9, ],
+        self::TYPE_FIELDNAME     => ['item_def' => 0, 'item_name' => 1, 'search_term' => 2, 'quality' => 3, 'categories' => 4, 'crawl_category' => 5, 'allow_auto' => 6, 'server' => 7, 'update_date' => 8, 'locked_date' => 9, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
+    ];
 
     /**
      * Holds a list of column names and their normalized version.
      *
-     * @var string[]
+     * @var array<string>
      */
     protected $normalizedColumnNameMap = [
         'ItemDef' => 'ITEM_DEF',
@@ -165,6 +179,14 @@ class AuctionItemsTableMap extends TableMap
         'COL_ITEM_NAME' => 'ITEM_NAME',
         'item_name' => 'ITEM_NAME',
         'auction_items.item_name' => 'ITEM_NAME',
+        'SearchTerm' => 'SEARCH_TERM',
+        'AuctionItems.SearchTerm' => 'SEARCH_TERM',
+        'searchTerm' => 'SEARCH_TERM',
+        'auctionItems.searchTerm' => 'SEARCH_TERM',
+        'AuctionItemsTableMap::COL_SEARCH_TERM' => 'SEARCH_TERM',
+        'COL_SEARCH_TERM' => 'SEARCH_TERM',
+        'search_term' => 'SEARCH_TERM',
+        'auction_items.search_term' => 'SEARCH_TERM',
         'Quality' => 'QUALITY',
         'AuctionItems.Quality' => 'QUALITY',
         'quality' => 'QUALITY',
@@ -210,6 +232,14 @@ class AuctionItemsTableMap extends TableMap
         'COL_UPDATE_DATE' => 'UPDATE_DATE',
         'update_date' => 'UPDATE_DATE',
         'auction_items.update_date' => 'UPDATE_DATE',
+        'LockedDate' => 'LOCKED_DATE',
+        'AuctionItems.LockedDate' => 'LOCKED_DATE',
+        'lockedDate' => 'LOCKED_DATE',
+        'auctionItems.lockedDate' => 'LOCKED_DATE',
+        'AuctionItemsTableMap::COL_LOCKED_DATE' => 'LOCKED_DATE',
+        'COL_LOCKED_DATE' => 'LOCKED_DATE',
+        'locked_date' => 'LOCKED_DATE',
+        'auction_items.locked_date' => 'LOCKED_DATE',
     ];
 
     /**
@@ -217,9 +247,9 @@ class AuctionItemsTableMap extends TableMap
      * Relations are not initialized by this method since they are lazy loaded
      *
      * @return void
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function initialize()
+    public function initialize(): void
     {
         // attributes
         $this->setName('auction_items');
@@ -231,18 +261,22 @@ class AuctionItemsTableMap extends TableMap
         // columns
         $this->addPrimaryKey('item_def', 'ItemDef', 'VARCHAR', true, 100, null);
         $this->addColumn('item_name', 'ItemName', 'VARCHAR', true, 100, null);
+        $this->addColumn('search_term', 'SearchTerm', 'VARCHAR', true, 100, null);
         $this->addColumn('quality', 'Quality', 'VARCHAR', true, 20, null);
         $this->addColumn('categories', 'Categories', 'JSON', true, null, null);
         $this->addColumn('crawl_category', 'CrawlCategory', 'CHAR', false, null, null);
         $this->addColumn('allow_auto', 'AllowAuto', 'BOOLEAN', true, 1, true);
         $this->addPrimaryKey('server', 'Server', 'CHAR', true, null, 'GLOBAL');
         $this->addColumn('update_date', 'UpdateDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
-    } // initialize()
+        $this->addColumn('locked_date', 'LockedDate', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
+    }
 
     /**
      * Build the RelationMap objects for this table relationships
+     *
+     * @return void
      */
-    public function buildRelations()
+    public function buildRelations(): void
     {
         $this->addRelation('AuctionAggregates', '\\App\\Schema\\Crawl\\AuctionAggregates\\AuctionAggregates', RelationMap::ONE_TO_MANY, array (
   0 =>
@@ -268,7 +302,7 @@ class AuctionItemsTableMap extends TableMap
     1 => ':server',
   ),
 ), null, null, 'AuctionDetailss', false);
-    } // buildRelations()
+    }
 
     /**
      * Adds an object to the instance pool.
@@ -279,9 +313,11 @@ class AuctionItemsTableMap extends TableMap
      * and findPk*() calls.
      *
      * @param \App\Schema\Crawl\AuctionItems\AuctionItems $obj A \App\Schema\Crawl\AuctionItems\AuctionItems object.
-     * @param string $key             (optional) key to use for instance map (for performance boost if key was already calculated externally).
+     * @param string|null $key Key (optional) to use for instance map (for performance boost if key was already calculated externally).
+     *
+     * @return void
      */
-    public static function addInstanceToPool($obj, $key = null)
+    public static function addInstanceToPool(AuctionItems $obj, ?string $key = null): void
     {
         if (Propel::isInstancePoolingEnabled()) {
             if (null === $key) {
@@ -300,8 +336,10 @@ class AuctionItemsTableMap extends TableMap
      * from the cache in order to prevent returning objects that no longer exist.
      *
      * @param mixed $value A \App\Schema\Crawl\AuctionItems\AuctionItems object or a primary key value.
+     *
+     * @return void
      */
-    public static function removeInstanceFromPool($value)
+    public static function removeInstanceFromPool($value): void
     {
         if (Propel::isInstancePoolingEnabled() && null !== $value) {
             if (is_object($value) && $value instanceof \App\Schema\Crawl\AuctionItems\AuctionItems) {
@@ -329,21 +367,21 @@ class AuctionItemsTableMap extends TableMap
      * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
-     * @param array  $row       resultset row.
-     * @param int    $offset    The 0-based offset for reading from the resultset row.
+     * @param array $row Resultset row.
+     * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
-     * @return string The primary key hash of the row
+     * @return string|null The primary key hash of the row
      */
-    public static function getPrimaryKeyHashFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
+    public static function getPrimaryKeyHashFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): ?string
     {
         // If the PK cannot be derived from the row, return NULL.
-        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] === null) {
+        if ($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] === null && $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] === null) {
             return null;
         }
 
-        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 6 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)])]);
+        return serialize([(null === $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 0 + $offset : static::translateFieldName('ItemDef', TableMap::TYPE_PHPNAME, $indexType)]), (null === $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] || is_scalar($row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)]) || is_callable([$row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)], '__toString']) ? (string) $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)] : $row[TableMap::TYPE_NUM == $indexType ? 7 + $offset : static::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)])]);
     }
 
     /**
@@ -351,14 +389,14 @@ class AuctionItemsTableMap extends TableMap
      * For tables with a single-column primary key, that simple pkey value will be returned.  For tables with
      * a multi-column primary key, an array of the primary key columns will be returned.
      *
-     * @param array  $row       resultset row.
-     * @param int    $offset    The 0-based offset for reading from the resultset row.
+     * @param array $row Resultset row.
+     * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM
      *
      * @return mixed The primary key of the row
      */
-    public static function getPrimaryKeyFromRow($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
+    public static function getPrimaryKeyFromRow(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM)
     {
             $pks = [];
 
@@ -369,7 +407,7 @@ class AuctionItemsTableMap extends TableMap
         ];
         $pks[] = (string) $row[
             $indexType == TableMap::TYPE_NUM
-                ? 6 + $offset
+                ? 7 + $offset
                 : self::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)
         ];
 
@@ -384,10 +422,10 @@ class AuctionItemsTableMap extends TableMap
      * relative to a location on the PHP include_path.
      * (e.g. path.to.MyClass -> 'path/to/MyClass.php')
      *
-     * @param boolean $withPrefix Whether or not to return the path with the class name
+     * @param bool $withPrefix Whether to return the path with the class name
      * @return string path.to.ClassName
      */
-    public static function getOMClass($withPrefix = true)
+    public static function getOMClass(bool $withPrefix = true): string
     {
         return $withPrefix ? AuctionItemsTableMap::CLASS_DEFAULT : AuctionItemsTableMap::OM_CLASS;
     }
@@ -395,17 +433,17 @@ class AuctionItemsTableMap extends TableMap
     /**
      * Populates an object of the default type or an object that inherit from the default.
      *
-     * @param array  $row       row returned by DataFetcher->fetch().
-     * @param int    $offset    The 0-based offset for reading from the resultset row.
+     * @param array $row Row returned by DataFetcher->fetch().
+     * @param int $offset The 0-based offset for reading from the resultset row.
      * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
                                  One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                           TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (AuctionItems object, last column rank)
+     * @return array (AuctionItems object, last column rank)
      */
-    public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
+    public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
         $key = AuctionItemsTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
         if (null !== ($obj = AuctionItemsTableMap::getInstanceFromPool($key))) {
@@ -429,13 +467,13 @@ class AuctionItemsTableMap extends TableMap
      * objects that inherit from the default.
      *
      * @param DataFetcherInterface $dataFetcher
-     * @return array
-     * @throws PropelException Any exceptions caught during processing will be
+     * @return array<object>
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public static function populateObjects(DataFetcherInterface $dataFetcher)
+    public static function populateObjects(DataFetcherInterface $dataFetcher): array
     {
-        $results = array();
+        $results = [];
 
         // set the class once to avoid overhead in the loop
         $cls = static::getOMClass(false);
@@ -465,31 +503,36 @@ class AuctionItemsTableMap extends TableMap
      * XML schema will not be added to the select list and only loaded
      * on demand.
      *
-     * @param Criteria $criteria object containing the columns to add.
-     * @param string   $alias    optional table alias
-     * @throws PropelException Any exceptions caught during processing will be
+     * @param Criteria $criteria Object containing the columns to add.
+     * @param string|null $alias Optional table alias
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
+     * @return void
      */
-    public static function addSelectColumns(Criteria $criteria, $alias = null)
+    public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_ITEM_DEF);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_ITEM_NAME);
+            $criteria->addSelectColumn(AuctionItemsTableMap::COL_SEARCH_TERM);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_QUALITY);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_CATEGORIES);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_CRAWL_CATEGORY);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_ALLOW_AUTO);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_SERVER);
             $criteria->addSelectColumn(AuctionItemsTableMap::COL_UPDATE_DATE);
+            $criteria->addSelectColumn(AuctionItemsTableMap::COL_LOCKED_DATE);
         } else {
             $criteria->addSelectColumn($alias . '.item_def');
             $criteria->addSelectColumn($alias . '.item_name');
+            $criteria->addSelectColumn($alias . '.search_term');
             $criteria->addSelectColumn($alias . '.quality');
             $criteria->addSelectColumn($alias . '.categories');
             $criteria->addSelectColumn($alias . '.crawl_category');
             $criteria->addSelectColumn($alias . '.allow_auto');
             $criteria->addSelectColumn($alias . '.server');
             $criteria->addSelectColumn($alias . '.update_date');
+            $criteria->addSelectColumn($alias . '.locked_date');
         }
     }
 
@@ -499,31 +542,36 @@ class AuctionItemsTableMap extends TableMap
      * Note: any columns that were marked with lazyLoad="true" in the
      * XML schema will not be removed as they are only loaded on demand.
      *
-     * @param Criteria $criteria object containing the columns to remove.
-     * @param string   $alias    optional table alias
-     * @throws PropelException Any exceptions caught during processing will be
+     * @param Criteria $criteria Object containing the columns to remove.
+     * @param string|null $alias Optional table alias
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
+     * @return void
      */
-    public static function removeSelectColumns(Criteria $criteria, $alias = null)
+    public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_ITEM_DEF);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_ITEM_NAME);
+            $criteria->removeSelectColumn(AuctionItemsTableMap::COL_SEARCH_TERM);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_QUALITY);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_CATEGORIES);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_CRAWL_CATEGORY);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_ALLOW_AUTO);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_SERVER);
             $criteria->removeSelectColumn(AuctionItemsTableMap::COL_UPDATE_DATE);
+            $criteria->removeSelectColumn(AuctionItemsTableMap::COL_LOCKED_DATE);
         } else {
             $criteria->removeSelectColumn($alias . '.item_def');
             $criteria->removeSelectColumn($alias . '.item_name');
+            $criteria->removeSelectColumn($alias . '.search_term');
             $criteria->removeSelectColumn($alias . '.quality');
             $criteria->removeSelectColumn($alias . '.categories');
             $criteria->removeSelectColumn($alias . '.crawl_category');
             $criteria->removeSelectColumn($alias . '.allow_auto');
             $criteria->removeSelectColumn($alias . '.server');
             $criteria->removeSelectColumn($alias . '.update_date');
+            $criteria->removeSelectColumn($alias . '.locked_date');
         }
     }
 
@@ -531,10 +579,10 @@ class AuctionItemsTableMap extends TableMap
      * Returns the TableMap related to this object.
      * This method is not needed for general use but a specific application could have a need.
      * @return TableMap
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public static function getTableMap()
+    public static function getTableMap(): TableMap
     {
         return Propel::getServiceContainer()->getDatabaseMap(AuctionItemsTableMap::DATABASE_NAME)->getTable(AuctionItemsTableMap::TABLE_NAME);
     }
@@ -542,15 +590,15 @@ class AuctionItemsTableMap extends TableMap
     /**
      * Performs a DELETE on the database, given a AuctionItems or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or AuctionItems object or primary key or array of primary keys
+     * @param mixed $values Criteria or AuctionItems object or primary key or array of primary keys
      *              which is used to create the DELETE statement
-     * @param  ConnectionInterface $con the connection to use
-     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     * @param ConnectionInterface $con the connection to use
+     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
      *                         if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-     public static function doDelete($values, ConnectionInterface $con = null)
+     public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(AuctionItemsTableMap::DATABASE_NAME);
@@ -568,7 +616,7 @@ class AuctionItemsTableMap extends TableMap
             // the primary key passed to be an array of pkey values
             if (count($values) == count($values, COUNT_RECURSIVE)) {
                 // array is not multi-dimensional
-                $values = array($values);
+                $values = [$values];
             }
             foreach ($values as $value) {
                 $criterion = $criteria->getNewCriterion(AuctionItemsTableMap::COL_ITEM_DEF, $value[0]);
@@ -596,7 +644,7 @@ class AuctionItemsTableMap extends TableMap
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public static function doDeleteAll(ConnectionInterface $con = null)
+    public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
         return AuctionItemsQuery::create()->doDeleteAll($con);
     }
@@ -604,13 +652,13 @@ class AuctionItemsTableMap extends TableMap
     /**
      * Performs an INSERT on the database, given a AuctionItems or Criteria object.
      *
-     * @param mixed               $criteria Criteria or AuctionItems object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or AuctionItems object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
-     * @return mixed           The new primary key.
-     * @throws PropelException Any exceptions caught during processing will be
+     * @return mixed The new primary key.
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public static function doInsert($criteria, ConnectionInterface $con = null)
+    public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(AuctionItemsTableMap::DATABASE_NAME);
@@ -633,4 +681,4 @@ class AuctionItemsTableMap extends TableMap
         });
     }
 
-} // AuctionItemsTableMap
+}

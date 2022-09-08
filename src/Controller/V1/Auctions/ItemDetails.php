@@ -37,6 +37,7 @@ class ItemDetails extends BaseController
         $result = AuctionAggregatesQuery::create()
             ->filterByItemDef($data_ary['item_def'])
             ->filterByServer($data_ary['server'])
+            ->filterByCount(array('min' => 1))
             ->withColumn("DATE_FORMAT(inserted, '%Y-%m-%d')", 'InsertedDate')
             ->withColumn('UNIX_TIMESTAMP(inserted)', 'InsertedTimestamp')
             ->withColumn("ROUND(AVG(Low))", 'AvgLow')

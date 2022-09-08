@@ -45,7 +45,7 @@ class Postlist extends BaseController
             'discussion_id' => $this->requestHelper->variable('discussion_id', 0),
             'search_term' => $this->requestHelper->variable('search_term', ''),
             'count' => $this->requestHelper->variable('count', 20),
-            'start_page' => $this->requestHelper->variable('start_page', 0)
+            'page' => $this->requestHelper->variable('page', 1)
         );
 
         // run checks on data
@@ -55,8 +55,8 @@ class Postlist extends BaseController
         if ($data_ary['count'] < 20) {
             $data_ary['count'] = 20;
         }
-        if ($data_ary['start_page'] < 0) {
-            $data_ary['start_page'] = 0;
+        if ($data_ary['page'] < 1) {
+            $data_ary['page'] = 1;
         }
 
         $posts = DevtrackerQuery::create()
@@ -76,7 +76,7 @@ class Postlist extends BaseController
             ->_endif()
             ->orderByDate('desc')
             ->limit($data_ary['count'])
-            ->offset($data_ary['start_page']*$data_ary['count'])
+            ->offset(($data_ary['page'] - 1)*$data_ary['count'])
             ->select(array('dev_name', 'dev_id', 'discussion_id', 'comment_id', 'discussion_name', 'body', 'timestamp'))
             ->find()
             ->getData();

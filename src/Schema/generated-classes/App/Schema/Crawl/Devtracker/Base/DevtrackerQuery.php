@@ -10,7 +10,7 @@ use App\Schema\Crawl\Devtracker\Map\DevtrackerTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\Collection\ObjectCollection;
+use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
@@ -53,8 +53,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDevtrackerQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildDevtrackerQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildDevtracker|null findOne(ConnectionInterface $con = null) Return the first ChildDevtracker matching the query
- * @method     ChildDevtracker findOneOrCreate(ConnectionInterface $con = null) Return the first ChildDevtracker matching the query, or a new ChildDevtracker object populated from the query conditions when no match is found
+ * @method     ChildDevtracker|null findOne(?ConnectionInterface $con = null) Return the first ChildDevtracker matching the query
+ * @method     ChildDevtracker findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildDevtracker matching the query, or a new ChildDevtracker object populated from the query conditions when no match is found
  *
  * @method     ChildDevtracker|null findOneById(int $ID) Return the first ChildDevtracker filtered by the ID column
  * @method     ChildDevtracker|null findOneByDevName(string $dev_name) Return the first ChildDevtracker filtered by the dev_name column
@@ -69,8 +69,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDevtracker|null findOneByIsAnnounce(boolean $is_announce) Return the first ChildDevtracker filtered by the is_announce column
  * @method     ChildDevtracker|null findOneByIsClosed(boolean $is_closed) Return the first ChildDevtracker filtered by the is_closed column *
 
- * @method     ChildDevtracker requirePk($key, ConnectionInterface $con = null) Return the ChildDevtracker by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildDevtracker requireOne(ConnectionInterface $con = null) Return the first ChildDevtracker matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildDevtracker requirePk($key, ?ConnectionInterface $con = null) Return the ChildDevtracker by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildDevtracker requireOne(?ConnectionInterface $con = null) Return the first ChildDevtracker matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildDevtracker requireOneById(int $ID) Return the first ChildDevtracker filtered by the ID column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDevtracker requireOneByDevName(string $dev_name) Return the first ChildDevtracker filtered by the dev_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -85,34 +85,34 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDevtracker requireOneByIsAnnounce(boolean $is_announce) Return the first ChildDevtracker filtered by the is_announce column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDevtracker requireOneByIsClosed(boolean $is_closed) Return the first ChildDevtracker filtered by the is_closed column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildDevtracker[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildDevtracker objects based on current ModelCriteria
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> find(ConnectionInterface $con = null) Return ChildDevtracker objects based on current ModelCriteria
- * @method     ChildDevtracker[]|ObjectCollection findById(int $ID) Return ChildDevtracker objects filtered by the ID column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findById(int $ID) Return ChildDevtracker objects filtered by the ID column
- * @method     ChildDevtracker[]|ObjectCollection findByDevName(string $dev_name) Return ChildDevtracker objects filtered by the dev_name column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByDevName(string $dev_name) Return ChildDevtracker objects filtered by the dev_name column
- * @method     ChildDevtracker[]|ObjectCollection findByDevId(int $dev_id) Return ChildDevtracker objects filtered by the dev_id column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByDevId(int $dev_id) Return ChildDevtracker objects filtered by the dev_id column
- * @method     ChildDevtracker[]|ObjectCollection findByCategoryId(int $category_id) Return ChildDevtracker objects filtered by the category_id column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByCategoryId(int $category_id) Return ChildDevtracker objects filtered by the category_id column
- * @method     ChildDevtracker[]|ObjectCollection findByDiscussionId(int $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByDiscussionId(int $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
- * @method     ChildDevtracker[]|ObjectCollection findByDiscussionName(string $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByDiscussionName(string $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
- * @method     ChildDevtracker[]|ObjectCollection findByCommentId(int $comment_id) Return ChildDevtracker objects filtered by the comment_id column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByCommentId(int $comment_id) Return ChildDevtracker objects filtered by the comment_id column
- * @method     ChildDevtracker[]|ObjectCollection findByBody(string $body) Return ChildDevtracker objects filtered by the body column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByBody(string $body) Return ChildDevtracker objects filtered by the body column
- * @method     ChildDevtracker[]|ObjectCollection findByDate(string $date) Return ChildDevtracker objects filtered by the date column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByDate(string $date) Return ChildDevtracker objects filtered by the date column
- * @method     ChildDevtracker[]|ObjectCollection findByIsPoll(boolean $is_poll) Return ChildDevtracker objects filtered by the is_poll column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByIsPoll(boolean $is_poll) Return ChildDevtracker objects filtered by the is_poll column
- * @method     ChildDevtracker[]|ObjectCollection findByIsAnnounce(boolean $is_announce) Return ChildDevtracker objects filtered by the is_announce column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByIsAnnounce(boolean $is_announce) Return ChildDevtracker objects filtered by the is_announce column
- * @method     ChildDevtracker[]|ObjectCollection findByIsClosed(boolean $is_closed) Return ChildDevtracker objects filtered by the is_closed column
- * @psalm-method ObjectCollection&\Traversable<ChildDevtracker> findByIsClosed(boolean $is_closed) Return ChildDevtracker objects filtered by the is_closed column
- * @method     ChildDevtracker[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildDevtracker> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildDevtracker[]|Collection find(?ConnectionInterface $con = null) Return ChildDevtracker objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildDevtracker> find(?ConnectionInterface $con = null) Return ChildDevtracker objects based on current ModelCriteria
+ * @method     ChildDevtracker[]|Collection findById(int $ID) Return ChildDevtracker objects filtered by the ID column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findById(int $ID) Return ChildDevtracker objects filtered by the ID column
+ * @method     ChildDevtracker[]|Collection findByDevName(string $dev_name) Return ChildDevtracker objects filtered by the dev_name column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDevName(string $dev_name) Return ChildDevtracker objects filtered by the dev_name column
+ * @method     ChildDevtracker[]|Collection findByDevId(int $dev_id) Return ChildDevtracker objects filtered by the dev_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDevId(int $dev_id) Return ChildDevtracker objects filtered by the dev_id column
+ * @method     ChildDevtracker[]|Collection findByCategoryId(int $category_id) Return ChildDevtracker objects filtered by the category_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByCategoryId(int $category_id) Return ChildDevtracker objects filtered by the category_id column
+ * @method     ChildDevtracker[]|Collection findByDiscussionId(int $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDiscussionId(int $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
+ * @method     ChildDevtracker[]|Collection findByDiscussionName(string $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDiscussionName(string $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
+ * @method     ChildDevtracker[]|Collection findByCommentId(int $comment_id) Return ChildDevtracker objects filtered by the comment_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByCommentId(int $comment_id) Return ChildDevtracker objects filtered by the comment_id column
+ * @method     ChildDevtracker[]|Collection findByBody(string $body) Return ChildDevtracker objects filtered by the body column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByBody(string $body) Return ChildDevtracker objects filtered by the body column
+ * @method     ChildDevtracker[]|Collection findByDate(string $date) Return ChildDevtracker objects filtered by the date column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDate(string $date) Return ChildDevtracker objects filtered by the date column
+ * @method     ChildDevtracker[]|Collection findByIsPoll(boolean $is_poll) Return ChildDevtracker objects filtered by the is_poll column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByIsPoll(boolean $is_poll) Return ChildDevtracker objects filtered by the is_poll column
+ * @method     ChildDevtracker[]|Collection findByIsAnnounce(boolean $is_announce) Return ChildDevtracker objects filtered by the is_announce column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByIsAnnounce(boolean $is_announce) Return ChildDevtracker objects filtered by the is_announce column
+ * @method     ChildDevtracker[]|Collection findByIsClosed(boolean $is_closed) Return ChildDevtracker objects filtered by the is_closed column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByIsClosed(boolean $is_closed) Return ChildDevtracker objects filtered by the is_closed column
+ * @method     ChildDevtracker[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildDevtracker> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class DevtrackerQuery extends ModelCriteria
@@ -122,9 +122,9 @@ abstract class DevtrackerQuery extends ModelCriteria
     /**
      * Initializes internal state of \App\Schema\Crawl\Devtracker\Base\DevtrackerQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName The database name
+     * @param string $modelName The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
     public function __construct($dbName = 'crawl', $modelName = '\\App\\Schema\\Crawl\\Devtracker\\Devtracker', $modelAlias = null)
     {
@@ -134,12 +134,12 @@ abstract class DevtrackerQuery extends ModelCriteria
     /**
      * Returns a new ChildDevtrackerQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string $modelAlias The alias of a model in the query
+     * @param Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildDevtrackerQuery
      */
-    public static function create($modelAlias = null, Criteria $criteria = null)
+    public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
         if ($criteria instanceof ChildDevtrackerQuery) {
             return $criteria;
@@ -169,7 +169,7 @@ abstract class DevtrackerQuery extends ModelCriteria
      *
      * @return ChildDevtracker|array|mixed the result, formatted by the current formatter
      */
-    public function findPk($key, ConnectionInterface $con = null)
+    public function findPk($key, ?ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
@@ -201,8 +201,8 @@ abstract class DevtrackerQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
@@ -234,8 +234,8 @@ abstract class DevtrackerQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildDevtracker|array|mixed the result, formatted by the current formatter
      */
@@ -255,12 +255,12 @@ abstract class DevtrackerQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array $keys Primary keys to use for the query
+     * @param ConnectionInterface $con an optional connection object
      *
-     * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
+     * @return Collection|array|mixed the list of results, formatted by the current formatter
      */
-    public function findPks($keys, ConnectionInterface $con = null)
+    public function findPks($keys, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
@@ -277,27 +277,31 @@ abstract class DevtrackerQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_ID, $key, Criteria::EQUAL);
+        $this->addUsingAlias(DevtrackerTableMap::COL_ID, $key, Criteria::EQUAL);
+
+        return $this;
     }
 
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array|int $keys The list of primary key to use for the query
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_ID, $keys, Criteria::IN);
+        $this->addUsingAlias(DevtrackerTableMap::COL_ID, $keys, Criteria::IN);
+
+        return $this;
     }
 
     /**
@@ -310,15 +314,15 @@ abstract class DevtrackerQuery extends ModelCriteria
      * $query->filterById(array('min' => 12)); // WHERE ID > 12
      * </code>
      *
-     * @param     mixed $id The value to use as filter.
+     * @param mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterById($id = null, $comparison = null)
+    public function filterById($id = null, ?string $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
@@ -338,7 +342,9 @@ abstract class DevtrackerQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_ID, $id, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_ID, $id, $comparison);
+
+        return $this;
     }
 
     /**
@@ -348,14 +354,15 @@ abstract class DevtrackerQuery extends ModelCriteria
      * <code>
      * $query->filterByDevName('fooValue');   // WHERE dev_name = 'fooValue'
      * $query->filterByDevName('%fooValue%', Criteria::LIKE); // WHERE dev_name LIKE '%fooValue%'
+     * $query->filterByDevName(['foo', 'bar']); // WHERE dev_name IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $devName The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $devName The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByDevName($devName = null, $comparison = null)
+    public function filterByDevName($devName = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($devName)) {
@@ -363,7 +370,9 @@ abstract class DevtrackerQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_DEV_NAME, $devName, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_DEV_NAME, $devName, $comparison);
+
+        return $this;
     }
 
     /**
@@ -376,15 +385,15 @@ abstract class DevtrackerQuery extends ModelCriteria
      * $query->filterByDevId(array('min' => 12)); // WHERE dev_id > 12
      * </code>
      *
-     * @param     mixed $devId The value to use as filter.
+     * @param mixed $devId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByDevId($devId = null, $comparison = null)
+    public function filterByDevId($devId = null, ?string $comparison = null)
     {
         if (is_array($devId)) {
             $useMinMax = false;
@@ -404,7 +413,9 @@ abstract class DevtrackerQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_DEV_ID, $devId, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_DEV_ID, $devId, $comparison);
+
+        return $this;
     }
 
     /**
@@ -417,15 +428,15 @@ abstract class DevtrackerQuery extends ModelCriteria
      * $query->filterByCategoryId(array('min' => 12)); // WHERE category_id > 12
      * </code>
      *
-     * @param     mixed $categoryId The value to use as filter.
+     * @param mixed $categoryId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByCategoryId($categoryId = null, $comparison = null)
+    public function filterByCategoryId($categoryId = null, ?string $comparison = null)
     {
         if (is_array($categoryId)) {
             $useMinMax = false;
@@ -445,7 +456,9 @@ abstract class DevtrackerQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_CATEGORY_ID, $categoryId, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_CATEGORY_ID, $categoryId, $comparison);
+
+        return $this;
     }
 
     /**
@@ -458,15 +471,15 @@ abstract class DevtrackerQuery extends ModelCriteria
      * $query->filterByDiscussionId(array('min' => 12)); // WHERE discussion_id > 12
      * </code>
      *
-     * @param     mixed $discussionId The value to use as filter.
+     * @param mixed $discussionId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByDiscussionId($discussionId = null, $comparison = null)
+    public function filterByDiscussionId($discussionId = null, ?string $comparison = null)
     {
         if (is_array($discussionId)) {
             $useMinMax = false;
@@ -486,7 +499,9 @@ abstract class DevtrackerQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_DISCUSSION_ID, $discussionId, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_DISCUSSION_ID, $discussionId, $comparison);
+
+        return $this;
     }
 
     /**
@@ -496,14 +511,15 @@ abstract class DevtrackerQuery extends ModelCriteria
      * <code>
      * $query->filterByDiscussionName('fooValue');   // WHERE discussion_name = 'fooValue'
      * $query->filterByDiscussionName('%fooValue%', Criteria::LIKE); // WHERE discussion_name LIKE '%fooValue%'
+     * $query->filterByDiscussionName(['foo', 'bar']); // WHERE discussion_name IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $discussionName The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $discussionName The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByDiscussionName($discussionName = null, $comparison = null)
+    public function filterByDiscussionName($discussionName = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($discussionName)) {
@@ -511,7 +527,9 @@ abstract class DevtrackerQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_DISCUSSION_NAME, $discussionName, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_DISCUSSION_NAME, $discussionName, $comparison);
+
+        return $this;
     }
 
     /**
@@ -524,15 +542,15 @@ abstract class DevtrackerQuery extends ModelCriteria
      * $query->filterByCommentId(array('min' => 12)); // WHERE comment_id > 12
      * </code>
      *
-     * @param     mixed $commentId The value to use as filter.
+     * @param mixed $commentId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByCommentId($commentId = null, $comparison = null)
+    public function filterByCommentId($commentId = null, ?string $comparison = null)
     {
         if (is_array($commentId)) {
             $useMinMax = false;
@@ -552,7 +570,9 @@ abstract class DevtrackerQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_COMMENT_ID, $commentId, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_COMMENT_ID, $commentId, $comparison);
+
+        return $this;
     }
 
     /**
@@ -562,14 +582,15 @@ abstract class DevtrackerQuery extends ModelCriteria
      * <code>
      * $query->filterByBody('fooValue');   // WHERE body = 'fooValue'
      * $query->filterByBody('%fooValue%', Criteria::LIKE); // WHERE body LIKE '%fooValue%'
+     * $query->filterByBody(['foo', 'bar']); // WHERE body IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $body The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $body The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByBody($body = null, $comparison = null)
+    public function filterByBody($body = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($body)) {
@@ -577,7 +598,9 @@ abstract class DevtrackerQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_BODY, $body, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_BODY, $body, $comparison);
+
+        return $this;
     }
 
     /**
@@ -590,17 +613,17 @@ abstract class DevtrackerQuery extends ModelCriteria
      * $query->filterByDate(array('max' => 'yesterday')); // WHERE date > '2011-03-13'
      * </code>
      *
-     * @param     mixed $date The value to use as filter.
+     * @param mixed $date The value to use as filter.
      *              Values can be integers (unix timestamps), DateTime objects, or strings.
      *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByDate($date = null, $comparison = null)
+    public function filterByDate($date = null, ?string $comparison = null)
     {
         if (is_array($date)) {
             $useMinMax = false;
@@ -620,7 +643,9 @@ abstract class DevtrackerQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_DATE, $date, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_DATE, $date, $comparison);
+
+        return $this;
     }
 
     /**
@@ -632,22 +657,24 @@ abstract class DevtrackerQuery extends ModelCriteria
      * $query->filterByIsPoll('yes'); // WHERE is_poll = true
      * </code>
      *
-     * @param     boolean|string $isPoll The value to use as filter.
+     * @param bool|string $isPoll The value to use as filter.
      *              Non-boolean arguments are converted using the following rules:
      *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByIsPoll($isPoll = null, $comparison = null)
+    public function filterByIsPoll($isPoll = null, ?string $comparison = null)
     {
         if (is_string($isPoll)) {
             $isPoll = in_array(strtolower($isPoll), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_IS_POLL, $isPoll, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_IS_POLL, $isPoll, $comparison);
+
+        return $this;
     }
 
     /**
@@ -659,22 +686,24 @@ abstract class DevtrackerQuery extends ModelCriteria
      * $query->filterByIsAnnounce('yes'); // WHERE is_announce = true
      * </code>
      *
-     * @param     boolean|string $isAnnounce The value to use as filter.
+     * @param bool|string $isAnnounce The value to use as filter.
      *              Non-boolean arguments are converted using the following rules:
      *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByIsAnnounce($isAnnounce = null, $comparison = null)
+    public function filterByIsAnnounce($isAnnounce = null, ?string $comparison = null)
     {
         if (is_string($isAnnounce)) {
             $isAnnounce = in_array(strtolower($isAnnounce), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_IS_ANNOUNCE, $isAnnounce, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_IS_ANNOUNCE, $isAnnounce, $comparison);
+
+        return $this;
     }
 
     /**
@@ -686,30 +715,32 @@ abstract class DevtrackerQuery extends ModelCriteria
      * $query->filterByIsClosed('yes'); // WHERE is_closed = true
      * </code>
      *
-     * @param     boolean|string $isClosed The value to use as filter.
+     * @param bool|string $isClosed The value to use as filter.
      *              Non-boolean arguments are converted using the following rules:
      *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
      *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByIsClosed($isClosed = null, $comparison = null)
+    public function filterByIsClosed($isClosed = null, ?string $comparison = null)
     {
         if (is_string($isClosed)) {
             $isClosed = in_array(strtolower($isClosed), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
-        return $this->addUsingAlias(DevtrackerTableMap::COL_IS_CLOSED, $isClosed, $comparison);
+        $this->addUsingAlias(DevtrackerTableMap::COL_IS_CLOSED, $isClosed, $comparison);
+
+        return $this;
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildDevtracker $devtracker Object to remove from the list of results
+     * @param ChildDevtracker $devtracker Object to remove from the list of results
      *
-     * @return $this|ChildDevtrackerQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function prune($devtracker = null)
     {
@@ -726,7 +757,7 @@ abstract class DevtrackerQuery extends ModelCriteria
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public function doDeleteAll(ConnectionInterface $con = null)
+    public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(DevtrackerTableMap::DATABASE_NAME);
@@ -751,12 +782,12 @@ abstract class DevtrackerQuery extends ModelCriteria
      * Performs a DELETE on the database based on the current ModelCriteria
      *
      * @param ConnectionInterface $con the connection to use
-     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
      *                         if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public function delete(ConnectionInterface $con = null)
+    public function delete(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(DevtrackerTableMap::DATABASE_NAME);
@@ -781,4 +812,4 @@ abstract class DevtrackerQuery extends ModelCriteria
         });
     }
 
-} // DevtrackerQuery
+}

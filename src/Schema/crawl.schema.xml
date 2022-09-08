@@ -87,12 +87,14 @@
   <table name="auction_items" idMethod="native" phpName="AuctionItems" namespace="AuctionItems">
     <column name="item_def" phpName="ItemDef" type="VARCHAR" size="100" primaryKey="true" required="true"/>
     <column name="item_name" phpName="ItemName" type="VARCHAR" size="100" required="true"/>
+    <column name="search_term" phpName="SearchTerm" type="VARCHAR" size="100" required="true"/>
     <column name="quality" phpName="Quality" type="VARCHAR" size="20" required="true"/>
     <column name="categories" phpName="Categories" type="JSON" required="true"/>
     <column name="crawl_category" phpName="CrawlCategory" type="CHAR" sqlType="enum('Miscellaneous','Bags','Companions','Consumables','Equipment','Fashion','Mounts','Professions','Refinement','Stronghold')"/>
     <column name="allow_auto" phpName="AllowAuto" type="BOOLEAN" size="1" required="true" defaultValue="true"/>
     <column name="server" phpName="Server" type="CHAR" sqlType="enum('GLOBAL','RU')" primaryKey="true" required="true" defaultValue="GLOBAL"/>
     <column name="update_date" phpName="UpdateDate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
+    <column name="locked_date" phpName="LockedDate" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>

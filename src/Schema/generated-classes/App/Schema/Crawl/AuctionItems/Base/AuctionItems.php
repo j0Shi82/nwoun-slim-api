@@ -41,19 +41,21 @@ abstract class AuctionItems implements ActiveRecordInterface
 {
     /**
      * TableMap class name
+     *
+     * @var string
      */
-    const TABLE_MAP = '\\App\\Schema\\Crawl\\AuctionItems\\Map\\AuctionItemsTableMap';
+    public const TABLE_MAP = '\\App\\Schema\\Crawl\\AuctionItems\\Map\\AuctionItemsTableMap';
 
 
     /**
      * attribute to determine if this object has previously been saved.
-     * @var boolean
+     * @var bool
      */
     protected $new = true;
 
     /**
      * attribute to determine whether this object has been deleted.
-     * @var boolean
+     * @var bool
      */
     protected $deleted = false;
 
@@ -62,14 +64,14 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Tracking modified columns allows us to only update modified columns.
      * @var array
      */
-    protected $modifiedColumns = array();
+    protected $modifiedColumns = [];
 
     /**
      * The (virtual) columns that are added at runtime
      * The formatters can add supplementary columns based on a resultset
      * @var array
      */
-    protected $virtualColumns = array();
+    protected $virtualColumns = [];
 
     /**
      * The value for the item_def field.
@@ -84,6 +86,13 @@ abstract class AuctionItems implements ActiveRecordInterface
      * @var        string
      */
     protected $item_name;
+
+    /**
+     * The value for the search_term field.
+     *
+     * @var        string
+     */
+    protected $search_term;
 
     /**
      * The value for the quality field.
@@ -131,6 +140,14 @@ abstract class AuctionItems implements ActiveRecordInterface
     protected $update_date;
 
     /**
+     * The value for the locked_date field.
+     *
+     * Note: this column has a database default value of: (expression) CURRENT_TIMESTAMP
+     * @var        DateTime
+     */
+    protected $locked_date;
+
+    /**
      * @var        ObjectCollection|AuctionAggregates[] Collection to store aggregation of AuctionAggregates objects.
      * @phpstan-var ObjectCollection&\Traversable<AuctionAggregates> Collection to store aggregation of AuctionAggregates objects.
      */
@@ -148,7 +165,7 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
-     * @var boolean
+     * @var bool
      */
     protected $alreadyInSave = false;
 
@@ -172,7 +189,7 @@ abstract class AuctionItems implements ActiveRecordInterface
      * equivalent initialization method).
      * @see __construct()
      */
-    public function applyDefaultValues()
+    public function applyDefaultValues(): void
     {
         $this->allow_auto = true;
         $this->server = 'GLOBAL';
@@ -190,9 +207,9 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Returns whether the object has been modified.
      *
-     * @return boolean True if the object has been modified.
+     * @return bool True if the object has been modified.
      */
-    public function isModified()
+    public function isModified(): bool
     {
         return !!$this->modifiedColumns;
     }
@@ -200,10 +217,10 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Has specified column been modified?
      *
-     * @param  string  $col column fully qualified name (TableMap::TYPE_COLNAME), e.g. Book::AUTHOR_ID
-     * @return boolean True if $col has been modified.
+     * @param string $col column fully qualified name (TableMap::TYPE_COLNAME), e.g. Book::AUTHOR_ID
+     * @return bool True if $col has been modified.
      */
-    public function isColumnModified($col)
+    public function isColumnModified(string $col): bool
     {
         return $this->modifiedColumns && isset($this->modifiedColumns[$col]);
     }
@@ -212,7 +229,7 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Get the columns that have been modified in this object.
      * @return array A unique list of the modified column names for this object.
      */
-    public function getModifiedColumns()
+    public function getModifiedColumns(): array
     {
         return $this->modifiedColumns ? array_keys($this->modifiedColumns) : [];
     }
@@ -222,9 +239,9 @@ abstract class AuctionItems implements ActiveRecordInterface
      * be false, if the object was retrieved from storage or was created
      * and then saved.
      *
-     * @return boolean true, if the object has never been persisted.
+     * @return bool True, if the object has never been persisted.
      */
-    public function isNew()
+    public function isNew(): bool
     {
         return $this->new;
     }
@@ -233,43 +250,43 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Setter for the isNew attribute.  This method will be called
      * by Propel-generated children and objects.
      *
-     * @param boolean $b the state of the object.
+     * @param bool $b the state of the object.
      */
-    public function setNew($b)
+    public function setNew(bool $b): void
     {
-        $this->new = (boolean) $b;
+        $this->new = $b;
     }
 
     /**
      * Whether this object has been deleted.
-     * @return boolean The deleted state of this object.
+     * @return bool The deleted state of this object.
      */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         return $this->deleted;
     }
 
     /**
      * Specify whether this object has been deleted.
-     * @param  boolean $b The deleted state of this object.
+     * @param bool $b The deleted state of this object.
      * @return void
      */
-    public function setDeleted($b)
+    public function setDeleted(bool $b): void
     {
-        $this->deleted = (boolean) $b;
+        $this->deleted = $b;
     }
 
     /**
      * Sets the modified state for the object to be false.
-     * @param  string $col If supplied, only the specified column is reset.
+     * @param string $col If supplied, only the specified column is reset.
      * @return void
      */
-    public function resetModified($col = null)
+    public function resetModified(?string $col = null): void
     {
         if (null !== $col) {
             unset($this->modifiedColumns[$col]);
         } else {
-            $this->modifiedColumns = array();
+            $this->modifiedColumns = [];
         }
     }
 
@@ -278,10 +295,10 @@ abstract class AuctionItems implements ActiveRecordInterface
      * <code>obj</code> is an instance of <code>AuctionItems</code>, delegates to
      * <code>equals(AuctionItems)</code>.  Otherwise, returns <code>false</code>.
      *
-     * @param  mixed   $obj The object to compare to.
-     * @return boolean Whether equal to the object specified.
+     * @param mixed $obj The object to compare to.
+     * @return bool Whether equal to the object specified.
      */
-    public function equals($obj)
+    public function equals($obj): bool
     {
         if (!$obj instanceof static) {
             return false;
@@ -303,7 +320,7 @@ abstract class AuctionItems implements ActiveRecordInterface
      *
      * @return array
      */
-    public function getVirtualColumns()
+    public function getVirtualColumns(): array
     {
         return $this->virtualColumns;
     }
@@ -311,10 +328,10 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Checks the existence of a virtual column in this object
      *
-     * @param  string  $name The virtual column name
-     * @return boolean
+     * @param string $name The virtual column name
+     * @return bool
      */
-    public function hasVirtualColumn($name)
+    public function hasVirtualColumn(string $name): bool
     {
         return array_key_exists($name, $this->virtualColumns);
     }
@@ -322,15 +339,15 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Get the value of a virtual column in this object
      *
-     * @param  string $name The virtual column name
+     * @param string $name The virtual column name
      * @return mixed
      *
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getVirtualColumn($name)
+    public function getVirtualColumn(string $name)
     {
         if (!$this->hasVirtualColumn($name)) {
-            throw new PropelException(sprintf('Cannot get value of inexistent virtual column %s.', $name));
+            throw new PropelException(sprintf('Cannot get value of nonexistent virtual column `%s`.', $name));
         }
 
         return $this->virtualColumns[$name];
@@ -339,12 +356,12 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Set the value of a virtual column in this object
      *
-     * @param string $name  The virtual column name
-     * @param mixed  $value The value to give to the virtual column
+     * @param string $name The virtual column name
+     * @param mixed $value The value to give to the virtual column
      *
      * @return $this The current object, for fluid interface
      */
-    public function setVirtualColumn($name, $value)
+    public function setVirtualColumn(string $name, $value)
     {
         $this->virtualColumns[$name] = $value;
 
@@ -354,11 +371,11 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Logs a message using Propel::log().
      *
-     * @param  string  $msg
-     * @param  int     $priority One of the Propel::LOG_* logging levels
+     * @param string $msg
+     * @param int $priority One of the Propel::LOG_* logging levels
      * @return void
      */
-    protected function log($msg, $priority = Propel::LOG_INFO)
+    protected function log(string $msg, int $priority = Propel::LOG_INFO): void
     {
         Propel::log(get_class($this) . ': ' . $msg, $priority);
     }
@@ -371,12 +388,12 @@ abstract class AuctionItems implements ActiveRecordInterface
      *  => {"Id":9012,"Title":"Don Juan","ISBN":"0140422161","Price":12.99,"PublisherId":1234,"AuthorId":5678}');
      * </code>
      *
-     * @param  mixed   $parser                 A AbstractParser instance, or a format name ('XML', 'YAML', 'JSON', 'CSV')
-     * @param  boolean $includeLazyLoadColumns (optional) Whether to include lazy load(ed) columns. Defaults to TRUE.
-     * @param  string  $keyType                (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME, TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM. Defaults to TableMap::TYPE_PHPNAME.
-     * @return string  The exported data
+     * @param \Propel\Runtime\Parser\AbstractParser|string $parser An AbstractParser instance, or a format name ('XML', 'YAML', 'JSON', 'CSV')
+     * @param bool $includeLazyLoadColumns (optional) Whether to include lazy load(ed) columns. Defaults to TRUE.
+     * @param string $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME, TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM. Defaults to TableMap::TYPE_PHPNAME.
+     * @return string The exported data
      */
-    public function exportTo($parser, $includeLazyLoadColumns = true, $keyType = TableMap::TYPE_PHPNAME)
+    public function exportTo($parser, bool $includeLazyLoadColumns = true, string $keyType = TableMap::TYPE_PHPNAME): string
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
@@ -388,8 +405,10 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Clean up internal collections prior to serializing
      * Avoids recursive loops that turn into segmentation faults when serializing
+     *
+     * @return array<string>
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         $this->clearAllReferences();
 
@@ -422,6 +441,16 @@ abstract class AuctionItems implements ActiveRecordInterface
     public function getItemName()
     {
         return $this->item_name;
+    }
+
+    /**
+     * Get the [search_term] column value.
+     *
+     * @return string
+     */
+    public function getSearchTerm()
+    {
+        return $this->search_term;
     }
 
     /**
@@ -493,9 +522,9 @@ abstract class AuctionItems implements ActiveRecordInterface
      * @param string|null $format The date/time format string (either date()-style or strftime()-style).
      *   If format is NULL, then the raw DateTime object will be returned.
      *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), and 0 if column value is 0000-00-00 00:00:00.
      *
-     * @throws PropelException - if unable to parse/validate the date/time value.
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
      *
      * @psalm-return ($format is null ? DateTime : string)
      */
@@ -509,10 +538,32 @@ abstract class AuctionItems implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [locked_date] column value.
+     *
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), and 0 if column value is 0000-00-00 00:00:00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime : string)
+     */
+    public function getLockedDate($format = null)
+    {
+        if ($format === null) {
+            return $this->locked_date;
+        } else {
+            return $this->locked_date instanceof \DateTimeInterface ? $this->locked_date->format($format) : null;
+        }
+    }
+
+    /**
      * Set the value of [item_def] column.
      *
      * @param string $v New value
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @return $this The current object (for fluent API support)
      */
     public function setItemDef($v)
     {
@@ -526,13 +577,13 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
 
         return $this;
-    } // setItemDef()
+    }
 
     /**
      * Set the value of [item_name] column.
      *
      * @param string $v New value
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @return $this The current object (for fluent API support)
      */
     public function setItemName($v)
     {
@@ -546,13 +597,33 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
 
         return $this;
-    } // setItemName()
+    }
+
+    /**
+     * Set the value of [search_term] column.
+     *
+     * @param string $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setSearchTerm($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->search_term !== $v) {
+            $this->search_term = $v;
+            $this->modifiedColumns[AuctionItemsTableMap::COL_SEARCH_TERM] = true;
+        }
+
+        return $this;
+    }
 
     /**
      * Set the value of [quality] column.
      *
      * @param string $v New value
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @return $this The current object (for fluent API support)
      */
     public function setQuality($v)
     {
@@ -566,13 +637,13 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
 
         return $this;
-    } // setQuality()
+    }
 
     /**
      * Set the value of [categories] column.
      *
      * @param string|array|object $v new value
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @return $this The current object (for fluent API support)
      */
     public function setCategories($v)
     {
@@ -587,13 +658,13 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
 
         return $this;
-    } // setCategories()
+    }
 
     /**
      * Set the value of [crawl_category] column.
      *
      * @param string|null $v New value
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @return $this The current object (for fluent API support)
      */
     public function setCrawlCategory($v)
     {
@@ -607,7 +678,7 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
 
         return $this;
-    } // setCrawlCategory()
+    }
 
     /**
      * Sets the value of the [allow_auto] column.
@@ -616,8 +687,8 @@ abstract class AuctionItems implements ActiveRecordInterface
      *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
      * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      *
-     * @param  boolean|integer|string $v The new value
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @param bool|integer|string $v The new value
+     * @return $this The current object (for fluent API support)
      */
     public function setAllowAuto($v)
     {
@@ -635,13 +706,13 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
 
         return $this;
-    } // setAllowAuto()
+    }
 
     /**
      * Set the value of [server] column.
      *
      * @param string $v New value
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @return $this The current object (for fluent API support)
      */
     public function setServer($v)
     {
@@ -655,14 +726,14 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
 
         return $this;
-    } // setServer()
+    }
 
     /**
      * Sets the value of [update_date] column to a normalized version of the date/time value specified.
      *
-     * @param  string|integer|\DateTimeInterface $v string, integer (timestamp), or \DateTimeInterface value.
+     * @param string|integer|\DateTimeInterface $v string, integer (timestamp), or \DateTimeInterface value.
      *               Empty strings are treated as NULL.
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @return $this The current object (for fluent API support)
      */
     public function setUpdateDate($v)
     {
@@ -675,7 +746,27 @@ abstract class AuctionItems implements ActiveRecordInterface
         } // if either are not null
 
         return $this;
-    } // setUpdateDate()
+    }
+
+    /**
+     * Sets the value of [locked_date] column to a normalized version of the date/time value specified.
+     *
+     * @param string|integer|\DateTimeInterface $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
+     * @return $this The current object (for fluent API support)
+     */
+    public function setLockedDate($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->locked_date !== null || $dt !== null) {
+            if ($this->locked_date === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->locked_date->format("Y-m-d H:i:s.u")) {
+                $this->locked_date = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[AuctionItemsTableMap::COL_LOCKED_DATE] = true;
+            }
+        } // if either are not null
+
+        return $this;
+    }
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -683,9 +774,9 @@ abstract class AuctionItems implements ActiveRecordInterface
      * This method can be used in conjunction with isModified() to indicate whether an object is both
      * modified _and_ has some values set which are non-default.
      *
-     * @return boolean Whether the columns in this object are only been set with default values.
+     * @return bool Whether the columns in this object are only been set with default values.
      */
-    public function hasOnlyDefaultValues()
+    public function hasOnlyDefaultValues(): bool
     {
             if ($this->allow_auto !== true) {
                 return false;
@@ -697,7 +788,7 @@ abstract class AuctionItems implements ActiveRecordInterface
 
         // otherwise, everything was equal, so return TRUE
         return true;
-    } // hasOnlyDefaultValues()
+    }
 
     /**
      * Hydrates (populates) the object variables with values from the database resultset.
@@ -707,17 +798,17 @@ abstract class AuctionItems implements ActiveRecordInterface
      * for results of JOIN queries where the resultset row includes columns from two or
      * more tables.
      *
-     * @param array   $row       The row returned by DataFetcher->fetch().
-     * @param int     $startcol  0-based offset column which indicates which restultset column to start with.
-     * @param boolean $rehydrate Whether this object is being re-hydrated from the database.
-     * @param string  $indexType The index type of $row. Mostly DataFetcher->getIndexType().
+     * @param array $row The row returned by DataFetcher->fetch().
+     * @param int $startcol 0-based offset column which indicates which resultset column to start with.
+     * @param bool $rehydrate Whether this object is being re-hydrated from the database.
+     * @param string $indexType The index type of $row. Mostly DataFetcher->getIndexType().
                                   One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                            TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *
-     * @return int             next starting column
-     * @throws PropelException - Any caught Exception will be rewrapped as a PropelException.
+     * @return int next starting column
+     * @throws \Propel\Runtime\Exception\PropelException - Any caught Exception will be rewrapped as a PropelException.
      */
-    public function hydrate($row, $startcol = 0, $rehydrate = false, $indexType = TableMap::TYPE_NUM)
+    public function hydrate(array $row, int $startcol = 0, bool $rehydrate = false, string $indexType = TableMap::TYPE_NUM): int
     {
         try {
 
@@ -727,26 +818,35 @@ abstract class AuctionItems implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : AuctionItemsTableMap::translateFieldName('ItemName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->item_name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AuctionItemsTableMap::translateFieldName('Quality', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : AuctionItemsTableMap::translateFieldName('SearchTerm', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->search_term = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AuctionItemsTableMap::translateFieldName('Quality', TableMap::TYPE_PHPNAME, $indexType)];
             $this->quality = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AuctionItemsTableMap::translateFieldName('Categories', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AuctionItemsTableMap::translateFieldName('Categories', TableMap::TYPE_PHPNAME, $indexType)];
             $this->categories = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : AuctionItemsTableMap::translateFieldName('CrawlCategory', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AuctionItemsTableMap::translateFieldName('CrawlCategory', TableMap::TYPE_PHPNAME, $indexType)];
             $this->crawl_category = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : AuctionItemsTableMap::translateFieldName('AllowAuto', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : AuctionItemsTableMap::translateFieldName('AllowAuto', TableMap::TYPE_PHPNAME, $indexType)];
             $this->allow_auto = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : AuctionItemsTableMap::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : AuctionItemsTableMap::translateFieldName('Server', TableMap::TYPE_PHPNAME, $indexType)];
             $this->server = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : AuctionItemsTableMap::translateFieldName('UpdateDate', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : AuctionItemsTableMap::translateFieldName('UpdateDate', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->update_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : AuctionItemsTableMap::translateFieldName('LockedDate', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->locked_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -755,7 +855,7 @@ abstract class AuctionItems implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = AuctionItemsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 10; // 10 = AuctionItemsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\App\\Schema\\Crawl\\AuctionItems\\AuctionItems'), 0, $e);
@@ -773,23 +873,24 @@ abstract class AuctionItems implements ActiveRecordInterface
      * the base method from the overridden method (i.e. parent::ensureConsistency()),
      * in case your model changes.
      *
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
+     * @return void
      */
-    public function ensureConsistency()
+    public function ensureConsistency(): void
     {
-    } // ensureConsistency
+    }
 
     /**
      * Reloads this object from datastore based on primary key and (optionally) resets all associated objects.
      *
      * This will only work if the object has been saved and has a valid primary key set.
      *
-     * @param      boolean $deep (optional) Whether to also de-associated any related objects.
-     * @param      ConnectionInterface $con (optional) The ConnectionInterface connection to use.
+     * @param bool $deep (optional) Whether to also de-associated any related objects.
+     * @param ConnectionInterface $con (optional) The ConnectionInterface connection to use.
      * @return void
-     * @throws PropelException - if this object is deleted, unsaved or doesn't have pk match in db
+     * @throws \Propel\Runtime\Exception\PropelException - if this object is deleted, unsaved or doesn't have pk match in db
      */
-    public function reload($deep = false, ConnectionInterface $con = null)
+    public function reload(bool $deep = false, ?ConnectionInterface $con = null): void
     {
         if ($this->isDeleted()) {
             throw new PropelException("Cannot reload a deleted object.");
@@ -826,13 +927,13 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Removes this object from datastore and sets delete attribute.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      * @return void
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      * @see AuctionItems::setDeleted()
      * @see AuctionItems::isDeleted()
      */
-    public function delete(ConnectionInterface $con = null)
+    public function delete(?ConnectionInterface $con = null): void
     {
         if ($this->isDeleted()) {
             throw new PropelException("This object has already been deleted.");
@@ -862,12 +963,12 @@ abstract class AuctionItems implements ActiveRecordInterface
      * method.  This method wraps all precipitate database operations in a
      * single transaction.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
-     * @throws PropelException
+     * @param ConnectionInterface $con
+     * @return int The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @throws \Propel\Runtime\Exception\PropelException
      * @see doSave()
      */
-    public function save(ConnectionInterface $con = null)
+    public function save(?ConnectionInterface $con = null): int
     {
         if ($this->isDeleted()) {
             throw new PropelException("You cannot save an object that has been deleted.");
@@ -912,12 +1013,12 @@ abstract class AuctionItems implements ActiveRecordInterface
      * If the object is new, it inserts it; otherwise an update is performed.
      * All related objects are also updated in this method.
      *
-     * @param      ConnectionInterface $con
-     * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
-     * @throws PropelException
+     * @param ConnectionInterface $con
+     * @return int The number of rows affected by this insert/update and any referring fk objects' save() operations.
+     * @throws \Propel\Runtime\Exception\PropelException
      * @see save()
      */
-    protected function doSave(ConnectionInterface $con)
+    protected function doSave(ConnectionInterface $con): int
     {
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
@@ -973,19 +1074,19 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
 
         return $affectedRows;
-    } // doSave()
+    }
 
     /**
      * Insert the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      * @see doSave()
      */
-    protected function doInsert(ConnectionInterface $con)
+    protected function doInsert(ConnectionInterface $con): void
     {
-        $modifiedColumns = array();
+        $modifiedColumns = [];
         $index = 0;
 
 
@@ -995,6 +1096,9 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
         if ($this->isColumnModified(AuctionItemsTableMap::COL_ITEM_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'item_name';
+        }
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_SEARCH_TERM)) {
+            $modifiedColumns[':p' . $index++]  = 'search_term';
         }
         if ($this->isColumnModified(AuctionItemsTableMap::COL_QUALITY)) {
             $modifiedColumns[':p' . $index++]  = 'quality';
@@ -1014,6 +1118,9 @@ abstract class AuctionItems implements ActiveRecordInterface
         if ($this->isColumnModified(AuctionItemsTableMap::COL_UPDATE_DATE)) {
             $modifiedColumns[':p' . $index++]  = 'update_date';
         }
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_LOCKED_DATE)) {
+            $modifiedColumns[':p' . $index++]  = 'locked_date';
+        }
 
         $sql = sprintf(
             'INSERT INTO auction_items (%s) VALUES (%s)',
@@ -1030,6 +1137,9 @@ abstract class AuctionItems implements ActiveRecordInterface
                         break;
                     case 'item_name':
                         $stmt->bindValue($identifier, $this->item_name, PDO::PARAM_STR);
+                        break;
+                    case 'search_term':
+                        $stmt->bindValue($identifier, $this->search_term, PDO::PARAM_STR);
                         break;
                     case 'quality':
                         $stmt->bindValue($identifier, $this->quality, PDO::PARAM_STR);
@@ -1049,6 +1159,9 @@ abstract class AuctionItems implements ActiveRecordInterface
                     case 'update_date':
                         $stmt->bindValue($identifier, $this->update_date ? $this->update_date->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
                         break;
+                    case 'locked_date':
+                        $stmt->bindValue($identifier, $this->locked_date ? $this->locked_date->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+                        break;
                 }
             }
             $stmt->execute();
@@ -1063,12 +1176,12 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Update the row in the database.
      *
-     * @param      ConnectionInterface $con
+     * @param ConnectionInterface $con
      *
-     * @return Integer Number of updated rows
+     * @return int Number of updated rows
      * @see doSave()
      */
-    protected function doUpdate(ConnectionInterface $con)
+    protected function doUpdate(ConnectionInterface $con): int
     {
         $selectCriteria = $this->buildPkeyCriteria();
         $valuesCriteria = $this->buildCriteria();
@@ -1079,14 +1192,14 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Retrieves a field from the object by name passed in as a string.
      *
-     * @param      string $name name
-     * @param      string $type The type of fieldname the $name is of:
+     * @param string $name name
+     * @param string $type The type of fieldname the $name is of:
      *                     one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                     TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                     Defaults to TableMap::TYPE_PHPNAME.
      * @return mixed Value of field.
      */
-    public function getByName($name, $type = TableMap::TYPE_PHPNAME)
+    public function getByName(string $name, string $type = TableMap::TYPE_PHPNAME)
     {
         $pos = AuctionItemsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
@@ -1098,39 +1211,44 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Retrieves a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param      int $pos position in xml schema
+     * @param int $pos Position in XML schema
      * @return mixed Value of field at $pos
      */
-    public function getByPosition($pos)
+    public function getByPosition(int $pos)
     {
         switch ($pos) {
             case 0:
                 return $this->getItemDef();
-                break;
+
             case 1:
                 return $this->getItemName();
-                break;
+
             case 2:
-                return $this->getQuality();
-                break;
+                return $this->getSearchTerm();
+
             case 3:
-                return $this->getCategories();
-                break;
+                return $this->getQuality();
+
             case 4:
-                return $this->getCrawlCategory();
-                break;
+                return $this->getCategories();
+
             case 5:
-                return $this->getAllowAuto();
-                break;
+                return $this->getCrawlCategory();
+
             case 6:
-                return $this->getServer();
-                break;
+                return $this->getAllowAuto();
+
             case 7:
+                return $this->getServer();
+
+            case 8:
                 return $this->getUpdateDate();
-                break;
+
+            case 9:
+                return $this->getLockedDate();
+
             default:
                 return null;
-                break;
         } // switch()
     }
 
@@ -1140,35 +1258,40 @@ abstract class AuctionItems implements ActiveRecordInterface
      * You can specify the key type of the array by passing one of the class
      * type constants.
      *
-     * @param     string  $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
+     * @param string $keyType (optional) One of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME,
      *                    TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                    Defaults to TableMap::TYPE_PHPNAME.
-     * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
-     * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
-     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
+     * @param bool $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
+     * @param array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param bool $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
-     * @return array an associative array containing the field names (as keys) and field values
+     * @return array An associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
+    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
-
         if (isset($alreadyDumpedObjects['AuctionItems'][$this->hashCode()])) {
-            return '*RECURSION*';
+            return ['*RECURSION*'];
         }
         $alreadyDumpedObjects['AuctionItems'][$this->hashCode()] = true;
         $keys = AuctionItemsTableMap::getFieldNames($keyType);
-        $result = array(
+        $result = [
             $keys[0] => $this->getItemDef(),
             $keys[1] => $this->getItemName(),
-            $keys[2] => $this->getQuality(),
-            $keys[3] => $this->getCategories(),
-            $keys[4] => $this->getCrawlCategory(),
-            $keys[5] => $this->getAllowAuto(),
-            $keys[6] => $this->getServer(),
-            $keys[7] => $this->getUpdateDate(),
-        );
-        if ($result[$keys[7]] instanceof \DateTimeInterface) {
-            $result[$keys[7]] = $result[$keys[7]]->format('Y-m-d H:i:s.u');
+            $keys[2] => $this->getSearchTerm(),
+            $keys[3] => $this->getQuality(),
+            $keys[4] => $this->getCategories(),
+            $keys[5] => $this->getCrawlCategory(),
+            $keys[6] => $this->getAllowAuto(),
+            $keys[7] => $this->getServer(),
+            $keys[8] => $this->getUpdateDate(),
+            $keys[9] => $this->getLockedDate(),
+        ];
+        if ($result[$keys[8]] instanceof \DateTimeInterface) {
+            $result[$keys[8]] = $result[$keys[8]]->format('Y-m-d H:i:s.u');
+        }
+
+        if ($result[$keys[9]] instanceof \DateTimeInterface) {
+            $result[$keys[9]] = $result[$keys[9]]->format('Y-m-d H:i:s.u');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1215,30 +1338,32 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Sets a field from the object by name passed in as a string.
      *
-     * @param  string $name
-     * @param  mixed  $value field value
-     * @param  string $type The type of fieldname the $name is of:
+     * @param string $name
+     * @param mixed $value field value
+     * @param string $type The type of fieldname the $name is of:
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_CAMELNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems
+     * @return $this
      */
-    public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
+    public function setByName(string $name, $value, string $type = TableMap::TYPE_PHPNAME)
     {
         $pos = AuctionItemsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
-        return $this->setByPosition($pos, $value);
+        $this->setByPosition($pos, $value);
+
+        return $this;
     }
 
     /**
      * Sets a field from the object by Position as specified in the xml schema.
      * Zero-based.
      *
-     * @param  int $pos position in xml schema
-     * @param  mixed $value field value
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems
+     * @param int $pos position in xml schema
+     * @param mixed $value field value
+     * @return $this
      */
-    public function setByPosition($pos, $value)
+    public function setByPosition(int $pos, $value)
     {
         switch ($pos) {
             case 0:
@@ -1248,22 +1373,28 @@ abstract class AuctionItems implements ActiveRecordInterface
                 $this->setItemName($value);
                 break;
             case 2:
-                $this->setQuality($value);
+                $this->setSearchTerm($value);
                 break;
             case 3:
-                $this->setCategories($value);
+                $this->setQuality($value);
                 break;
             case 4:
-                $this->setCrawlCategory($value);
+                $this->setCategories($value);
                 break;
             case 5:
-                $this->setAllowAuto($value);
+                $this->setCrawlCategory($value);
                 break;
             case 6:
-                $this->setServer($value);
+                $this->setAllowAuto($value);
                 break;
             case 7:
+                $this->setServer($value);
+                break;
+            case 8:
                 $this->setUpdateDate($value);
+                break;
+            case 9:
+                $this->setLockedDate($value);
                 break;
         } // switch()
 
@@ -1283,11 +1414,11 @@ abstract class AuctionItems implements ActiveRecordInterface
      * TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      * The default key type is the column's TableMap::TYPE_PHPNAME.
      *
-     * @param      array  $arr     An array to populate the object from.
-     * @param      string $keyType The type of keys the array uses.
-     * @return     $this|\App\Schema\Crawl\AuctionItems\AuctionItems
+     * @param array $arr An array to populate the object from.
+     * @param string $keyType The type of keys the array uses.
+     * @return $this
      */
-    public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
+    public function fromArray(array $arr, string $keyType = TableMap::TYPE_PHPNAME)
     {
         $keys = AuctionItemsTableMap::getFieldNames($keyType);
 
@@ -1298,22 +1429,28 @@ abstract class AuctionItems implements ActiveRecordInterface
             $this->setItemName($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setQuality($arr[$keys[2]]);
+            $this->setSearchTerm($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setCategories($arr[$keys[3]]);
+            $this->setQuality($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setCrawlCategory($arr[$keys[4]]);
+            $this->setCategories($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setAllowAuto($arr[$keys[5]]);
+            $this->setCrawlCategory($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setServer($arr[$keys[6]]);
+            $this->setAllowAuto($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setUpdateDate($arr[$keys[7]]);
+            $this->setServer($arr[$keys[7]]);
+        }
+        if (array_key_exists($keys[8], $arr)) {
+            $this->setUpdateDate($arr[$keys[8]]);
+        }
+        if (array_key_exists($keys[9], $arr)) {
+            $this->setLockedDate($arr[$keys[9]]);
         }
 
         return $this;
@@ -1336,9 +1473,9 @@ abstract class AuctionItems implements ActiveRecordInterface
      * @param string $data The source data to import from
      * @param string $keyType The type of keys the array uses.
      *
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object, for fluid interface
+     * @return $this The current object, for fluid interface
      */
-    public function importFrom($parser, $data, $keyType = TableMap::TYPE_PHPNAME)
+    public function importFrom($parser, string $data, string $keyType = TableMap::TYPE_PHPNAME)
     {
         if (!$parser instanceof AbstractParser) {
             $parser = AbstractParser::getParser($parser);
@@ -1352,9 +1489,9 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Build a Criteria object containing the values of all modified columns in this object.
      *
-     * @return Criteria The Criteria object containing all modified values.
+     * @return \Propel\Runtime\ActiveQuery\Criteria The Criteria object containing all modified values.
      */
-    public function buildCriteria()
+    public function buildCriteria(): Criteria
     {
         $criteria = new Criteria(AuctionItemsTableMap::DATABASE_NAME);
 
@@ -1363,6 +1500,9 @@ abstract class AuctionItems implements ActiveRecordInterface
         }
         if ($this->isColumnModified(AuctionItemsTableMap::COL_ITEM_NAME)) {
             $criteria->add(AuctionItemsTableMap::COL_ITEM_NAME, $this->item_name);
+        }
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_SEARCH_TERM)) {
+            $criteria->add(AuctionItemsTableMap::COL_SEARCH_TERM, $this->search_term);
         }
         if ($this->isColumnModified(AuctionItemsTableMap::COL_QUALITY)) {
             $criteria->add(AuctionItemsTableMap::COL_QUALITY, $this->quality);
@@ -1382,6 +1522,9 @@ abstract class AuctionItems implements ActiveRecordInterface
         if ($this->isColumnModified(AuctionItemsTableMap::COL_UPDATE_DATE)) {
             $criteria->add(AuctionItemsTableMap::COL_UPDATE_DATE, $this->update_date);
         }
+        if ($this->isColumnModified(AuctionItemsTableMap::COL_LOCKED_DATE)) {
+            $criteria->add(AuctionItemsTableMap::COL_LOCKED_DATE, $this->locked_date);
+        }
 
         return $criteria;
     }
@@ -1390,13 +1533,13 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Builds a Criteria object containing the primary key for this object.
      *
      * Unlike buildCriteria() this method includes the primary key values regardless
-     * of whether or not they have been modified.
+     * of whether they have been modified.
      *
      * @throws LogicException if no primary key is defined
      *
-     * @return Criteria The Criteria object containing value(s) for primary key(s).
+     * @return \Propel\Runtime\ActiveQuery\Criteria The Criteria object containing value(s) for primary key(s).
      */
-    public function buildPkeyCriteria()
+    public function buildPkeyCriteria(): Criteria
     {
         $criteria = ChildAuctionItemsQuery::create();
         $criteria->add(AuctionItemsTableMap::COL_ITEM_DEF, $this->item_def);
@@ -1409,7 +1552,7 @@ abstract class AuctionItems implements ActiveRecordInterface
      * If the primary key is not null, return the hashcode of the
      * primary key. Otherwise, return the hash code of the object.
      *
-     * @return int Hashcode
+     * @return int|string Hashcode
      */
     public function hashCode()
     {
@@ -1435,7 +1578,7 @@ abstract class AuctionItems implements ActiveRecordInterface
      */
     public function getPrimaryKey()
     {
-        $pks = array();
+        $pks = [];
         $pks[0] = $this->getItemDef();
         $pks[1] = $this->getServer();
 
@@ -1445,10 +1588,10 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Set the [composite] primary key.
      *
-     * @param      array $keys The elements of the composite key (order must match the order in XML file).
+     * @param array $keys The elements of the composite key (order must match the order in XML file).
      * @return void
      */
-    public function setPrimaryKey($keys)
+    public function setPrimaryKey(array $keys): void
     {
         $this->setItemDef($keys[0]);
         $this->setServer($keys[1]);
@@ -1456,9 +1599,10 @@ abstract class AuctionItems implements ActiveRecordInterface
 
     /**
      * Returns true if the primary key for this object is null.
-     * @return boolean
+     *
+     * @return bool
      */
-    public function isPrimaryKeyNull()
+    public function isPrimaryKeyNull(): bool
     {
         return (null === $this->getItemDef()) && (null === $this->getServer());
     }
@@ -1469,21 +1613,24 @@ abstract class AuctionItems implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \App\Schema\Crawl\AuctionItems\AuctionItems (or compatible) type.
-     * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
-     * @throws PropelException
+     * @param object $copyObj An object of \App\Schema\Crawl\AuctionItems\AuctionItems (or compatible) type.
+     * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
+     * @throws \Propel\Runtime\Exception\PropelException
+     * @return void
      */
-    public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
+    public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
         $copyObj->setItemDef($this->getItemDef());
         $copyObj->setItemName($this->getItemName());
+        $copyObj->setSearchTerm($this->getSearchTerm());
         $copyObj->setQuality($this->getQuality());
         $copyObj->setCategories($this->getCategories());
         $copyObj->setCrawlCategory($this->getCrawlCategory());
         $copyObj->setAllowAuto($this->getAllowAuto());
         $copyObj->setServer($this->getServer());
         $copyObj->setUpdateDate($this->getUpdateDate());
+        $copyObj->setLockedDate($this->getLockedDate());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1517,11 +1664,11 @@ abstract class AuctionItems implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
+     * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @return \App\Schema\Crawl\AuctionItems\AuctionItems Clone of current object.
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function copy($deepCopy = false)
+    public function copy(bool $deepCopy = false)
     {
         // we use get_class(), because this might be a subclass
         $clazz = get_class($this);
@@ -1537,10 +1684,10 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Avoids crafting an 'init[$relationName]s' method name
      * that wouldn't work when StandardEnglishPluralizer is used.
      *
-     * @param      string $relationName The name of the relation to initialize
+     * @param string $relationName The name of the relation to initialize
      * @return void
      */
-    public function initRelation($relationName)
+    public function initRelation($relationName): void
     {
         if ('AuctionAggregates' === $relationName) {
             $this->initAuctionAggregatess();
@@ -1558,18 +1705,22 @@ abstract class AuctionItems implements ActiveRecordInterface
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
-     * @see        addAuctionAggregatess()
+     * @return $this
+     * @see addAuctionAggregatess()
      */
     public function clearAuctionAggregatess()
     {
         $this->collAuctionAggregatess = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
     }
 
     /**
      * Reset is the collAuctionAggregatess collection loaded partially.
+     *
+     * @return void
      */
-    public function resetPartialAuctionAggregatess($v = true)
+    public function resetPartialAuctionAggregatess($v = true): void
     {
         $this->collAuctionAggregatessPartial = $v;
     }
@@ -1581,12 +1732,12 @@ abstract class AuctionItems implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
+     * @param bool $overrideExisting If set to true, the method call initializes
      *                                        the collection even if it is not empty
      *
      * @return void
      */
-    public function initAuctionAggregatess($overrideExisting = true)
+    public function initAuctionAggregatess(bool $overrideExisting = true): void
     {
         if (null !== $this->collAuctionAggregatess && !$overrideExisting) {
             return;
@@ -1607,13 +1758,13 @@ abstract class AuctionItems implements ActiveRecordInterface
      * If this ChildAuctionItems is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
      * @return ObjectCollection|AuctionAggregates[] List of AuctionAggregates objects
      * @phpstan-return ObjectCollection&\Traversable<AuctionAggregates> List of AuctionAggregates objects
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getAuctionAggregatess(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getAuctionAggregatess(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
         $partial = $this->collAuctionAggregatessPartial && !$this->isNew();
         if (null === $this->collAuctionAggregatess || null !== $criteria || $partial) {
@@ -1672,11 +1823,11 @@ abstract class AuctionItems implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $auctionAggregatess A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildAuctionItems The current object (for fluent API support)
+     * @param Collection $auctionAggregatess A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
      */
-    public function setAuctionAggregatess(Collection $auctionAggregatess, ConnectionInterface $con = null)
+    public function setAuctionAggregatess(Collection $auctionAggregatess, ?ConnectionInterface $con = null)
     {
         /** @var AuctionAggregates[] $auctionAggregatessToDelete */
         $auctionAggregatessToDelete = $this->getAuctionAggregatess(new Criteria(), $con)->diff($auctionAggregatess);
@@ -1705,13 +1856,13 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Returns the number of related BaseAuctionAggregates objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related BaseAuctionAggregates objects.
-     * @throws PropelException
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related BaseAuctionAggregates objects.
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countAuctionAggregatess(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countAuctionAggregatess(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
         $partial = $this->collAuctionAggregatessPartial && !$this->isNew();
         if (null === $this->collAuctionAggregatess || null !== $criteria || $partial) {
@@ -1740,8 +1891,8 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Method called to associate a AuctionAggregates object to this object
      * through the AuctionAggregates foreign key attribute.
      *
-     * @param  AuctionAggregates $l AuctionAggregates
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @param AuctionAggregates $l AuctionAggregates
+     * @return $this The current object (for fluent API support)
      */
     public function addAuctionAggregates(AuctionAggregates $l)
     {
@@ -1764,15 +1915,15 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * @param AuctionAggregates $auctionAggregates The AuctionAggregates object to add.
      */
-    protected function doAddAuctionAggregates(AuctionAggregates $auctionAggregates)
+    protected function doAddAuctionAggregates(AuctionAggregates $auctionAggregates): void
     {
         $this->collAuctionAggregatess[]= $auctionAggregates;
         $auctionAggregates->setAuctionItems($this);
     }
 
     /**
-     * @param  AuctionAggregates $auctionAggregates The AuctionAggregates object to remove.
-     * @return $this|ChildAuctionItems The current object (for fluent API support)
+     * @param AuctionAggregates $auctionAggregates The AuctionAggregates object to remove.
+     * @return $this The current object (for fluent API support)
      */
     public function removeAuctionAggregates(AuctionAggregates $auctionAggregates)
     {
@@ -1796,18 +1947,22 @@ abstract class AuctionItems implements ActiveRecordInterface
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
-     * @return void
-     * @see        addAuctionDetailss()
+     * @return $this
+     * @see addAuctionDetailss()
      */
     public function clearAuctionDetailss()
     {
         $this->collAuctionDetailss = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
     }
 
     /**
      * Reset is the collAuctionDetailss collection loaded partially.
+     *
+     * @return void
      */
-    public function resetPartialAuctionDetailss($v = true)
+    public function resetPartialAuctionDetailss($v = true): void
     {
         $this->collAuctionDetailssPartial = $v;
     }
@@ -1819,12 +1974,12 @@ abstract class AuctionItems implements ActiveRecordInterface
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
-     * @param      boolean $overrideExisting If set to true, the method call initializes
+     * @param bool $overrideExisting If set to true, the method call initializes
      *                                        the collection even if it is not empty
      *
      * @return void
      */
-    public function initAuctionDetailss($overrideExisting = true)
+    public function initAuctionDetailss(bool $overrideExisting = true): void
     {
         if (null !== $this->collAuctionDetailss && !$overrideExisting) {
             return;
@@ -1845,13 +2000,13 @@ abstract class AuctionItems implements ActiveRecordInterface
      * If this ChildAuctionItems is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
-     * @param      Criteria $criteria optional Criteria object to narrow the query
-     * @param      ConnectionInterface $con optional connection object
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
      * @return ObjectCollection|AuctionDetails[] List of AuctionDetails objects
      * @phpstan-return ObjectCollection&\Traversable<AuctionDetails> List of AuctionDetails objects
-     * @throws PropelException
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getAuctionDetailss(Criteria $criteria = null, ConnectionInterface $con = null)
+    public function getAuctionDetailss(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
         $partial = $this->collAuctionDetailssPartial && !$this->isNew();
         if (null === $this->collAuctionDetailss || null !== $criteria || $partial) {
@@ -1910,11 +2065,11 @@ abstract class AuctionItems implements ActiveRecordInterface
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param      Collection $auctionDetailss A Propel collection.
-     * @param      ConnectionInterface $con Optional connection object
-     * @return $this|ChildAuctionItems The current object (for fluent API support)
+     * @param Collection $auctionDetailss A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
      */
-    public function setAuctionDetailss(Collection $auctionDetailss, ConnectionInterface $con = null)
+    public function setAuctionDetailss(Collection $auctionDetailss, ?ConnectionInterface $con = null)
     {
         /** @var AuctionDetails[] $auctionDetailssToDelete */
         $auctionDetailssToDelete = $this->getAuctionDetailss(new Criteria(), $con)->diff($auctionDetailss);
@@ -1943,13 +2098,13 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * Returns the number of related BaseAuctionDetails objects.
      *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct
-     * @param      ConnectionInterface $con
-     * @return int             Count of related BaseAuctionDetails objects.
-     * @throws PropelException
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related BaseAuctionDetails objects.
+     * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countAuctionDetailss(Criteria $criteria = null, $distinct = false, ConnectionInterface $con = null)
+    public function countAuctionDetailss(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
         $partial = $this->collAuctionDetailssPartial && !$this->isNew();
         if (null === $this->collAuctionDetailss || null !== $criteria || $partial) {
@@ -1978,8 +2133,8 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Method called to associate a AuctionDetails object to this object
      * through the AuctionDetails foreign key attribute.
      *
-     * @param  AuctionDetails $l AuctionDetails
-     * @return $this|\App\Schema\Crawl\AuctionItems\AuctionItems The current object (for fluent API support)
+     * @param AuctionDetails $l AuctionDetails
+     * @return $this The current object (for fluent API support)
      */
     public function addAuctionDetails(AuctionDetails $l)
     {
@@ -2002,15 +2157,15 @@ abstract class AuctionItems implements ActiveRecordInterface
     /**
      * @param AuctionDetails $auctionDetails The AuctionDetails object to add.
      */
-    protected function doAddAuctionDetails(AuctionDetails $auctionDetails)
+    protected function doAddAuctionDetails(AuctionDetails $auctionDetails): void
     {
         $this->collAuctionDetailss[]= $auctionDetails;
         $auctionDetails->setAuctionItems($this);
     }
 
     /**
-     * @param  AuctionDetails $auctionDetails The AuctionDetails object to remove.
-     * @return $this|ChildAuctionItems The current object (for fluent API support)
+     * @param AuctionDetails $auctionDetails The AuctionDetails object to remove.
+     * @return $this The current object (for fluent API support)
      */
     public function removeAuctionDetails(AuctionDetails $auctionDetails)
     {
@@ -2032,23 +2187,29 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
+     *
+     * @return $this
      */
     public function clear()
     {
         $this->item_def = null;
         $this->item_name = null;
+        $this->search_term = null;
         $this->quality = null;
         $this->categories = null;
         $this->crawl_category = null;
         $this->allow_auto = null;
         $this->server = null;
         $this->update_date = null;
+        $this->locked_date = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
+
+        return $this;
     }
 
     /**
@@ -2057,9 +2218,10 @@ abstract class AuctionItems implements ActiveRecordInterface
      * This method is used to reset all php object references (not the actual reference in the database).
      * Necessary for object serialisation.
      *
-     * @param      boolean $deep Whether to also clear the references on all referrer objects.
+     * @param bool $deep Whether to also clear the references on all referrer objects.
+     * @return $this
      */
-    public function clearAllReferences($deep = false)
+    public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
             if ($this->collAuctionAggregatess) {
@@ -2076,6 +2238,7 @@ abstract class AuctionItems implements ActiveRecordInterface
 
         $this->collAuctionAggregatess = null;
         $this->collAuctionDetailss = null;
+        return $this;
     }
 
     /**
@@ -2090,73 +2253,77 @@ abstract class AuctionItems implements ActiveRecordInterface
 
     /**
      * Code to be run before persisting the object
-     * @param  ConnectionInterface $con
-     * @return boolean
+     * @param ConnectionInterface|null $con
+     * @return bool
      */
-    public function preSave(ConnectionInterface $con = null)
+    public function preSave(?ConnectionInterface $con = null): bool
     {
                 return true;
     }
 
     /**
      * Code to be run after persisting the object
-     * @param ConnectionInterface $con
+     * @param ConnectionInterface|null $con
+     * @return void
      */
-    public function postSave(ConnectionInterface $con = null)
+    public function postSave(?ConnectionInterface $con = null): void
     {
             }
 
     /**
      * Code to be run before inserting to database
-     * @param  ConnectionInterface $con
-     * @return boolean
+     * @param ConnectionInterface|null $con
+     * @return bool
      */
-    public function preInsert(ConnectionInterface $con = null)
+    public function preInsert(?ConnectionInterface $con = null): bool
     {
                 return true;
     }
 
     /**
      * Code to be run after inserting to database
-     * @param ConnectionInterface $con
+     * @param ConnectionInterface|null $con
+     * @return void
      */
-    public function postInsert(ConnectionInterface $con = null)
+    public function postInsert(?ConnectionInterface $con = null): void
     {
             }
 
     /**
      * Code to be run before updating the object in database
-     * @param  ConnectionInterface $con
-     * @return boolean
+     * @param ConnectionInterface|null $con
+     * @return bool
      */
-    public function preUpdate(ConnectionInterface $con = null)
+    public function preUpdate(?ConnectionInterface $con = null): bool
     {
                 return true;
     }
 
     /**
      * Code to be run after updating the object in database
-     * @param ConnectionInterface $con
+     * @param ConnectionInterface|null $con
+     * @return void
      */
-    public function postUpdate(ConnectionInterface $con = null)
+    public function postUpdate(?ConnectionInterface $con = null): void
     {
             }
 
     /**
      * Code to be run before deleting the object in database
-     * @param  ConnectionInterface $con
-     * @return boolean
+     * @param ConnectionInterface|null $con
+     * @return bool
      */
-    public function preDelete(ConnectionInterface $con = null)
+    public function preDelete(?ConnectionInterface $con = null): bool
     {
                 return true;
     }
 
     /**
      * Code to be run after deleting the object in database
-     * @param ConnectionInterface $con
+     * @param ConnectionInterface|null $con
+     * @return void
      */
-    public function postDelete(ConnectionInterface $con = null)
+    public function postDelete(?ConnectionInterface $con = null): void
     {
             }
 
@@ -2168,7 +2335,7 @@ abstract class AuctionItems implements ActiveRecordInterface
      * Allows to define default __call() behavior if you overwrite __call()
      *
      * @param string $name
-     * @param mixed  $params
+     * @param mixed $params
      *
      * @return array|string
      */

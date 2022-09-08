@@ -10,7 +10,7 @@ use App\Schema\Crawl\ArticleTitleTags\Map\ArticleTitleTagsTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\Collection\ObjectCollection;
+use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
@@ -33,26 +33,26 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticleTitleTagsQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildArticleTitleTagsQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildArticleTitleTags|null findOne(ConnectionInterface $con = null) Return the first ChildArticleTitleTags matching the query
- * @method     ChildArticleTitleTags findOneOrCreate(ConnectionInterface $con = null) Return the first ChildArticleTitleTags matching the query, or a new ChildArticleTitleTags object populated from the query conditions when no match is found
+ * @method     ChildArticleTitleTags|null findOne(?ConnectionInterface $con = null) Return the first ChildArticleTitleTags matching the query
+ * @method     ChildArticleTitleTags findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildArticleTitleTags matching the query, or a new ChildArticleTitleTags object populated from the query conditions when no match is found
  *
  * @method     ChildArticleTitleTags|null findOneByArticleId(int $article_id) Return the first ChildArticleTitleTags filtered by the article_id column
  * @method     ChildArticleTitleTags|null findOneByTagId(int $tag_id) Return the first ChildArticleTitleTags filtered by the tag_id column *
 
- * @method     ChildArticleTitleTags requirePk($key, ConnectionInterface $con = null) Return the ChildArticleTitleTags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildArticleTitleTags requireOne(ConnectionInterface $con = null) Return the first ChildArticleTitleTags matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticleTitleTags requirePk($key, ?ConnectionInterface $con = null) Return the ChildArticleTitleTags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticleTitleTags requireOne(?ConnectionInterface $con = null) Return the first ChildArticleTitleTags matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildArticleTitleTags requireOneByArticleId(int $article_id) Return the first ChildArticleTitleTags filtered by the article_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticleTitleTags requireOneByTagId(int $tag_id) Return the first ChildArticleTitleTags filtered by the tag_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildArticleTitleTags[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildArticleTitleTags objects based on current ModelCriteria
- * @psalm-method ObjectCollection&\Traversable<ChildArticleTitleTags> find(ConnectionInterface $con = null) Return ChildArticleTitleTags objects based on current ModelCriteria
- * @method     ChildArticleTitleTags[]|ObjectCollection findByArticleId(int $article_id) Return ChildArticleTitleTags objects filtered by the article_id column
- * @psalm-method ObjectCollection&\Traversable<ChildArticleTitleTags> findByArticleId(int $article_id) Return ChildArticleTitleTags objects filtered by the article_id column
- * @method     ChildArticleTitleTags[]|ObjectCollection findByTagId(int $tag_id) Return ChildArticleTitleTags objects filtered by the tag_id column
- * @psalm-method ObjectCollection&\Traversable<ChildArticleTitleTags> findByTagId(int $tag_id) Return ChildArticleTitleTags objects filtered by the tag_id column
- * @method     ChildArticleTitleTags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildArticleTitleTags> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildArticleTitleTags[]|Collection find(?ConnectionInterface $con = null) Return ChildArticleTitleTags objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildArticleTitleTags> find(?ConnectionInterface $con = null) Return ChildArticleTitleTags objects based on current ModelCriteria
+ * @method     ChildArticleTitleTags[]|Collection findByArticleId(int $article_id) Return ChildArticleTitleTags objects filtered by the article_id column
+ * @psalm-method Collection&\Traversable<ChildArticleTitleTags> findByArticleId(int $article_id) Return ChildArticleTitleTags objects filtered by the article_id column
+ * @method     ChildArticleTitleTags[]|Collection findByTagId(int $tag_id) Return ChildArticleTitleTags objects filtered by the tag_id column
+ * @psalm-method Collection&\Traversable<ChildArticleTitleTags> findByTagId(int $tag_id) Return ChildArticleTitleTags objects filtered by the tag_id column
+ * @method     ChildArticleTitleTags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildArticleTitleTags> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class ArticleTitleTagsQuery extends ModelCriteria
@@ -62,9 +62,9 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
     /**
      * Initializes internal state of \App\Schema\Crawl\ArticleTitleTags\Base\ArticleTitleTagsQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName The database name
+     * @param string $modelName The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
     public function __construct($dbName = 'crawl', $modelName = '\\App\\Schema\\Crawl\\ArticleTitleTags\\ArticleTitleTags', $modelAlias = null)
     {
@@ -74,12 +74,12 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
     /**
      * Returns a new ChildArticleTitleTagsQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string $modelAlias The alias of a model in the query
+     * @param Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildArticleTitleTagsQuery
      */
-    public static function create($modelAlias = null, Criteria $criteria = null)
+    public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
         if ($criteria instanceof ChildArticleTitleTagsQuery) {
             return $criteria;
@@ -109,7 +109,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @return ChildArticleTitleTags|array|mixed the result, formatted by the current formatter
      */
-    public function findPk($key, ConnectionInterface $con = null)
+    public function findPk($key, ?ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
@@ -141,8 +141,8 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
@@ -175,8 +175,8 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildArticleTitleTags|array|mixed the result, formatted by the current formatter
      */
@@ -196,12 +196,12 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(array(12, 56), array(832, 123), array(123, 456)), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array $keys Primary keys to use for the query
+     * @param ConnectionInterface $con an optional connection object
      *
-     * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
+     * @return Collection|array|mixed the list of results, formatted by the current formatter
      */
-    public function findPks($keys, ConnectionInterface $con = null)
+    public function findPks($keys, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
@@ -218,9 +218,9 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
-     * @return $this|ChildArticleTitleTagsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
@@ -233,14 +233,16 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array|int $keys The list of primary key to use for the query
      *
-     * @return $this|ChildArticleTitleTagsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
         if (empty($keys)) {
-            return $this->add(null, '1<>1', Criteria::CUSTOM);
+            $this->add(null, '1<>1', Criteria::CUSTOM);
+
+            return $this;
         }
         foreach ($keys as $key) {
             $cton0 = $this->getNewCriterion(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $key[0], Criteria::EQUAL);
@@ -262,15 +264,15 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * $query->filterByArticleId(array('min' => 12)); // WHERE article_id > 12
      * </code>
      *
-     * @param     mixed $articleId The value to use as filter.
+     * @param mixed $articleId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleTitleTagsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByArticleId($articleId = null, $comparison = null)
+    public function filterByArticleId($articleId = null, ?string $comparison = null)
     {
         if (is_array($articleId)) {
             $useMinMax = false;
@@ -290,7 +292,9 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $articleId, $comparison);
+        $this->addUsingAlias(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $articleId, $comparison);
+
+        return $this;
     }
 
     /**
@@ -303,15 +307,15 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * $query->filterByTagId(array('min' => 12)); // WHERE tag_id > 12
      * </code>
      *
-     * @param     mixed $tagId The value to use as filter.
+     * @param mixed $tagId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleTitleTagsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByTagId($tagId = null, $comparison = null)
+    public function filterByTagId($tagId = null, ?string $comparison = null)
     {
         if (is_array($tagId)) {
             $useMinMax = false;
@@ -331,15 +335,17 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTitleTagsTableMap::COL_TAG_ID, $tagId, $comparison);
+        $this->addUsingAlias(ArticleTitleTagsTableMap::COL_TAG_ID, $tagId, $comparison);
+
+        return $this;
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildArticleTitleTags $articleTitleTags Object to remove from the list of results
+     * @param ChildArticleTitleTags $articleTitleTags Object to remove from the list of results
      *
-     * @return $this|ChildArticleTitleTagsQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function prune($articleTitleTags = null)
     {
@@ -358,7 +364,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public function doDeleteAll(ConnectionInterface $con = null)
+    public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(ArticleTitleTagsTableMap::DATABASE_NAME);
@@ -383,12 +389,12 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * Performs a DELETE on the database based on the current ModelCriteria
      *
      * @param ConnectionInterface $con the connection to use
-     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
      *                         if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public function delete(ConnectionInterface $con = null)
+    public function delete(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(ArticleTitleTagsTableMap::DATABASE_NAME);
@@ -413,4 +419,4 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
         });
     }
 
-} // ArticleTitleTagsQuery
+}

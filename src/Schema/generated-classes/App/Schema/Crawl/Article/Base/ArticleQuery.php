@@ -10,7 +10,7 @@ use App\Schema\Crawl\Article\Map\ArticleTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\Collection\ObjectCollection;
+use Propel\Runtime\Collection\Collection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
@@ -49,8 +49,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticleQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildArticleQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildArticle|null findOne(ConnectionInterface $con = null) Return the first ChildArticle matching the query
- * @method     ChildArticle findOneOrCreate(ConnectionInterface $con = null) Return the first ChildArticle matching the query, or a new ChildArticle object populated from the query conditions when no match is found
+ * @method     ChildArticle|null findOne(?ConnectionInterface $con = null) Return the first ChildArticle matching the query
+ * @method     ChildArticle findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildArticle matching the query, or a new ChildArticle object populated from the query conditions when no match is found
  *
  * @method     ChildArticle|null findOneById(int $id) Return the first ChildArticle filtered by the id column
  * @method     ChildArticle|null findOneByArticleId(string $article_id) Return the first ChildArticle filtered by the article_id column
@@ -63,8 +63,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticle|null findOneByLastTagged(int $last_tagged) Return the first ChildArticle filtered by the last_tagged column
  * @method     ChildArticle|null findOneByType(string $type) Return the first ChildArticle filtered by the type column *
 
- * @method     ChildArticle requirePk($key, ConnectionInterface $con = null) Return the ChildArticle by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildArticle requireOne(ConnectionInterface $con = null) Return the first ChildArticle matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticle requirePk($key, ?ConnectionInterface $con = null) Return the ChildArticle by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticle requireOne(?ConnectionInterface $con = null) Return the first ChildArticle matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildArticle requireOneById(int $id) Return the first ChildArticle filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticle requireOneByArticleId(string $article_id) Return the first ChildArticle filtered by the article_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -77,30 +77,30 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticle requireOneByLastTagged(int $last_tagged) Return the first ChildArticle filtered by the last_tagged column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticle requireOneByType(string $type) Return the first ChildArticle filtered by the type column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildArticle[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildArticle objects based on current ModelCriteria
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> find(ConnectionInterface $con = null) Return ChildArticle objects based on current ModelCriteria
- * @method     ChildArticle[]|ObjectCollection findById(int $id) Return ChildArticle objects filtered by the id column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findById(int $id) Return ChildArticle objects filtered by the id column
- * @method     ChildArticle[]|ObjectCollection findByArticleId(string $article_id) Return ChildArticle objects filtered by the article_id column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findByArticleId(string $article_id) Return ChildArticle objects filtered by the article_id column
- * @method     ChildArticle[]|ObjectCollection findByLink(string $link) Return ChildArticle objects filtered by the link column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findByLink(string $link) Return ChildArticle objects filtered by the link column
- * @method     ChildArticle[]|ObjectCollection findBySite(string $site) Return ChildArticle objects filtered by the site column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findBySite(string $site) Return ChildArticle objects filtered by the site column
- * @method     ChildArticle[]|ObjectCollection findByTs(int $ts) Return ChildArticle objects filtered by the ts column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findByTs(int $ts) Return ChildArticle objects filtered by the ts column
- * @method     ChildArticle[]|ObjectCollection findByTitle(string $title) Return ChildArticle objects filtered by the title column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findByTitle(string $title) Return ChildArticle objects filtered by the title column
- * @method     ChildArticle[]|ObjectCollection findByContent(string $content) Return ChildArticle objects filtered by the content column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findByContent(string $content) Return ChildArticle objects filtered by the content column
- * @method     ChildArticle[]|ObjectCollection findByCats(string $cats) Return ChildArticle objects filtered by the cats column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findByCats(string $cats) Return ChildArticle objects filtered by the cats column
- * @method     ChildArticle[]|ObjectCollection findByLastTagged(int $last_tagged) Return ChildArticle objects filtered by the last_tagged column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findByLastTagged(int $last_tagged) Return ChildArticle objects filtered by the last_tagged column
- * @method     ChildArticle[]|ObjectCollection findByType(string $type) Return ChildArticle objects filtered by the type column
- * @psalm-method ObjectCollection&\Traversable<ChildArticle> findByType(string $type) Return ChildArticle objects filtered by the type column
- * @method     ChildArticle[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildArticle> paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildArticle[]|Collection find(?ConnectionInterface $con = null) Return ChildArticle objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildArticle> find(?ConnectionInterface $con = null) Return ChildArticle objects based on current ModelCriteria
+ * @method     ChildArticle[]|Collection findById(int $id) Return ChildArticle objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildArticle> findById(int $id) Return ChildArticle objects filtered by the id column
+ * @method     ChildArticle[]|Collection findByArticleId(string $article_id) Return ChildArticle objects filtered by the article_id column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByArticleId(string $article_id) Return ChildArticle objects filtered by the article_id column
+ * @method     ChildArticle[]|Collection findByLink(string $link) Return ChildArticle objects filtered by the link column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByLink(string $link) Return ChildArticle objects filtered by the link column
+ * @method     ChildArticle[]|Collection findBySite(string $site) Return ChildArticle objects filtered by the site column
+ * @psalm-method Collection&\Traversable<ChildArticle> findBySite(string $site) Return ChildArticle objects filtered by the site column
+ * @method     ChildArticle[]|Collection findByTs(int $ts) Return ChildArticle objects filtered by the ts column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByTs(int $ts) Return ChildArticle objects filtered by the ts column
+ * @method     ChildArticle[]|Collection findByTitle(string $title) Return ChildArticle objects filtered by the title column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByTitle(string $title) Return ChildArticle objects filtered by the title column
+ * @method     ChildArticle[]|Collection findByContent(string $content) Return ChildArticle objects filtered by the content column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByContent(string $content) Return ChildArticle objects filtered by the content column
+ * @method     ChildArticle[]|Collection findByCats(string $cats) Return ChildArticle objects filtered by the cats column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByCats(string $cats) Return ChildArticle objects filtered by the cats column
+ * @method     ChildArticle[]|Collection findByLastTagged(int $last_tagged) Return ChildArticle objects filtered by the last_tagged column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByLastTagged(int $last_tagged) Return ChildArticle objects filtered by the last_tagged column
+ * @method     ChildArticle[]|Collection findByType(string $type) Return ChildArticle objects filtered by the type column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByType(string $type) Return ChildArticle objects filtered by the type column
+ * @method     ChildArticle[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildArticle> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
 abstract class ArticleQuery extends ModelCriteria
@@ -110,9 +110,9 @@ abstract class ArticleQuery extends ModelCriteria
     /**
      * Initializes internal state of \App\Schema\Crawl\Article\Base\ArticleQuery object.
      *
-     * @param     string $dbName The database name
-     * @param     string $modelName The phpName of a model, e.g. 'Book'
-     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     * @param string $dbName The database name
+     * @param string $modelName The phpName of a model, e.g. 'Book'
+     * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
     public function __construct($dbName = 'crawl', $modelName = '\\App\\Schema\\Crawl\\Article\\Article', $modelAlias = null)
     {
@@ -122,12 +122,12 @@ abstract class ArticleQuery extends ModelCriteria
     /**
      * Returns a new ChildArticleQuery object.
      *
-     * @param     string $modelAlias The alias of a model in the query
-     * @param     Criteria $criteria Optional Criteria to build the query from
+     * @param string $modelAlias The alias of a model in the query
+     * @param Criteria $criteria Optional Criteria to build the query from
      *
      * @return ChildArticleQuery
      */
-    public static function create($modelAlias = null, Criteria $criteria = null)
+    public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
         if ($criteria instanceof ChildArticleQuery) {
             return $criteria;
@@ -157,7 +157,7 @@ abstract class ArticleQuery extends ModelCriteria
      *
      * @return ChildArticle|array|mixed the result, formatted by the current formatter
      */
-    public function findPk($key, ConnectionInterface $con = null)
+    public function findPk($key, ?ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
@@ -189,8 +189,8 @@ abstract class ArticleQuery extends ModelCriteria
      * Find object by primary key using raw SQL to go fast.
      * Bypass doSelect() and the object formatter by using generated code.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
@@ -222,8 +222,8 @@ abstract class ArticleQuery extends ModelCriteria
     /**
      * Find object by primary key.
      *
-     * @param     mixed $key Primary key to use for the query
-     * @param     ConnectionInterface $con A connection object
+     * @param mixed $key Primary key to use for the query
+     * @param ConnectionInterface $con A connection object
      *
      * @return ChildArticle|array|mixed the result, formatted by the current formatter
      */
@@ -243,12 +243,12 @@ abstract class ArticleQuery extends ModelCriteria
      * <code>
      * $objs = $c->findPks(array(12, 56, 832), $con);
      * </code>
-     * @param     array $keys Primary keys to use for the query
-     * @param     ConnectionInterface $con an optional connection object
+     * @param array $keys Primary keys to use for the query
+     * @param ConnectionInterface $con an optional connection object
      *
-     * @return ObjectCollection|array|mixed the list of results, formatted by the current formatter
+     * @return Collection|array|mixed the list of results, formatted by the current formatter
      */
-    public function findPks($keys, ConnectionInterface $con = null)
+    public function findPks($keys, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getReadConnection($this->getDbName());
@@ -265,27 +265,31 @@ abstract class ArticleQuery extends ModelCriteria
     /**
      * Filter the query by primary key
      *
-     * @param     mixed $key Primary key to use for the query
+     * @param mixed $key Primary key to use for the query
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(ArticleTableMap::COL_ID, $key, Criteria::EQUAL);
+        $this->addUsingAlias(ArticleTableMap::COL_ID, $key, Criteria::EQUAL);
+
+        return $this;
     }
 
     /**
      * Filter the query by a list of primary keys
      *
-     * @param     array $keys The list of primary key to use for the query
+     * @param array|int $keys The list of primary key to use for the query
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(ArticleTableMap::COL_ID, $keys, Criteria::IN);
+        $this->addUsingAlias(ArticleTableMap::COL_ID, $keys, Criteria::IN);
+
+        return $this;
     }
 
     /**
@@ -298,15 +302,15 @@ abstract class ArticleQuery extends ModelCriteria
      * $query->filterById(array('min' => 12)); // WHERE id > 12
      * </code>
      *
-     * @param     mixed $id The value to use as filter.
+     * @param mixed $id The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterById($id = null, $comparison = null)
+    public function filterById($id = null, ?string $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
@@ -326,7 +330,9 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_ID, $id, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_ID, $id, $comparison);
+
+        return $this;
     }
 
     /**
@@ -336,14 +342,15 @@ abstract class ArticleQuery extends ModelCriteria
      * <code>
      * $query->filterByArticleId('fooValue');   // WHERE article_id = 'fooValue'
      * $query->filterByArticleId('%fooValue%', Criteria::LIKE); // WHERE article_id LIKE '%fooValue%'
+     * $query->filterByArticleId(['foo', 'bar']); // WHERE article_id IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $articleId The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $articleId The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByArticleId($articleId = null, $comparison = null)
+    public function filterByArticleId($articleId = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($articleId)) {
@@ -351,7 +358,9 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_ARTICLE_ID, $articleId, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_ARTICLE_ID, $articleId, $comparison);
+
+        return $this;
     }
 
     /**
@@ -361,14 +370,15 @@ abstract class ArticleQuery extends ModelCriteria
      * <code>
      * $query->filterByLink('fooValue');   // WHERE link = 'fooValue'
      * $query->filterByLink('%fooValue%', Criteria::LIKE); // WHERE link LIKE '%fooValue%'
+     * $query->filterByLink(['foo', 'bar']); // WHERE link IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $link The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $link The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByLink($link = null, $comparison = null)
+    public function filterByLink($link = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($link)) {
@@ -376,7 +386,9 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_LINK, $link, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_LINK, $link, $comparison);
+
+        return $this;
     }
 
     /**
@@ -386,14 +398,15 @@ abstract class ArticleQuery extends ModelCriteria
      * <code>
      * $query->filterBySite('fooValue');   // WHERE site = 'fooValue'
      * $query->filterBySite('%fooValue%', Criteria::LIKE); // WHERE site LIKE '%fooValue%'
+     * $query->filterBySite(['foo', 'bar']); // WHERE site IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $site The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $site The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterBySite($site = null, $comparison = null)
+    public function filterBySite($site = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($site)) {
@@ -401,7 +414,9 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_SITE, $site, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_SITE, $site, $comparison);
+
+        return $this;
     }
 
     /**
@@ -414,15 +429,15 @@ abstract class ArticleQuery extends ModelCriteria
      * $query->filterByTs(array('min' => 12)); // WHERE ts > 12
      * </code>
      *
-     * @param     mixed $ts The value to use as filter.
+     * @param mixed $ts The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByTs($ts = null, $comparison = null)
+    public function filterByTs($ts = null, ?string $comparison = null)
     {
         if (is_array($ts)) {
             $useMinMax = false;
@@ -442,7 +457,9 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_TS, $ts, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_TS, $ts, $comparison);
+
+        return $this;
     }
 
     /**
@@ -452,14 +469,15 @@ abstract class ArticleQuery extends ModelCriteria
      * <code>
      * $query->filterByTitle('fooValue');   // WHERE title = 'fooValue'
      * $query->filterByTitle('%fooValue%', Criteria::LIKE); // WHERE title LIKE '%fooValue%'
+     * $query->filterByTitle(['foo', 'bar']); // WHERE title IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $title The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $title The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByTitle($title = null, $comparison = null)
+    public function filterByTitle($title = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($title)) {
@@ -467,7 +485,9 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_TITLE, $title, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_TITLE, $title, $comparison);
+
+        return $this;
     }
 
     /**
@@ -477,14 +497,15 @@ abstract class ArticleQuery extends ModelCriteria
      * <code>
      * $query->filterByContent('fooValue');   // WHERE content = 'fooValue'
      * $query->filterByContent('%fooValue%', Criteria::LIKE); // WHERE content LIKE '%fooValue%'
+     * $query->filterByContent(['foo', 'bar']); // WHERE content IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $content The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $content The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByContent($content = null, $comparison = null)
+    public function filterByContent($content = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($content)) {
@@ -492,7 +513,9 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_CONTENT, $content, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_CONTENT, $content, $comparison);
+
+        return $this;
     }
 
     /**
@@ -502,14 +525,15 @@ abstract class ArticleQuery extends ModelCriteria
      * <code>
      * $query->filterByCats('fooValue');   // WHERE cats = 'fooValue'
      * $query->filterByCats('%fooValue%', Criteria::LIKE); // WHERE cats LIKE '%fooValue%'
+     * $query->filterByCats(['foo', 'bar']); // WHERE cats IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $cats The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $cats The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByCats($cats = null, $comparison = null)
+    public function filterByCats($cats = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($cats)) {
@@ -517,7 +541,9 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_CATS, $cats, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_CATS, $cats, $comparison);
+
+        return $this;
     }
 
     /**
@@ -530,15 +556,15 @@ abstract class ArticleQuery extends ModelCriteria
      * $query->filterByLastTagged(array('min' => 12)); // WHERE last_tagged > 12
      * </code>
      *
-     * @param     mixed $lastTagged The value to use as filter.
+     * @param mixed $lastTagged The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByLastTagged($lastTagged = null, $comparison = null)
+    public function filterByLastTagged($lastTagged = null, ?string $comparison = null)
     {
         if (is_array($lastTagged)) {
             $useMinMax = false;
@@ -558,7 +584,9 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_LAST_TAGGED, $lastTagged, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_LAST_TAGGED, $lastTagged, $comparison);
+
+        return $this;
     }
 
     /**
@@ -568,14 +596,15 @@ abstract class ArticleQuery extends ModelCriteria
      * <code>
      * $query->filterByType('fooValue');   // WHERE type = 'fooValue'
      * $query->filterByType('%fooValue%', Criteria::LIKE); // WHERE type LIKE '%fooValue%'
+     * $query->filterByType(['foo', 'bar']); // WHERE type IN ('foo', 'bar')
      * </code>
      *
-     * @param     string $type The value to use as filter.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string|string[] $type The value to use as filter.
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
-    public function filterByType($type = null, $comparison = null)
+    public function filterByType($type = null, ?string $comparison = null)
     {
         if (null === $comparison) {
             if (is_array($type)) {
@@ -583,15 +612,17 @@ abstract class ArticleQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ArticleTableMap::COL_TYPE, $type, $comparison);
+        $this->addUsingAlias(ArticleTableMap::COL_TYPE, $type, $comparison);
+
+        return $this;
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildArticle $article Object to remove from the list of results
+     * @param ChildArticle $article Object to remove from the list of results
      *
-     * @return $this|ChildArticleQuery The current query, for fluid interface
+     * @return $this The current query, for fluid interface
      */
     public function prune($article = null)
     {
@@ -608,7 +639,7 @@ abstract class ArticleQuery extends ModelCriteria
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
-    public function doDeleteAll(ConnectionInterface $con = null)
+    public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(ArticleTableMap::DATABASE_NAME);
@@ -633,12 +664,12 @@ abstract class ArticleQuery extends ModelCriteria
      * Performs a DELETE on the database based on the current ModelCriteria
      *
      * @param ConnectionInterface $con the connection to use
-     * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
+     * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
      *                         if supported by native driver or if emulated using Propel.
-     * @throws PropelException Any exceptions caught during processing will be
+     * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
      */
-    public function delete(ConnectionInterface $con = null)
+    public function delete(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
             $con = Propel::getServiceContainer()->getWriteConnection(ArticleTableMap::DATABASE_NAME);
@@ -663,4 +694,4 @@ abstract class ArticleQuery extends ModelCriteria
         });
     }
 
-} // ArticleQuery
+}
