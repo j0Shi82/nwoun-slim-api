@@ -14,6 +14,8 @@ use App\Controller\V1\Auctions\Assignment;
 use App\Controller\V1\Auctions\Data;
 use App\Controller\V1\Auctions\Items;
 use App\Controller\V1\Auctions\ItemDetails;
+use App\Controller\V1\Auctions\Engine;
+use App\Controller\V1\Auctions\Patreon;
 use App\Services\DB;
 use App\Middleware\Cors;
 
@@ -62,6 +64,8 @@ class Routes
             $auctionsGroup->get('/items', [Items::class, 'get']);
             $auctionsGroup->get('/itemdetails', [ItemDetails::class, 'get']);
             $auctionsGroup->post('/data', [Data::class, 'post']);
+            $auctionsGroup->get('/engine', [Engine::class, 'get']);
+            $auctionsGroup->get('/patreon', [Patreon::class, 'get']);
             Routes::add404CatchAll($auctionsGroup);
         });
 

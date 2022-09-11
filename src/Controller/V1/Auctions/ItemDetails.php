@@ -23,7 +23,7 @@ class ItemDetails extends BaseController
         // define all possible GET data
         $data_ary = array(
             'item_def' => $this->requestHelper->variable('item_def', ''),
-            'server' => $this->requestHelper->variable('server', ''),
+            'server' => $this->requestHelper->variable('server', '')
         );
 
         if (empty($data_ary['item_def']) || empty($data_ary['server'])) {
