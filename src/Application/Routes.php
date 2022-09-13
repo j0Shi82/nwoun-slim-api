@@ -18,6 +18,7 @@ use App\Controller\V1\Auctions\Engine;
 use App\Controller\V1\Auctions\Patreon;
 use App\Services\DB;
 use App\Middleware\Cors;
+use App\Middleware\Compression;
 
 class Routes
 {
@@ -57,15 +58,15 @@ class Routes
             $devtrackerGroup->get('/devlist', [Devlist::class, 'get']);
             $devtrackerGroup->get('/topiclist', [Topiclist::class, 'get']);
             Routes::add404CatchAll($devtrackerGroup);
-        });
+        })->add(new Compression());
 
         $v1Group->group('/auctions', function (\Slim\Routing\RouteCollectorProxy $auctionsGroup) {
             $auctionsGroup->get('/assignment', [Assignment::class, 'get']);
-            $auctionsGroup->get('/items', [Items::class, 'get']);
-            $auctionsGroup->get('/itemdetails', [ItemDetails::class, 'get']);
+            $auctionsGroup->get('/items', [Items::class, 'get'])->add(new Compression());
+            $auctionsGroup->get('/itemdetails', [ItemDetails::class, 'get'])->add(new Compression());
             $auctionsGroup->post('/data', [Data::class, 'post']);
-            $auctionsGroup->get('/engine', [Engine::class, 'get']);
-            $auctionsGroup->get('/patreon', [Patreon::class, 'get']);
+            $auctionsGroup->get('/engine', [Engine::class, 'get'])->add(new Compression());
+            $auctionsGroup->get('/patreon', [Patreon::class, 'get'])->add(new Compression());
             Routes::add404CatchAll($auctionsGroup);
         });
 
@@ -76,18 +77,18 @@ class Routes
             $nwfeedsGroup->get('/arcgamesforum', [Neverwinterfeeds::class, 'get_forum']);
             $nwfeedsGroup->get('/officialreddit', [Neverwinterfeeds::class, 'get_reddit']);
             Routes::add404CatchAll($nwfeedsGroup);
-        });
+        })->add(new Compression());
 
         $v1Group->group('/articles', function (\Slim\Routing\RouteCollectorProxy $articlesGroup) {
             $articlesGroup->get('/discussiontags', [Articles::class, 'get_tags']);
             $articlesGroup->get('/all', [Articles::class, 'get']);
             Routes::add404CatchAll($articlesGroup);
-        });
+        })->add(new Compression());
 
         $v1Group->group('/infohub', function (\Slim\Routing\RouteCollectorProxy $infohubGroup) {
             $infohubGroup->post('/source', [Infohub::class, 'post_source']);
             Routes::add404CatchAll($infohubGroup);
-        });
+        })->add(new Compression());
     }
 
     /**
