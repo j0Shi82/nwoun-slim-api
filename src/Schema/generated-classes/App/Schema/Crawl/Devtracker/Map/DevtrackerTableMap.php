@@ -288,9 +288,9 @@ class DevtrackerTableMap extends TableMap
         $this->addColumn('dev_name', 'DevName', 'VARCHAR', true, 30, null);
         $this->addColumn('dev_id', 'DevId', 'INTEGER', true, null, null);
         $this->addColumn('category_id', 'CategoryId', 'INTEGER', true, null, null);
-        $this->addColumn('discussion_id', 'DiscussionId', 'INTEGER', true, null, null);
+        $this->addColumn('discussion_id', 'DiscussionId', 'VARCHAR', true, 20, null);
         $this->addColumn('discussion_name', 'DiscussionName', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('comment_id', 'CommentId', 'INTEGER', true, null, 0);
+        $this->addColumn('comment_id', 'CommentId', 'VARCHAR', true, 20, '0');
         $this->addColumn('body', 'Body', 'LONGVARCHAR', true, null, null);
         $this->addColumn('date', 'Date', 'TIMESTAMP', true, null, null);
         $this->addColumn('is_poll', 'IsPoll', 'BOOLEAN', true, 1, null);

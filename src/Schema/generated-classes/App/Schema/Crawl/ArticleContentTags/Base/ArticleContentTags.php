@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Schema\Crawl\ArticleTags\Base;
+namespace App\Schema\Crawl\ArticleContentTags\Base;
 
 use \Exception;
 use \PDO;
-use App\Schema\Crawl\ArticleTags\ArticleTagsQuery as ChildArticleTagsQuery;
-use App\Schema\Crawl\ArticleTags\Map\ArticleTagsTableMap;
+use App\Schema\Crawl\Article\Article;
+use App\Schema\Crawl\Article\ArticleQuery;
+use App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery as ChildArticleContentTagsQuery;
+use App\Schema\Crawl\ArticleContentTags\Map\ArticleContentTagsTableMap;
+use App\Schema\Crawl\Tag\Tag;
+use App\Schema\Crawl\Tag\TagQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -23,16 +27,16 @@ use Propel\Runtime\Parser\AbstractParser;
  *
  *
  *
- * @package    propel.generator.App.Schema.Crawl.ArticleTags.Base
+ * @package    propel.generator.App.Schema.Crawl.ArticleContentTags.Base
  */
-abstract class ArticleTags implements ActiveRecordInterface
+abstract class ArticleContentTags implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      *
      * @var string
      */
-    public const TABLE_MAP = '\\App\\Schema\\Crawl\\ArticleTags\\Map\\ArticleTagsTableMap';
+    public const TABLE_MAP = '\\App\\Schema\\Crawl\\ArticleContentTags\\Map\\ArticleContentTagsTableMap';
 
 
     /**
@@ -76,6 +80,16 @@ abstract class ArticleTags implements ActiveRecordInterface
     protected $tag_id;
 
     /**
+     * @var        Article
+     */
+    protected $aContentArticle;
+
+    /**
+     * @var        Tag
+     */
+    protected $aContentTag;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -84,7 +98,7 @@ abstract class ArticleTags implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of App\Schema\Crawl\ArticleTags\Base\ArticleTags object.
+     * Initializes internal state of App\Schema\Crawl\ArticleContentTags\Base\ArticleContentTags object.
      */
     public function __construct()
     {
@@ -177,9 +191,9 @@ abstract class ArticleTags implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>ArticleTags</code> instance.  If
-     * <code>obj</code> is an instance of <code>ArticleTags</code>, delegates to
-     * <code>equals(ArticleTags)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>ArticleContentTags</code> instance.  If
+     * <code>obj</code> is an instance of <code>ArticleContentTags</code>, delegates to
+     * <code>equals(ArticleContentTags)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param mixed $obj The object to compare to.
      * @return bool Whether equal to the object specified.
@@ -343,7 +357,11 @@ abstract class ArticleTags implements ActiveRecordInterface
 
         if ($this->article_id !== $v) {
             $this->article_id = $v;
-            $this->modifiedColumns[ArticleTagsTableMap::COL_ARTICLE_ID] = true;
+            $this->modifiedColumns[ArticleContentTagsTableMap::COL_ARTICLE_ID] = true;
+        }
+
+        if ($this->aContentArticle !== null && $this->aContentArticle->getId() !== $v) {
+            $this->aContentArticle = null;
         }
 
         return $this;
@@ -363,7 +381,11 @@ abstract class ArticleTags implements ActiveRecordInterface
 
         if ($this->tag_id !== $v) {
             $this->tag_id = $v;
-            $this->modifiedColumns[ArticleTagsTableMap::COL_TAG_ID] = true;
+            $this->modifiedColumns[ArticleContentTagsTableMap::COL_TAG_ID] = true;
+        }
+
+        if ($this->aContentTag !== null && $this->aContentTag->getId() !== $v) {
+            $this->aContentTag = null;
         }
 
         return $this;
@@ -405,10 +427,10 @@ abstract class ArticleTags implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ArticleTagsTableMap::translateFieldName('ArticleId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ArticleContentTagsTableMap::translateFieldName('ArticleId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->article_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ArticleTagsTableMap::translateFieldName('TagId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ArticleContentTagsTableMap::translateFieldName('TagId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->tag_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
@@ -418,10 +440,10 @@ abstract class ArticleTags implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = ArticleTagsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 2; // 2 = ArticleContentTagsTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\App\\Schema\\Crawl\\ArticleTags\\ArticleTags'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\App\\Schema\\Crawl\\ArticleContentTags\\ArticleContentTags'), 0, $e);
         }
     }
 
@@ -441,6 +463,12 @@ abstract class ArticleTags implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
+        if ($this->aContentArticle !== null && $this->article_id !== $this->aContentArticle->getId()) {
+            $this->aContentArticle = null;
+        }
+        if ($this->aContentTag !== null && $this->tag_id !== $this->aContentTag->getId()) {
+            $this->aContentTag = null;
+        }
     }
 
     /**
@@ -464,13 +492,13 @@ abstract class ArticleTags implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(ArticleTagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(ArticleContentTagsTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildArticleTagsQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildArticleContentTagsQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -480,6 +508,8 @@ abstract class ArticleTags implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aContentArticle = null;
+            $this->aContentTag = null;
         } // if (deep)
     }
 
@@ -489,8 +519,8 @@ abstract class ArticleTags implements ActiveRecordInterface
      * @param ConnectionInterface $con
      * @return void
      * @throws \Propel\Runtime\Exception\PropelException
-     * @see ArticleTags::setDeleted()
-     * @see ArticleTags::isDeleted()
+     * @see ArticleContentTags::setDeleted()
+     * @see ArticleContentTags::isDeleted()
      */
     public function delete(?ConnectionInterface $con = null): void
     {
@@ -499,11 +529,11 @@ abstract class ArticleTags implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ArticleTagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ArticleContentTagsTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildArticleTagsQuery::create()
+            $deleteQuery = ChildArticleContentTagsQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -538,7 +568,7 @@ abstract class ArticleTags implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ArticleTagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ArticleContentTagsTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -557,7 +587,7 @@ abstract class ArticleTags implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                ArticleTagsTableMap::addInstanceToPool($this);
+                ArticleContentTagsTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -582,6 +612,25 @@ abstract class ArticleTags implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aContentArticle !== null) {
+                if ($this->aContentArticle->isModified() || $this->aContentArticle->isNew()) {
+                    $affectedRows += $this->aContentArticle->save($con);
+                }
+                $this->setContentArticle($this->aContentArticle);
+            }
+
+            if ($this->aContentTag !== null) {
+                if ($this->aContentTag->isModified() || $this->aContentTag->isNew()) {
+                    $affectedRows += $this->aContentTag->save($con);
+                }
+                $this->setContentTag($this->aContentTag);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -616,10 +665,10 @@ abstract class ArticleTags implements ActiveRecordInterface
 
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(ArticleTagsTableMap::COL_ARTICLE_ID)) {
+        if ($this->isColumnModified(ArticleContentTagsTableMap::COL_ARTICLE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'article_id';
         }
-        if ($this->isColumnModified(ArticleTagsTableMap::COL_TAG_ID)) {
+        if ($this->isColumnModified(ArticleContentTagsTableMap::COL_TAG_ID)) {
             $modifiedColumns[':p' . $index++]  = 'tag_id';
         }
 
@@ -678,7 +727,7 @@ abstract class ArticleTags implements ActiveRecordInterface
      */
     public function getByName(string $name, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = ArticleTagsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ArticleContentTagsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -716,16 +765,17 @@ abstract class ArticleTags implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param bool $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param bool $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array An associative array containing the field names (as keys) and field values
      */
-    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = []): array
+    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
-        if (isset($alreadyDumpedObjects['ArticleTags'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['ArticleContentTags'][$this->hashCode()])) {
             return ['*RECURSION*'];
         }
-        $alreadyDumpedObjects['ArticleTags'][$this->hashCode()] = true;
-        $keys = ArticleTagsTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['ArticleContentTags'][$this->hashCode()] = true;
+        $keys = ArticleContentTagsTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getArticleId(),
             $keys[1] => $this->getTagId(),
@@ -735,6 +785,38 @@ abstract class ArticleTags implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aContentArticle) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'article';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'article';
+                        break;
+                    default:
+                        $key = 'ContentArticle';
+                }
+
+                $result[$key] = $this->aContentArticle->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aContentTag) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'tag';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'tag';
+                        break;
+                    default:
+                        $key = 'ContentTag';
+                }
+
+                $result[$key] = $this->aContentTag->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -752,7 +834,7 @@ abstract class ArticleTags implements ActiveRecordInterface
      */
     public function setByName(string $name, $value, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = ArticleTagsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ArticleContentTagsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
 
@@ -800,7 +882,7 @@ abstract class ArticleTags implements ActiveRecordInterface
      */
     public function fromArray(array $arr, string $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = ArticleTagsTableMap::getFieldNames($keyType);
+        $keys = ArticleContentTagsTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setArticleId($arr[$keys[0]]);
@@ -849,13 +931,13 @@ abstract class ArticleTags implements ActiveRecordInterface
      */
     public function buildCriteria(): Criteria
     {
-        $criteria = new Criteria(ArticleTagsTableMap::DATABASE_NAME);
+        $criteria = new Criteria(ArticleContentTagsTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(ArticleTagsTableMap::COL_ARTICLE_ID)) {
-            $criteria->add(ArticleTagsTableMap::COL_ARTICLE_ID, $this->article_id);
+        if ($this->isColumnModified(ArticleContentTagsTableMap::COL_ARTICLE_ID)) {
+            $criteria->add(ArticleContentTagsTableMap::COL_ARTICLE_ID, $this->article_id);
         }
-        if ($this->isColumnModified(ArticleTagsTableMap::COL_TAG_ID)) {
-            $criteria->add(ArticleTagsTableMap::COL_TAG_ID, $this->tag_id);
+        if ($this->isColumnModified(ArticleContentTagsTableMap::COL_TAG_ID)) {
+            $criteria->add(ArticleContentTagsTableMap::COL_TAG_ID, $this->tag_id);
         }
 
         return $criteria;
@@ -873,9 +955,9 @@ abstract class ArticleTags implements ActiveRecordInterface
      */
     public function buildPkeyCriteria(): Criteria
     {
-        $criteria = ChildArticleTagsQuery::create();
-        $criteria->add(ArticleTagsTableMap::COL_ARTICLE_ID, $this->article_id);
-        $criteria->add(ArticleTagsTableMap::COL_TAG_ID, $this->tag_id);
+        $criteria = ChildArticleContentTagsQuery::create();
+        $criteria->add(ArticleContentTagsTableMap::COL_ARTICLE_ID, $this->article_id);
+        $criteria->add(ArticleContentTagsTableMap::COL_TAG_ID, $this->tag_id);
 
         return $criteria;
     }
@@ -891,8 +973,22 @@ abstract class ArticleTags implements ActiveRecordInterface
         $validPk = null !== $this->getArticleId() &&
             null !== $this->getTagId();
 
-        $validPrimaryKeyFKs = 0;
+        $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
+
+        //relation ContentArticle to table article
+        if ($this->aContentArticle && $hash = spl_object_hash($this->aContentArticle)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation ContentTag to table tag
+        if ($this->aContentTag && $hash = spl_object_hash($this->aContentTag)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -945,7 +1041,7 @@ abstract class ArticleTags implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \App\Schema\Crawl\ArticleTags\ArticleTags (or compatible) type.
+     * @param object $copyObj An object of \App\Schema\Crawl\ArticleContentTags\ArticleContentTags (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -969,7 +1065,7 @@ abstract class ArticleTags implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \App\Schema\Crawl\ArticleTags\ArticleTags Clone of current object.
+     * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTags Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -983,6 +1079,108 @@ abstract class ArticleTags implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a Article object.
+     *
+     * @param Article $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setContentArticle(Article $v = null)
+    {
+        if ($v === null) {
+            $this->setArticleId(NULL);
+        } else {
+            $this->setArticleId($v->getId());
+        }
+
+        $this->aContentArticle = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Article object, it will not be re-added.
+        if ($v !== null) {
+            $v->addContentArticle($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Article object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return Article The associated Article object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getContentArticle(?ConnectionInterface $con = null)
+    {
+        if ($this->aContentArticle === null && ($this->article_id != 0)) {
+            $this->aContentArticle = ArticleQuery::create()->findPk($this->article_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aContentArticle->addContentArticles($this);
+             */
+        }
+
+        return $this->aContentArticle;
+    }
+
+    /**
+     * Declares an association between this object and a Tag object.
+     *
+     * @param Tag $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setContentTag(Tag $v = null)
+    {
+        if ($v === null) {
+            $this->setTagId(NULL);
+        } else {
+            $this->setTagId($v->getId());
+        }
+
+        $this->aContentTag = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Tag object, it will not be re-added.
+        if ($v !== null) {
+            $v->addContentTag($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Tag object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return Tag The associated Tag object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getContentTag(?ConnectionInterface $con = null)
+    {
+        if ($this->aContentTag === null && ($this->tag_id != 0)) {
+            $this->aContentTag = TagQuery::create()->findPk($this->tag_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aContentTag->addContentTags($this);
+             */
+        }
+
+        return $this->aContentTag;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -991,6 +1189,12 @@ abstract class ArticleTags implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aContentArticle) {
+            $this->aContentArticle->removeContentArticle($this);
+        }
+        if (null !== $this->aContentTag) {
+            $this->aContentTag->removeContentTag($this);
+        }
         $this->article_id = null;
         $this->tag_id = null;
         $this->alreadyInSave = false;
@@ -1016,6 +1220,8 @@ abstract class ArticleTags implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aContentArticle = null;
+        $this->aContentTag = null;
         return $this;
     }
 
@@ -1026,7 +1232,7 @@ abstract class ArticleTags implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(ArticleTagsTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(ArticleContentTagsTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

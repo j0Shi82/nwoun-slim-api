@@ -39,7 +39,8 @@ CREATE TABLE `article_tags`
 (
     `article_id` INTEGER NOT NULL,
     `tag_id` INTEGER NOT NULL,
-    PRIMARY KEY (`article_id`,`tag_id`)
+    PRIMARY KEY (`article_id`,`tag_id`),
+    INDEX `fi_tentTag` (`tag_id`)
 ) ENGINE=MyISAM;
 
 -- ---------------------------------------------------------------------
@@ -52,7 +53,8 @@ CREATE TABLE `article_title_tags`
 (
     `article_id` INTEGER NOT NULL,
     `tag_id` INTEGER NOT NULL,
-    PRIMARY KEY (`article_id`,`tag_id`)
+    PRIMARY KEY (`article_id`,`tag_id`),
+    INDEX `fi_leTag` (`tag_id`)
 ) ENGINE=MyISAM;
 
 -- ---------------------------------------------------------------------
@@ -126,9 +128,9 @@ CREATE TABLE `devtracker`
     `dev_name` VARCHAR(30) NOT NULL,
     `dev_id` INTEGER NOT NULL,
     `category_id` INTEGER NOT NULL,
-    `discussion_id` INTEGER NOT NULL,
+    `discussion_id` VARCHAR(20) NOT NULL,
     `discussion_name` TEXT NOT NULL,
-    `comment_id` INTEGER DEFAULT 0 NOT NULL,
+    `comment_id` VARCHAR(20) DEFAULT '0' NOT NULL,
     `body` TEXT NOT NULL,
     `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `is_poll` TINYINT(1) NOT NULL,

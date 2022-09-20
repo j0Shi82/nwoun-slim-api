@@ -265,6 +265,22 @@ class ArticleTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('ContentArticle', '\\App\\Schema\\Crawl\\ArticleContentTags\\ArticleContentTags', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':article_id',
+    1 => ':id',
+  ),
+), null, null, 'ContentArticles', false);
+        $this->addRelation('TitleArticle', '\\App\\Schema\\Crawl\\ArticleTitleTags\\ArticleTitleTags', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':article_id',
+    1 => ':id',
+  ),
+), null, null, 'TitleArticles', false);
+        $this->addRelation('ContentTag', '\\App\\Schema\\Crawl\\Tag\\Tag', RelationMap::MANY_TO_MANY, array(), null, null, 'ContentTags');
+        $this->addRelation('TitleTag', '\\App\\Schema\\Crawl\\Tag\\Tag', RelationMap::MANY_TO_MANY, array(), null, null, 'TitleTags');
     }
 
     /**

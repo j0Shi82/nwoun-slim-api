@@ -77,12 +77,11 @@ class Postlist extends BaseController
             ->orderByDate('desc')
             ->limit($data_ary['count'])
             ->offset(($data_ary['page'] - 1)*$data_ary['count'])
-            ->select(array('dev_name', 'dev_id', 'discussion_id', 'comment_id', 'discussion_name', 'body', 'timestamp'))
+            ->select(array('dev_name', 'dev_id', 'discussion_id', 'comment_id', 'category_id', 'discussion_name', 'body', 'timestamp'))
             ->find()
             ->getData();
 
         array_walk($posts, function (&$post) {
-            $post['discussion_id'] = (int) $post['discussion_id'];
             $post['discussion_name'] = html_entity_decode($post['discussion_name']);
             $post['timestamp'] = (int) $post['timestamp'];
 

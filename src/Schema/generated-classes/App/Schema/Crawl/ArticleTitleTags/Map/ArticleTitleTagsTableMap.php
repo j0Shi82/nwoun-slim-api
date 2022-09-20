@@ -157,9 +157,10 @@ class ArticleTitleTagsTableMap extends TableMap
         $this->setClassName('\\App\\Schema\\Crawl\\ArticleTitleTags\\ArticleTitleTags');
         $this->setPackage('App.Schema.Crawl.ArticleTitleTags');
         $this->setUseIdGenerator(false);
+        $this->setIsCrossRef(true);
         // columns
-        $this->addPrimaryKey('article_id', 'ArticleId', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('tag_id', 'TagId', 'INTEGER', true, null, null);
+        $this->addForeignPrimaryKey('article_id', 'ArticleId', 'INTEGER' , 'article', 'id', true, null, null);
+        $this->addForeignPrimaryKey('tag_id', 'TagId', 'INTEGER' , 'tag', 'id', true, null, null);
     }
 
     /**
@@ -169,6 +170,20 @@ class ArticleTitleTagsTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('TitleArticle', '\\App\\Schema\\Crawl\\Article\\Article', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':article_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('TitleTag', '\\App\\Schema\\Crawl\\Tag\\Tag', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':tag_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
     }
 
     /**

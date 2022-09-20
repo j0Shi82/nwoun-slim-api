@@ -22,20 +22,32 @@ class Devinfo extends BaseController
         // define all possible GET data
         $data_ary = array(
             'dev' => $this->requestHelper->variable('dev', ''),
+            'id' => $this->requestHelper->variable('id', 0),
         );
 
         $ch = \curl_init();
         // Will return the response, if false it print the response
         \curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         // Set the url
-        \curl_setopt($ch, CURLOPT_URL, "https://forum.arcgames.com/neverwinter/api/v1/users/get.json?User.ID=".$data_ary['dev']);
+        if ($data_ary['id']) {
+            \curl_setopt($ch, CURLOPT_URL, "https://forum.arcgames.com/neverwinter/api/v1/users/get.json?User.ID=".$data_ary['id']);
+        } else {
+            \curl_setopt($ch, CURLOPT_URL, "https://www.reddit.com/user/".$data_ary['dev']."/about.json");
+        }
+
         \curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         // Execute
         $payload=\curl_exec($ch);
         // Closing
         \curl_close($ch);
 
-        $response->getBody()->write(json_encode(json_decode($payload)));
+        $payload = json_decode($payload);
+
+        $return = [
+            'img' => $payload->Profile->PhotoUrl ?? $payload->data->icon_img,
+        ];
+
+        $response->getBody()->write(json_encode($return));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');

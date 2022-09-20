@@ -94,7 +94,7 @@ abstract class Devtracker implements ActiveRecordInterface
     /**
      * The value for the discussion_id field.
      *
-     * @var        int
+     * @var        string
      */
     protected $discussion_id;
 
@@ -108,8 +108,8 @@ abstract class Devtracker implements ActiveRecordInterface
     /**
      * The value for the comment_id field.
      *
-     * Note: this column has a database default value of: 0
-     * @var        int
+     * Note: this column has a database default value of: '0'
+     * @var        string
      */
     protected $comment_id;
 
@@ -164,7 +164,7 @@ abstract class Devtracker implements ActiveRecordInterface
      */
     public function applyDefaultValues(): void
     {
-        $this->comment_id = 0;
+        $this->comment_id = '0';
     }
 
     /**
@@ -438,7 +438,7 @@ abstract class Devtracker implements ActiveRecordInterface
     /**
      * Get the [discussion_id] column value.
      *
-     * @return int
+     * @return string
      */
     public function getDiscussionId()
     {
@@ -458,7 +458,7 @@ abstract class Devtracker implements ActiveRecordInterface
     /**
      * Get the [comment_id] column value.
      *
-     * @return int
+     * @return string
      */
     public function getCommentId()
     {
@@ -640,13 +640,13 @@ abstract class Devtracker implements ActiveRecordInterface
     /**
      * Set the value of [discussion_id] column.
      *
-     * @param int $v New value
+     * @param string $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setDiscussionId($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->discussion_id !== $v) {
@@ -680,13 +680,13 @@ abstract class Devtracker implements ActiveRecordInterface
     /**
      * Set the value of [comment_id] column.
      *
-     * @param int $v New value
+     * @param string $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setCommentId($v)
     {
         if ($v !== null) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->comment_id !== $v) {
@@ -831,7 +831,7 @@ abstract class Devtracker implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
-            if ($this->comment_id !== 0) {
+            if ($this->comment_id !== '0') {
                 return false;
             }
 
@@ -874,13 +874,13 @@ abstract class Devtracker implements ActiveRecordInterface
             $this->category_id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : DevtrackerTableMap::translateFieldName('DiscussionId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->discussion_id = (null !== $col) ? (int) $col : null;
+            $this->discussion_id = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : DevtrackerTableMap::translateFieldName('DiscussionName', TableMap::TYPE_PHPNAME, $indexType)];
             $this->discussion_name = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : DevtrackerTableMap::translateFieldName('CommentId', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->comment_id = (null !== $col) ? (int) $col : null;
+            $this->comment_id = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : DevtrackerTableMap::translateFieldName('Body', TableMap::TYPE_PHPNAME, $indexType)];
             $this->body = (null !== $col) ? (string) $col : null;
@@ -1169,13 +1169,13 @@ abstract class Devtracker implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->category_id, PDO::PARAM_INT);
                         break;
                     case 'discussion_id':
-                        $stmt->bindValue($identifier, $this->discussion_id, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->discussion_id, PDO::PARAM_STR);
                         break;
                     case 'discussion_name':
                         $stmt->bindValue($identifier, $this->discussion_name, PDO::PARAM_STR);
                         break;
                     case 'comment_id':
-                        $stmt->bindValue($identifier, $this->comment_id, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->comment_id, PDO::PARAM_STR);
                         break;
                     case 'body':
                         $stmt->bindValue($identifier, $this->body, PDO::PARAM_STR);

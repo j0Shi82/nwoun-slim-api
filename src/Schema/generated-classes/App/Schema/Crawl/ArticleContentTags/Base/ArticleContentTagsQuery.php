@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Schema\Crawl\ArticleTitleTags\Base;
+namespace App\Schema\Crawl\ArticleContentTags\Base;
 
 use \Exception;
 use \PDO;
 use App\Schema\Crawl\Article\Article;
-use App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags as ChildArticleTitleTags;
-use App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery as ChildArticleTitleTagsQuery;
-use App\Schema\Crawl\ArticleTitleTags\Map\ArticleTitleTagsTableMap;
+use App\Schema\Crawl\ArticleContentTags\ArticleContentTags as ChildArticleContentTags;
+use App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery as ChildArticleContentTagsQuery;
+use App\Schema\Crawl\ArticleContentTags\Map\ArticleContentTagsTableMap;
 use App\Schema\Crawl\Tag\Tag;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -19,98 +19,98 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'article_title_tags' table.
+ * Base class that represents a query for the 'article_tags' table.
  *
  *
  *
- * @method     ChildArticleTitleTagsQuery orderByArticleId($order = Criteria::ASC) Order by the article_id column
- * @method     ChildArticleTitleTagsQuery orderByTagId($order = Criteria::ASC) Order by the tag_id column
+ * @method     ChildArticleContentTagsQuery orderByArticleId($order = Criteria::ASC) Order by the article_id column
+ * @method     ChildArticleContentTagsQuery orderByTagId($order = Criteria::ASC) Order by the tag_id column
  *
- * @method     ChildArticleTitleTagsQuery groupByArticleId() Group by the article_id column
- * @method     ChildArticleTitleTagsQuery groupByTagId() Group by the tag_id column
+ * @method     ChildArticleContentTagsQuery groupByArticleId() Group by the article_id column
+ * @method     ChildArticleContentTagsQuery groupByTagId() Group by the tag_id column
  *
- * @method     ChildArticleTitleTagsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     ChildArticleTitleTagsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     ChildArticleTitleTagsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     ChildArticleContentTagsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     ChildArticleContentTagsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     ChildArticleContentTagsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildArticleTitleTagsQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
- * @method     ChildArticleTitleTagsQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
- * @method     ChildArticleTitleTagsQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ * @method     ChildArticleContentTagsQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
+ * @method     ChildArticleContentTagsQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
+ * @method     ChildArticleContentTagsQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildArticleTitleTagsQuery leftJoinTitleArticle($relationAlias = null) Adds a LEFT JOIN clause to the query using the TitleArticle relation
- * @method     ChildArticleTitleTagsQuery rightJoinTitleArticle($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TitleArticle relation
- * @method     ChildArticleTitleTagsQuery innerJoinTitleArticle($relationAlias = null) Adds a INNER JOIN clause to the query using the TitleArticle relation
+ * @method     ChildArticleContentTagsQuery leftJoinContentArticle($relationAlias = null) Adds a LEFT JOIN clause to the query using the ContentArticle relation
+ * @method     ChildArticleContentTagsQuery rightJoinContentArticle($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ContentArticle relation
+ * @method     ChildArticleContentTagsQuery innerJoinContentArticle($relationAlias = null) Adds a INNER JOIN clause to the query using the ContentArticle relation
  *
- * @method     ChildArticleTitleTagsQuery joinWithTitleArticle($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the TitleArticle relation
+ * @method     ChildArticleContentTagsQuery joinWithContentArticle($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ContentArticle relation
  *
- * @method     ChildArticleTitleTagsQuery leftJoinWithTitleArticle() Adds a LEFT JOIN clause and with to the query using the TitleArticle relation
- * @method     ChildArticleTitleTagsQuery rightJoinWithTitleArticle() Adds a RIGHT JOIN clause and with to the query using the TitleArticle relation
- * @method     ChildArticleTitleTagsQuery innerJoinWithTitleArticle() Adds a INNER JOIN clause and with to the query using the TitleArticle relation
+ * @method     ChildArticleContentTagsQuery leftJoinWithContentArticle() Adds a LEFT JOIN clause and with to the query using the ContentArticle relation
+ * @method     ChildArticleContentTagsQuery rightJoinWithContentArticle() Adds a RIGHT JOIN clause and with to the query using the ContentArticle relation
+ * @method     ChildArticleContentTagsQuery innerJoinWithContentArticle() Adds a INNER JOIN clause and with to the query using the ContentArticle relation
  *
- * @method     ChildArticleTitleTagsQuery leftJoinTitleTag($relationAlias = null) Adds a LEFT JOIN clause to the query using the TitleTag relation
- * @method     ChildArticleTitleTagsQuery rightJoinTitleTag($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TitleTag relation
- * @method     ChildArticleTitleTagsQuery innerJoinTitleTag($relationAlias = null) Adds a INNER JOIN clause to the query using the TitleTag relation
+ * @method     ChildArticleContentTagsQuery leftJoinContentTag($relationAlias = null) Adds a LEFT JOIN clause to the query using the ContentTag relation
+ * @method     ChildArticleContentTagsQuery rightJoinContentTag($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ContentTag relation
+ * @method     ChildArticleContentTagsQuery innerJoinContentTag($relationAlias = null) Adds a INNER JOIN clause to the query using the ContentTag relation
  *
- * @method     ChildArticleTitleTagsQuery joinWithTitleTag($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the TitleTag relation
+ * @method     ChildArticleContentTagsQuery joinWithContentTag($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ContentTag relation
  *
- * @method     ChildArticleTitleTagsQuery leftJoinWithTitleTag() Adds a LEFT JOIN clause and with to the query using the TitleTag relation
- * @method     ChildArticleTitleTagsQuery rightJoinWithTitleTag() Adds a RIGHT JOIN clause and with to the query using the TitleTag relation
- * @method     ChildArticleTitleTagsQuery innerJoinWithTitleTag() Adds a INNER JOIN clause and with to the query using the TitleTag relation
+ * @method     ChildArticleContentTagsQuery leftJoinWithContentTag() Adds a LEFT JOIN clause and with to the query using the ContentTag relation
+ * @method     ChildArticleContentTagsQuery rightJoinWithContentTag() Adds a RIGHT JOIN clause and with to the query using the ContentTag relation
+ * @method     ChildArticleContentTagsQuery innerJoinWithContentTag() Adds a INNER JOIN clause and with to the query using the ContentTag relation
  *
  * @method     \App\Schema\Crawl\Article\ArticleQuery|\App\Schema\Crawl\Tag\TagQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildArticleTitleTags|null findOne(?ConnectionInterface $con = null) Return the first ChildArticleTitleTags matching the query
- * @method     ChildArticleTitleTags findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildArticleTitleTags matching the query, or a new ChildArticleTitleTags object populated from the query conditions when no match is found
+ * @method     ChildArticleContentTags|null findOne(?ConnectionInterface $con = null) Return the first ChildArticleContentTags matching the query
+ * @method     ChildArticleContentTags findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildArticleContentTags matching the query, or a new ChildArticleContentTags object populated from the query conditions when no match is found
  *
- * @method     ChildArticleTitleTags|null findOneByArticleId(int $article_id) Return the first ChildArticleTitleTags filtered by the article_id column
- * @method     ChildArticleTitleTags|null findOneByTagId(int $tag_id) Return the first ChildArticleTitleTags filtered by the tag_id column *
+ * @method     ChildArticleContentTags|null findOneByArticleId(int $article_id) Return the first ChildArticleContentTags filtered by the article_id column
+ * @method     ChildArticleContentTags|null findOneByTagId(int $tag_id) Return the first ChildArticleContentTags filtered by the tag_id column *
 
- * @method     ChildArticleTitleTags requirePk($key, ?ConnectionInterface $con = null) Return the ChildArticleTitleTags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildArticleTitleTags requireOne(?ConnectionInterface $con = null) Return the first ChildArticleTitleTags matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticleContentTags requirePk($key, ?ConnectionInterface $con = null) Return the ChildArticleContentTags by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticleContentTags requireOne(?ConnectionInterface $con = null) Return the first ChildArticleContentTags matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildArticleTitleTags requireOneByArticleId(int $article_id) Return the first ChildArticleTitleTags filtered by the article_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildArticleTitleTags requireOneByTagId(int $tag_id) Return the first ChildArticleTitleTags filtered by the tag_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticleContentTags requireOneByArticleId(int $article_id) Return the first ChildArticleContentTags filtered by the article_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildArticleContentTags requireOneByTagId(int $tag_id) Return the first ChildArticleContentTags filtered by the tag_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildArticleTitleTags[]|Collection find(?ConnectionInterface $con = null) Return ChildArticleTitleTags objects based on current ModelCriteria
- * @psalm-method Collection&\Traversable<ChildArticleTitleTags> find(?ConnectionInterface $con = null) Return ChildArticleTitleTags objects based on current ModelCriteria
- * @method     ChildArticleTitleTags[]|Collection findByArticleId(int $article_id) Return ChildArticleTitleTags objects filtered by the article_id column
- * @psalm-method Collection&\Traversable<ChildArticleTitleTags> findByArticleId(int $article_id) Return ChildArticleTitleTags objects filtered by the article_id column
- * @method     ChildArticleTitleTags[]|Collection findByTagId(int $tag_id) Return ChildArticleTitleTags objects filtered by the tag_id column
- * @psalm-method Collection&\Traversable<ChildArticleTitleTags> findByTagId(int $tag_id) Return ChildArticleTitleTags objects filtered by the tag_id column
- * @method     ChildArticleTitleTags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildArticleTitleTags> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildArticleContentTags[]|Collection find(?ConnectionInterface $con = null) Return ChildArticleContentTags objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildArticleContentTags> find(?ConnectionInterface $con = null) Return ChildArticleContentTags objects based on current ModelCriteria
+ * @method     ChildArticleContentTags[]|Collection findByArticleId(int $article_id) Return ChildArticleContentTags objects filtered by the article_id column
+ * @psalm-method Collection&\Traversable<ChildArticleContentTags> findByArticleId(int $article_id) Return ChildArticleContentTags objects filtered by the article_id column
+ * @method     ChildArticleContentTags[]|Collection findByTagId(int $tag_id) Return ChildArticleContentTags objects filtered by the tag_id column
+ * @psalm-method Collection&\Traversable<ChildArticleContentTags> findByTagId(int $tag_id) Return ChildArticleContentTags objects filtered by the tag_id column
+ * @method     ChildArticleContentTags[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildArticleContentTags> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
-abstract class ArticleTitleTagsQuery extends ModelCriteria
+abstract class ArticleContentTagsQuery extends ModelCriteria
 {
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \App\Schema\Crawl\ArticleTitleTags\Base\ArticleTitleTagsQuery object.
+     * Initializes internal state of \App\Schema\Crawl\ArticleContentTags\Base\ArticleContentTagsQuery object.
      *
      * @param string $dbName The database name
      * @param string $modelName The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'crawl', $modelName = '\\App\\Schema\\Crawl\\ArticleTitleTags\\ArticleTitleTags', $modelAlias = null)
+    public function __construct($dbName = 'crawl', $modelName = '\\App\\Schema\\Crawl\\ArticleContentTags\\ArticleContentTags', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new ChildArticleTitleTagsQuery object.
+     * Returns a new ChildArticleContentTagsQuery object.
      *
      * @param string $modelAlias The alias of a model in the query
      * @param Criteria $criteria Optional Criteria to build the query from
      *
-     * @return ChildArticleTitleTagsQuery
+     * @return ChildArticleContentTagsQuery
      */
     public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
-        if ($criteria instanceof ChildArticleTitleTagsQuery) {
+        if ($criteria instanceof ChildArticleContentTagsQuery) {
             return $criteria;
         }
-        $query = new ChildArticleTitleTagsQuery();
+        $query = new ChildArticleContentTagsQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -133,7 +133,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * @param array[$article_id, $tag_id] $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
-     * @return ChildArticleTitleTags|array|mixed the result, formatted by the current formatter
+     * @return ChildArticleContentTags|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, ?ConnectionInterface $con = null)
     {
@@ -142,7 +142,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(ArticleTitleTagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(ArticleContentTagsTableMap::DATABASE_NAME);
         }
 
         $this->basePreSelect($con);
@@ -155,7 +155,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
             return $this->findPkComplex($key, $con);
         }
 
-        if ((null !== ($obj = ArticleTitleTagsTableMap::getInstanceFromPool(serialize([(null === $key[0] || is_scalar($key[0]) || is_callable([$key[0], '__toString']) ? (string) $key[0] : $key[0]), (null === $key[1] || is_scalar($key[1]) || is_callable([$key[1], '__toString']) ? (string) $key[1] : $key[1])]))))) {
+        if ((null !== ($obj = ArticleContentTagsTableMap::getInstanceFromPool(serialize([(null === $key[0] || is_scalar($key[0]) || is_callable([$key[0], '__toString']) ? (string) $key[0] : $key[0]), (null === $key[1] || is_scalar($key[1]) || is_callable([$key[1], '__toString']) ? (string) $key[1] : $key[1])]))))) {
             // the object is already in the instance pool
             return $obj;
         }
@@ -172,11 +172,11 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
-     * @return ChildArticleTitleTags A model object, or null if the key is not found
+     * @return ChildArticleContentTags A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT article_id, tag_id FROM article_title_tags WHERE article_id = :p0 AND tag_id = :p1';
+        $sql = 'SELECT article_id, tag_id FROM article_tags WHERE article_id = :p0 AND tag_id = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -188,10 +188,10 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            /** @var ChildArticleTitleTags $obj */
-            $obj = new ChildArticleTitleTags();
+            /** @var ChildArticleContentTags $obj */
+            $obj = new ChildArticleContentTags();
             $obj->hydrate($row);
-            ArticleTitleTagsTableMap::addInstanceToPool($obj, serialize([(null === $key[0] || is_scalar($key[0]) || is_callable([$key[0], '__toString']) ? (string) $key[0] : $key[0]), (null === $key[1] || is_scalar($key[1]) || is_callable([$key[1], '__toString']) ? (string) $key[1] : $key[1])]));
+            ArticleContentTagsTableMap::addInstanceToPool($obj, serialize([(null === $key[0] || is_scalar($key[0]) || is_callable([$key[0], '__toString']) ? (string) $key[0] : $key[0]), (null === $key[1] || is_scalar($key[1]) || is_callable([$key[1], '__toString']) ? (string) $key[1] : $key[1])]));
         }
         $stmt->closeCursor();
 
@@ -204,7 +204,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con A connection object
      *
-     * @return ChildArticleTitleTags|array|mixed the result, formatted by the current formatter
+     * @return ChildArticleContentTags|array|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, ConnectionInterface $con)
     {
@@ -250,8 +250,8 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      */
     public function filterByPrimaryKey($key)
     {
-        $this->addUsingAlias(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $key[0], Criteria::EQUAL);
-        $this->addUsingAlias(ArticleTitleTagsTableMap::COL_TAG_ID, $key[1], Criteria::EQUAL);
+        $this->addUsingAlias(ArticleContentTagsTableMap::COL_ARTICLE_ID, $key[0], Criteria::EQUAL);
+        $this->addUsingAlias(ArticleContentTagsTableMap::COL_TAG_ID, $key[1], Criteria::EQUAL);
 
         return $this;
     }
@@ -271,8 +271,8 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
             return $this;
         }
         foreach ($keys as $key) {
-            $cton0 = $this->getNewCriterion(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $key[0], Criteria::EQUAL);
-            $cton1 = $this->getNewCriterion(ArticleTitleTagsTableMap::COL_TAG_ID, $key[1], Criteria::EQUAL);
+            $cton0 = $this->getNewCriterion(ArticleContentTagsTableMap::COL_ARTICLE_ID, $key[0], Criteria::EQUAL);
+            $cton1 = $this->getNewCriterion(ArticleContentTagsTableMap::COL_TAG_ID, $key[1], Criteria::EQUAL);
             $cton0->addAnd($cton1);
             $this->addOr($cton0);
         }
@@ -290,7 +290,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * $query->filterByArticleId(array('min' => 12)); // WHERE article_id > 12
      * </code>
      *
-     * @see       filterByTitleArticle()
+     * @see       filterByContentArticle()
      *
      * @param mixed $articleId The value to use as filter.
      *              Use scalar values for equality.
@@ -305,11 +305,11 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
         if (is_array($articleId)) {
             $useMinMax = false;
             if (isset($articleId['min'])) {
-                $this->addUsingAlias(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $articleId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(ArticleContentTagsTableMap::COL_ARTICLE_ID, $articleId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($articleId['max'])) {
-                $this->addUsingAlias(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $articleId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(ArticleContentTagsTableMap::COL_ARTICLE_ID, $articleId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -320,7 +320,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $articleId, $comparison);
+        $this->addUsingAlias(ArticleContentTagsTableMap::COL_ARTICLE_ID, $articleId, $comparison);
 
         return $this;
     }
@@ -335,7 +335,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      * $query->filterByTagId(array('min' => 12)); // WHERE tag_id > 12
      * </code>
      *
-     * @see       filterByTitleTag()
+     * @see       filterByContentTag()
      *
      * @param mixed $tagId The value to use as filter.
      *              Use scalar values for equality.
@@ -350,11 +350,11 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
         if (is_array($tagId)) {
             $useMinMax = false;
             if (isset($tagId['min'])) {
-                $this->addUsingAlias(ArticleTitleTagsTableMap::COL_TAG_ID, $tagId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(ArticleContentTagsTableMap::COL_TAG_ID, $tagId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($tagId['max'])) {
-                $this->addUsingAlias(ArticleTitleTagsTableMap::COL_TAG_ID, $tagId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(ArticleContentTagsTableMap::COL_TAG_ID, $tagId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -365,7 +365,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(ArticleTitleTagsTableMap::COL_TAG_ID, $tagId, $comparison);
+        $this->addUsingAlias(ArticleContentTagsTableMap::COL_TAG_ID, $tagId, $comparison);
 
         return $this;
     }
@@ -380,37 +380,37 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByTitleArticle($article, ?string $comparison = null)
+    public function filterByContentArticle($article, ?string $comparison = null)
     {
         if ($article instanceof \App\Schema\Crawl\Article\Article) {
             return $this
-                ->addUsingAlias(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $article->getId(), $comparison);
+                ->addUsingAlias(ArticleContentTagsTableMap::COL_ARTICLE_ID, $article->getId(), $comparison);
         } elseif ($article instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             $this
-                ->addUsingAlias(ArticleTitleTagsTableMap::COL_ARTICLE_ID, $article->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(ArticleContentTagsTableMap::COL_ARTICLE_ID, $article->toKeyValue('PrimaryKey', 'Id'), $comparison);
 
             return $this;
         } else {
-            throw new PropelException('filterByTitleArticle() only accepts arguments of type \App\Schema\Crawl\Article\Article or Collection');
+            throw new PropelException('filterByContentArticle() only accepts arguments of type \App\Schema\Crawl\Article\Article or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the TitleArticle relation
+     * Adds a JOIN clause to the query using the ContentArticle relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinTitleArticle(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinContentArticle(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('TitleArticle');
+        $relationMap = $tableMap->getRelation('ContentArticle');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -425,14 +425,14 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'TitleArticle');
+            $this->addJoinObject($join, 'ContentArticle');
         }
 
         return $this;
     }
 
     /**
-     * Use the TitleArticle relation Article object
+     * Use the ContentArticle relation Article object
      *
      * @see useQuery()
      *
@@ -442,15 +442,15 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @return \App\Schema\Crawl\Article\ArticleQuery A secondary query class using the current class as primary query
      */
-    public function useTitleArticleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useContentArticleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinTitleArticle($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'TitleArticle', '\App\Schema\Crawl\Article\ArticleQuery');
+            ->joinContentArticle($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ContentArticle', '\App\Schema\Crawl\Article\ArticleQuery');
     }
 
     /**
-     * Use the TitleArticle relation Article object
+     * Use the ContentArticle relation Article object
      *
      * @param callable(\App\Schema\Crawl\Article\ArticleQuery):\App\Schema\Crawl\Article\ArticleQuery $callable A function working on the related query
      *
@@ -460,12 +460,12 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withTitleArticleQuery(
+    public function withContentArticleQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useTitleArticleQuery(
+        $relatedQuery = $this->useContentArticleQuery(
             $relationAlias,
             $joinType
         );
@@ -475,7 +475,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
         return $this;
     }
     /**
-     * Use the TitleArticle relation to the Article table for an EXISTS query.
+     * Use the ContentArticle relation to the Article table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -485,24 +485,24 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @return \App\Schema\Crawl\Article\ArticleQuery The inner query object of the EXISTS statement
      */
-    public function useTitleArticleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useContentArticleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('TitleArticle', $modelAlias, $queryClass, $typeOfExists);
+        return $this->useExistsQuery('ContentArticle', $modelAlias, $queryClass, $typeOfExists);
     }
 
     /**
-     * Use the TitleArticle relation to the Article table for a NOT EXISTS query.
+     * Use the ContentArticle relation to the Article table for a NOT EXISTS query.
      *
-     * @see useTitleArticleExistsQuery()
+     * @see useContentArticleExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \App\Schema\Crawl\Article\ArticleQuery The inner query object of the NOT EXISTS statement
      */
-    public function useTitleArticleNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useContentArticleNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('TitleArticle', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $this->useExistsQuery('ContentArticle', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Filter the query by a related \App\Schema\Crawl\Tag\Tag object
@@ -514,37 +514,37 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByTitleTag($tag, ?string $comparison = null)
+    public function filterByContentTag($tag, ?string $comparison = null)
     {
         if ($tag instanceof \App\Schema\Crawl\Tag\Tag) {
             return $this
-                ->addUsingAlias(ArticleTitleTagsTableMap::COL_TAG_ID, $tag->getId(), $comparison);
+                ->addUsingAlias(ArticleContentTagsTableMap::COL_TAG_ID, $tag->getId(), $comparison);
         } elseif ($tag instanceof ObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             $this
-                ->addUsingAlias(ArticleTitleTagsTableMap::COL_TAG_ID, $tag->toKeyValue('PrimaryKey', 'Id'), $comparison);
+                ->addUsingAlias(ArticleContentTagsTableMap::COL_TAG_ID, $tag->toKeyValue('PrimaryKey', 'Id'), $comparison);
 
             return $this;
         } else {
-            throw new PropelException('filterByTitleTag() only accepts arguments of type \App\Schema\Crawl\Tag\Tag or Collection');
+            throw new PropelException('filterByContentTag() only accepts arguments of type \App\Schema\Crawl\Tag\Tag or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the TitleTag relation
+     * Adds a JOIN clause to the query using the ContentTag relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinTitleTag(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    public function joinContentTag(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('TitleTag');
+        $relationMap = $tableMap->getRelation('ContentTag');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -559,14 +559,14 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'TitleTag');
+            $this->addJoinObject($join, 'ContentTag');
         }
 
         return $this;
     }
 
     /**
-     * Use the TitleTag relation Tag object
+     * Use the ContentTag relation Tag object
      *
      * @see useQuery()
      *
@@ -576,15 +576,15 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @return \App\Schema\Crawl\Tag\TagQuery A secondary query class using the current class as primary query
      */
-    public function useTitleTagQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useContentTagQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinTitleTag($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'TitleTag', '\App\Schema\Crawl\Tag\TagQuery');
+            ->joinContentTag($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ContentTag', '\App\Schema\Crawl\Tag\TagQuery');
     }
 
     /**
-     * Use the TitleTag relation Tag object
+     * Use the ContentTag relation Tag object
      *
      * @param callable(\App\Schema\Crawl\Tag\TagQuery):\App\Schema\Crawl\Tag\TagQuery $callable A function working on the related query
      *
@@ -594,12 +594,12 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withTitleTagQuery(
+    public function withContentTagQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::INNER_JOIN
     ) {
-        $relatedQuery = $this->useTitleTagQuery(
+        $relatedQuery = $this->useContentTagQuery(
             $relationAlias,
             $joinType
         );
@@ -609,7 +609,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
         return $this;
     }
     /**
-     * Use the TitleTag relation to the Tag table for an EXISTS query.
+     * Use the ContentTag relation to the Tag table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -619,37 +619,37 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
      *
      * @return \App\Schema\Crawl\Tag\TagQuery The inner query object of the EXISTS statement
      */
-    public function useTitleTagExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useContentTagExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('TitleTag', $modelAlias, $queryClass, $typeOfExists);
+        return $this->useExistsQuery('ContentTag', $modelAlias, $queryClass, $typeOfExists);
     }
 
     /**
-     * Use the TitleTag relation to the Tag table for a NOT EXISTS query.
+     * Use the ContentTag relation to the Tag table for a NOT EXISTS query.
      *
-     * @see useTitleTagExistsQuery()
+     * @see useContentTagExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
      * @return \App\Schema\Crawl\Tag\TagQuery The inner query object of the NOT EXISTS statement
      */
-    public function useTitleTagNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useContentTagNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('TitleTag', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $this->useExistsQuery('ContentTag', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
      * Exclude object from result
      *
-     * @param ChildArticleTitleTags $articleTitleTags Object to remove from the list of results
+     * @param ChildArticleContentTags $articleContentTags Object to remove from the list of results
      *
      * @return $this The current query, for fluid interface
      */
-    public function prune($articleTitleTags = null)
+    public function prune($articleContentTags = null)
     {
-        if ($articleTitleTags) {
-            $this->addCond('pruneCond0', $this->getAliasedColName(ArticleTitleTagsTableMap::COL_ARTICLE_ID), $articleTitleTags->getArticleId(), Criteria::NOT_EQUAL);
-            $this->addCond('pruneCond1', $this->getAliasedColName(ArticleTitleTagsTableMap::COL_TAG_ID), $articleTitleTags->getTagId(), Criteria::NOT_EQUAL);
+        if ($articleContentTags) {
+            $this->addCond('pruneCond0', $this->getAliasedColName(ArticleContentTagsTableMap::COL_ARTICLE_ID), $articleContentTags->getArticleId(), Criteria::NOT_EQUAL);
+            $this->addCond('pruneCond1', $this->getAliasedColName(ArticleContentTagsTableMap::COL_TAG_ID), $articleContentTags->getTagId(), Criteria::NOT_EQUAL);
             $this->combine(array('pruneCond0', 'pruneCond1'), Criteria::LOGICAL_OR);
         }
 
@@ -657,7 +657,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
     }
 
     /**
-     * Deletes all rows from the article_title_tags table.
+     * Deletes all rows from the article_tags table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
@@ -665,7 +665,7 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
     public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ArticleTitleTagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ArticleContentTagsTableMap::DATABASE_NAME);
         }
 
         // use transaction because $criteria could contain info
@@ -676,8 +676,8 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            ArticleTitleTagsTableMap::clearInstancePool();
-            ArticleTitleTagsTableMap::clearRelatedInstancePool();
+            ArticleContentTagsTableMap::clearInstancePool();
+            ArticleContentTagsTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -695,23 +695,23 @@ abstract class ArticleTitleTagsQuery extends ModelCriteria
     public function delete(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ArticleTitleTagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ArticleContentTagsTableMap::DATABASE_NAME);
         }
 
         $criteria = $this;
 
         // Set the correct dbName
-        $criteria->setDbName(ArticleTitleTagsTableMap::DATABASE_NAME);
+        $criteria->setDbName(ArticleContentTagsTableMap::DATABASE_NAME);
 
         // use transaction because $criteria could contain info
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
 
-            ArticleTitleTagsTableMap::removeInstanceFromPool($criteria);
+            ArticleContentTagsTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
-            ArticleTitleTagsTableMap::clearRelatedInstancePool();
+            ArticleContentTagsTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });

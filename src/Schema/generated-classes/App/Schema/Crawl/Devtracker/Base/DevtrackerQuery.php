@@ -60,9 +60,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDevtracker|null findOneByDevName(string $dev_name) Return the first ChildDevtracker filtered by the dev_name column
  * @method     ChildDevtracker|null findOneByDevId(int $dev_id) Return the first ChildDevtracker filtered by the dev_id column
  * @method     ChildDevtracker|null findOneByCategoryId(int $category_id) Return the first ChildDevtracker filtered by the category_id column
- * @method     ChildDevtracker|null findOneByDiscussionId(int $discussion_id) Return the first ChildDevtracker filtered by the discussion_id column
+ * @method     ChildDevtracker|null findOneByDiscussionId(string $discussion_id) Return the first ChildDevtracker filtered by the discussion_id column
  * @method     ChildDevtracker|null findOneByDiscussionName(string $discussion_name) Return the first ChildDevtracker filtered by the discussion_name column
- * @method     ChildDevtracker|null findOneByCommentId(int $comment_id) Return the first ChildDevtracker filtered by the comment_id column
+ * @method     ChildDevtracker|null findOneByCommentId(string $comment_id) Return the first ChildDevtracker filtered by the comment_id column
  * @method     ChildDevtracker|null findOneByBody(string $body) Return the first ChildDevtracker filtered by the body column
  * @method     ChildDevtracker|null findOneByDate(string $date) Return the first ChildDevtracker filtered by the date column
  * @method     ChildDevtracker|null findOneByIsPoll(boolean $is_poll) Return the first ChildDevtracker filtered by the is_poll column
@@ -76,9 +76,9 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDevtracker requireOneByDevName(string $dev_name) Return the first ChildDevtracker filtered by the dev_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDevtracker requireOneByDevId(int $dev_id) Return the first ChildDevtracker filtered by the dev_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDevtracker requireOneByCategoryId(int $category_id) Return the first ChildDevtracker filtered by the category_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildDevtracker requireOneByDiscussionId(int $discussion_id) Return the first ChildDevtracker filtered by the discussion_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildDevtracker requireOneByDiscussionId(string $discussion_id) Return the first ChildDevtracker filtered by the discussion_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDevtracker requireOneByDiscussionName(string $discussion_name) Return the first ChildDevtracker filtered by the discussion_name column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildDevtracker requireOneByCommentId(int $comment_id) Return the first ChildDevtracker filtered by the comment_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildDevtracker requireOneByCommentId(string $comment_id) Return the first ChildDevtracker filtered by the comment_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDevtracker requireOneByBody(string $body) Return the first ChildDevtracker filtered by the body column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDevtracker requireOneByDate(string $date) Return the first ChildDevtracker filtered by the date column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDevtracker requireOneByIsPoll(boolean $is_poll) Return the first ChildDevtracker filtered by the is_poll column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -95,12 +95,12 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildDevtracker> findByDevId(int $dev_id) Return ChildDevtracker objects filtered by the dev_id column
  * @method     ChildDevtracker[]|Collection findByCategoryId(int $category_id) Return ChildDevtracker objects filtered by the category_id column
  * @psalm-method Collection&\Traversable<ChildDevtracker> findByCategoryId(int $category_id) Return ChildDevtracker objects filtered by the category_id column
- * @method     ChildDevtracker[]|Collection findByDiscussionId(int $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByDiscussionId(int $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
+ * @method     ChildDevtracker[]|Collection findByDiscussionId(string $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDiscussionId(string $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
  * @method     ChildDevtracker[]|Collection findByDiscussionName(string $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
  * @psalm-method Collection&\Traversable<ChildDevtracker> findByDiscussionName(string $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
- * @method     ChildDevtracker[]|Collection findByCommentId(int $comment_id) Return ChildDevtracker objects filtered by the comment_id column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByCommentId(int $comment_id) Return ChildDevtracker objects filtered by the comment_id column
+ * @method     ChildDevtracker[]|Collection findByCommentId(string $comment_id) Return ChildDevtracker objects filtered by the comment_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByCommentId(string $comment_id) Return ChildDevtracker objects filtered by the comment_id column
  * @method     ChildDevtracker[]|Collection findByBody(string $body) Return ChildDevtracker objects filtered by the body column
  * @psalm-method Collection&\Traversable<ChildDevtracker> findByBody(string $body) Return ChildDevtracker objects filtered by the body column
  * @method     ChildDevtracker[]|Collection findByDate(string $date) Return ChildDevtracker objects filtered by the date column
@@ -466,35 +466,20 @@ abstract class DevtrackerQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByDiscussionId(1234); // WHERE discussion_id = 1234
-     * $query->filterByDiscussionId(array(12, 34)); // WHERE discussion_id IN (12, 34)
-     * $query->filterByDiscussionId(array('min' => 12)); // WHERE discussion_id > 12
+     * $query->filterByDiscussionId('fooValue');   // WHERE discussion_id = 'fooValue'
+     * $query->filterByDiscussionId('%fooValue%', Criteria::LIKE); // WHERE discussion_id LIKE '%fooValue%'
+     * $query->filterByDiscussionId(['foo', 'bar']); // WHERE discussion_id IN ('foo', 'bar')
      * </code>
      *
-     * @param mixed $discussionId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|string[] $discussionId The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByDiscussionId($discussionId = null, ?string $comparison = null)
     {
-        if (is_array($discussionId)) {
-            $useMinMax = false;
-            if (isset($discussionId['min'])) {
-                $this->addUsingAlias(DevtrackerTableMap::COL_DISCUSSION_ID, $discussionId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($discussionId['max'])) {
-                $this->addUsingAlias(DevtrackerTableMap::COL_DISCUSSION_ID, $discussionId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($discussionId)) {
                 $comparison = Criteria::IN;
             }
         }
@@ -537,35 +522,20 @@ abstract class DevtrackerQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByCommentId(1234); // WHERE comment_id = 1234
-     * $query->filterByCommentId(array(12, 34)); // WHERE comment_id IN (12, 34)
-     * $query->filterByCommentId(array('min' => 12)); // WHERE comment_id > 12
+     * $query->filterByCommentId('fooValue');   // WHERE comment_id = 'fooValue'
+     * $query->filterByCommentId('%fooValue%', Criteria::LIKE); // WHERE comment_id LIKE '%fooValue%'
+     * $query->filterByCommentId(['foo', 'bar']); // WHERE comment_id IN ('foo', 'bar')
      * </code>
      *
-     * @param mixed $commentId The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|string[] $commentId The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByCommentId($commentId = null, ?string $comparison = null)
     {
-        if (is_array($commentId)) {
-            $useMinMax = false;
-            if (isset($commentId['min'])) {
-                $this->addUsingAlias(DevtrackerTableMap::COL_COMMENT_ID, $commentId['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($commentId['max'])) {
-                $this->addUsingAlias(DevtrackerTableMap::COL_COMMENT_ID, $commentId['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($commentId)) {
                 $comparison = Criteria::IN;
             }
         }

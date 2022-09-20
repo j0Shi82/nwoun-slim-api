@@ -3,7 +3,7 @@ $serviceContainer = \Propel\Runtime\Propel::getServiceContainer();
 $serviceContainer->initDatabaseMaps(array (
   'crawl' => 
   array (
-    0 => '\\App\\Schema\\Crawl\\ArticleTags\\Map\\ArticleTagsTableMap',
+    0 => '\\App\\Schema\\Crawl\\ArticleContentTags\\Map\\ArticleContentTagsTableMap',
     1 => '\\App\\Schema\\Crawl\\ArticleTitleTags\\Map\\ArticleTitleTagsTableMap',
     2 => '\\App\\Schema\\Crawl\\Article\\Map\\ArticleTableMap',
     3 => '\\App\\Schema\\Crawl\\AuctionAggregates\\Map\\AuctionAggregatesTableMap',

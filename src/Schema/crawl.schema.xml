@@ -33,19 +33,31 @@
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
   </table>
-  <table name="article_tags" idMethod="native" phpName="ArticleTags" namespace="ArticleTags">
+  <table name="article_tags" isCrossRef="true" idMethod="native" phpName="ArticleContentTags" namespace="ArticleContentTags">
     <column name="article_id" phpName="ArticleId" type="INTEGER" primaryKey="true" required="true"/>
     <column name="tag_id" phpName="TagId" type="INTEGER" primaryKey="true" required="true"/>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
+    <foreign-key foreignTable="article" name="ContentArticle" phpName ="ContentArticle" refPhpName="ContentArticle">
+      <reference local="article_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="tag" name="ContentTag" phpName ="ContentTag" refPhpName="ContentTag">
+      <reference local="tag_id" foreign="id"/>
+    </foreign-key>
   </table>
-  <table name="article_title_tags" idMethod="native" phpName="ArticleTitleTags" namespace="ArticleTitleTags">
+  <table name="article_title_tags" isCrossRef="true" idMethod="native" phpName="ArticleTitleTags" namespace="ArticleTitleTags">
     <column name="article_id" phpName="ArticleId" type="INTEGER" primaryKey="true" required="true"/>
     <column name="tag_id" phpName="TagId" type="INTEGER" primaryKey="true" required="true"/>
     <vendor type="mysql">
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
+    <foreign-key foreignTable="article" name="TitleArticle" phpName ="TitleArticle" refPhpName="TitleArticle">
+      <reference local="article_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="tag" name="TitleTag" phpName ="TitleTag" refPhpName="TitleTag">
+      <reference local="tag_id" foreign="id"/>
+    </foreign-key>
   </table>
   <table name="auction_aggregates" idMethod="native" phpName="AuctionAggregates" namespace="AuctionAggregates">
     <column name="item_def" phpName="ItemDef" type="VARCHAR" primaryKey="true" size="100" required="true"/>
@@ -104,9 +116,9 @@
     <column name="dev_name" phpName="DevName" type="VARCHAR" size="30" required="true"/>
     <column name="dev_id" phpName="DevId" type="INTEGER" required="true"/>
     <column name="category_id" phpName="CategoryId" type="INTEGER" required="true"/>
-    <column name="discussion_id" phpName="DiscussionId" type="INTEGER" required="true"/>
+    <column name="discussion_id" phpName="DiscussionId" type="VARCHAR" size="20" required="true"/>
     <column name="discussion_name" phpName="DiscussionName" type="LONGVARCHAR" required="true"/>
-    <column name="comment_id" phpName="CommentId" type="INTEGER" required="true" defaultValue="0"/>
+    <column name="comment_id" phpName="CommentId" type="VARCHAR" size="20" required="true" defaultValue="0"/>
     <column name="body" phpName="Body" type="LONGVARCHAR" required="true"/>
     <column name="date" phpName="Date" type="TIMESTAMP" required="true"/>
     <column name="is_poll" phpName="IsPoll" type="BOOLEAN" size="1" required="true"/>

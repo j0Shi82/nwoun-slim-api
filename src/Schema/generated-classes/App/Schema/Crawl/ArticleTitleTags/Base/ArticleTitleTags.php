@@ -4,8 +4,12 @@ namespace App\Schema\Crawl\ArticleTitleTags\Base;
 
 use \Exception;
 use \PDO;
+use App\Schema\Crawl\Article\Article;
+use App\Schema\Crawl\Article\ArticleQuery;
 use App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery as ChildArticleTitleTagsQuery;
 use App\Schema\Crawl\ArticleTitleTags\Map\ArticleTitleTagsTableMap;
+use App\Schema\Crawl\Tag\Tag;
+use App\Schema\Crawl\Tag\TagQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -74,6 +78,16 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
      * @var        int
      */
     protected $tag_id;
+
+    /**
+     * @var        Article
+     */
+    protected $aTitleArticle;
+
+    /**
+     * @var        Tag
+     */
+    protected $aTitleTag;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -346,6 +360,10 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
             $this->modifiedColumns[ArticleTitleTagsTableMap::COL_ARTICLE_ID] = true;
         }
 
+        if ($this->aTitleArticle !== null && $this->aTitleArticle->getId() !== $v) {
+            $this->aTitleArticle = null;
+        }
+
         return $this;
     }
 
@@ -364,6 +382,10 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
         if ($this->tag_id !== $v) {
             $this->tag_id = $v;
             $this->modifiedColumns[ArticleTitleTagsTableMap::COL_TAG_ID] = true;
+        }
+
+        if ($this->aTitleTag !== null && $this->aTitleTag->getId() !== $v) {
+            $this->aTitleTag = null;
         }
 
         return $this;
@@ -441,6 +463,12 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
+        if ($this->aTitleArticle !== null && $this->article_id !== $this->aTitleArticle->getId()) {
+            $this->aTitleArticle = null;
+        }
+        if ($this->aTitleTag !== null && $this->tag_id !== $this->aTitleTag->getId()) {
+            $this->aTitleTag = null;
+        }
     }
 
     /**
@@ -480,6 +508,8 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aTitleArticle = null;
+            $this->aTitleTag = null;
         } // if (deep)
     }
 
@@ -582,6 +612,25 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aTitleArticle !== null) {
+                if ($this->aTitleArticle->isModified() || $this->aTitleArticle->isNew()) {
+                    $affectedRows += $this->aTitleArticle->save($con);
+                }
+                $this->setTitleArticle($this->aTitleArticle);
+            }
+
+            if ($this->aTitleTag !== null) {
+                if ($this->aTitleTag->isModified() || $this->aTitleTag->isNew()) {
+                    $affectedRows += $this->aTitleTag->save($con);
+                }
+                $this->setTitleTag($this->aTitleTag);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -716,10 +765,11 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param bool $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param bool $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array An associative array containing the field names (as keys) and field values
      */
-    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = []): array
+    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
         if (isset($alreadyDumpedObjects['ArticleTitleTags'][$this->hashCode()])) {
             return ['*RECURSION*'];
@@ -735,6 +785,38 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aTitleArticle) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'article';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'article';
+                        break;
+                    default:
+                        $key = 'TitleArticle';
+                }
+
+                $result[$key] = $this->aTitleArticle->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aTitleTag) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'tag';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'tag';
+                        break;
+                    default:
+                        $key = 'TitleTag';
+                }
+
+                $result[$key] = $this->aTitleTag->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -891,8 +973,22 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
         $validPk = null !== $this->getArticleId() &&
             null !== $this->getTagId();
 
-        $validPrimaryKeyFKs = 0;
+        $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
+
+        //relation TitleArticle to table article
+        if ($this->aTitleArticle && $hash = spl_object_hash($this->aTitleArticle)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation TitleTag to table tag
+        if ($this->aTitleTag && $hash = spl_object_hash($this->aTitleTag)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -983,6 +1079,108 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a Article object.
+     *
+     * @param Article $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setTitleArticle(Article $v = null)
+    {
+        if ($v === null) {
+            $this->setArticleId(NULL);
+        } else {
+            $this->setArticleId($v->getId());
+        }
+
+        $this->aTitleArticle = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Article object, it will not be re-added.
+        if ($v !== null) {
+            $v->addTitleArticle($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Article object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return Article The associated Article object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getTitleArticle(?ConnectionInterface $con = null)
+    {
+        if ($this->aTitleArticle === null && ($this->article_id != 0)) {
+            $this->aTitleArticle = ArticleQuery::create()->findPk($this->article_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aTitleArticle->addTitleArticles($this);
+             */
+        }
+
+        return $this->aTitleArticle;
+    }
+
+    /**
+     * Declares an association between this object and a Tag object.
+     *
+     * @param Tag $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setTitleTag(Tag $v = null)
+    {
+        if ($v === null) {
+            $this->setTagId(NULL);
+        } else {
+            $this->setTagId($v->getId());
+        }
+
+        $this->aTitleTag = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the Tag object, it will not be re-added.
+        if ($v !== null) {
+            $v->addTitleTag($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Tag object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return Tag The associated Tag object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getTitleTag(?ConnectionInterface $con = null)
+    {
+        if ($this->aTitleTag === null && ($this->tag_id != 0)) {
+            $this->aTitleTag = TagQuery::create()->findPk($this->tag_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aTitleTag->addTitleTags($this);
+             */
+        }
+
+        return $this->aTitleTag;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -991,6 +1189,12 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
      */
     public function clear()
     {
+        if (null !== $this->aTitleArticle) {
+            $this->aTitleArticle->removeTitleArticle($this);
+        }
+        if (null !== $this->aTitleTag) {
+            $this->aTitleTag->removeTitleTag($this);
+        }
         $this->article_id = null;
         $this->tag_id = null;
         $this->alreadyInSave = false;
@@ -1016,6 +1220,8 @@ abstract class ArticleTitleTags implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aTitleArticle = null;
+        $this->aTitleTag = null;
         return $this;
     }
 

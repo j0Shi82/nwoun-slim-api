@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Schema\Crawl\ArticleTags\Map;
+namespace App\Schema\Crawl\ArticleContentTags\Map;
 
-use App\Schema\Crawl\ArticleTags\ArticleTags;
-use App\Schema\Crawl\ArticleTags\ArticleTagsQuery;
+use App\Schema\Crawl\ArticleContentTags\ArticleContentTags;
+use App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -25,7 +25,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  */
-class ArticleTagsTableMap extends TableMap
+class ArticleContentTagsTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -33,7 +33,7 @@ class ArticleTagsTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'App.Schema.Crawl.ArticleTags.Map.ArticleTagsTableMap';
+    public const CLASS_NAME = 'App.Schema.Crawl.ArticleContentTags.Map.ArticleContentTagsTableMap';
 
     /**
      * The default database name for this class
@@ -48,12 +48,12 @@ class ArticleTagsTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\App\\Schema\\Crawl\\ArticleTags\\ArticleTags';
+    public const OM_CLASS = '\\App\\Schema\\Crawl\\ArticleContentTags\\ArticleContentTags';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'App.Schema.Crawl.ArticleTags.ArticleTags';
+    public const CLASS_DEFAULT = 'App.Schema.Crawl.ArticleContentTags.ArticleContentTags';
 
     /**
      * The total number of columns
@@ -96,7 +96,7 @@ class ArticleTagsTableMap extends TableMap
     protected static $fieldNames = [
         self::TYPE_PHPNAME       => ['ArticleId', 'TagId', ],
         self::TYPE_CAMELNAME     => ['articleId', 'tagId', ],
-        self::TYPE_COLNAME       => [ArticleTagsTableMap::COL_ARTICLE_ID, ArticleTagsTableMap::COL_TAG_ID, ],
+        self::TYPE_COLNAME       => [ArticleContentTagsTableMap::COL_ARTICLE_ID, ArticleContentTagsTableMap::COL_TAG_ID, ],
         self::TYPE_FIELDNAME     => ['article_id', 'tag_id', ],
         self::TYPE_NUM           => [0, 1, ]
     ];
@@ -112,7 +112,7 @@ class ArticleTagsTableMap extends TableMap
     protected static $fieldKeys = [
         self::TYPE_PHPNAME       => ['ArticleId' => 0, 'TagId' => 1, ],
         self::TYPE_CAMELNAME     => ['articleId' => 0, 'tagId' => 1, ],
-        self::TYPE_COLNAME       => [ArticleTagsTableMap::COL_ARTICLE_ID => 0, ArticleTagsTableMap::COL_TAG_ID => 1, ],
+        self::TYPE_COLNAME       => [ArticleContentTagsTableMap::COL_ARTICLE_ID => 0, ArticleContentTagsTableMap::COL_TAG_ID => 1, ],
         self::TYPE_FIELDNAME     => ['article_id' => 0, 'tag_id' => 1, ],
         self::TYPE_NUM           => [0, 1, ]
     ];
@@ -124,18 +124,18 @@ class ArticleTagsTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'ArticleId' => 'ARTICLE_ID',
-        'ArticleTags.ArticleId' => 'ARTICLE_ID',
+        'ArticleContentTags.ArticleId' => 'ARTICLE_ID',
         'articleId' => 'ARTICLE_ID',
-        'articleTags.articleId' => 'ARTICLE_ID',
-        'ArticleTagsTableMap::COL_ARTICLE_ID' => 'ARTICLE_ID',
+        'articleContentTags.articleId' => 'ARTICLE_ID',
+        'ArticleContentTagsTableMap::COL_ARTICLE_ID' => 'ARTICLE_ID',
         'COL_ARTICLE_ID' => 'ARTICLE_ID',
         'article_id' => 'ARTICLE_ID',
         'article_tags.article_id' => 'ARTICLE_ID',
         'TagId' => 'TAG_ID',
-        'ArticleTags.TagId' => 'TAG_ID',
+        'ArticleContentTags.TagId' => 'TAG_ID',
         'tagId' => 'TAG_ID',
-        'articleTags.tagId' => 'TAG_ID',
-        'ArticleTagsTableMap::COL_TAG_ID' => 'TAG_ID',
+        'articleContentTags.tagId' => 'TAG_ID',
+        'ArticleContentTagsTableMap::COL_TAG_ID' => 'TAG_ID',
         'COL_TAG_ID' => 'TAG_ID',
         'tag_id' => 'TAG_ID',
         'article_tags.tag_id' => 'TAG_ID',
@@ -152,14 +152,15 @@ class ArticleTagsTableMap extends TableMap
     {
         // attributes
         $this->setName('article_tags');
-        $this->setPhpName('ArticleTags');
+        $this->setPhpName('ArticleContentTags');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\App\\Schema\\Crawl\\ArticleTags\\ArticleTags');
-        $this->setPackage('App.Schema.Crawl.ArticleTags');
+        $this->setClassName('\\App\\Schema\\Crawl\\ArticleContentTags\\ArticleContentTags');
+        $this->setPackage('App.Schema.Crawl.ArticleContentTags');
         $this->setUseIdGenerator(false);
+        $this->setIsCrossRef(true);
         // columns
-        $this->addPrimaryKey('article_id', 'ArticleId', 'INTEGER', true, null, null);
-        $this->addPrimaryKey('tag_id', 'TagId', 'INTEGER', true, null, null);
+        $this->addForeignPrimaryKey('article_id', 'ArticleId', 'INTEGER' , 'article', 'id', true, null, null);
+        $this->addForeignPrimaryKey('tag_id', 'TagId', 'INTEGER' , 'tag', 'id', true, null, null);
     }
 
     /**
@@ -169,6 +170,20 @@ class ArticleTagsTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('ContentArticle', '\\App\\Schema\\Crawl\\Article\\Article', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':article_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('ContentTag', '\\App\\Schema\\Crawl\\Tag\\Tag', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':tag_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
     }
 
     /**
@@ -179,12 +194,12 @@ class ArticleTagsTableMap extends TableMap
      * to the cache in order to ensure that the same objects are always returned by find*()
      * and findPk*() calls.
      *
-     * @param \App\Schema\Crawl\ArticleTags\ArticleTags $obj A \App\Schema\Crawl\ArticleTags\ArticleTags object.
+     * @param \App\Schema\Crawl\ArticleContentTags\ArticleContentTags $obj A \App\Schema\Crawl\ArticleContentTags\ArticleContentTags object.
      * @param string|null $key Key (optional) to use for instance map (for performance boost if key was already calculated externally).
      *
      * @return void
      */
-    public static function addInstanceToPool(ArticleTags $obj, ?string $key = null): void
+    public static function addInstanceToPool(ArticleContentTags $obj, ?string $key = null): void
     {
         if (Propel::isInstancePoolingEnabled()) {
             if (null === $key) {
@@ -202,14 +217,14 @@ class ArticleTagsTableMap extends TableMap
      * methods in your stub classes -- you may need to explicitly remove objects
      * from the cache in order to prevent returning objects that no longer exist.
      *
-     * @param mixed $value A \App\Schema\Crawl\ArticleTags\ArticleTags object or a primary key value.
+     * @param mixed $value A \App\Schema\Crawl\ArticleContentTags\ArticleContentTags object or a primary key value.
      *
      * @return void
      */
     public static function removeInstanceFromPool($value): void
     {
         if (Propel::isInstancePoolingEnabled() && null !== $value) {
-            if (is_object($value) && $value instanceof \App\Schema\Crawl\ArticleTags\ArticleTags) {
+            if (is_object($value) && $value instanceof \App\Schema\Crawl\ArticleContentTags\ArticleContentTags) {
                 $key = serialize([(null === $value->getArticleId() || is_scalar($value->getArticleId()) || is_callable([$value->getArticleId(), '__toString']) ? (string) $value->getArticleId() : $value->getArticleId()), (null === $value->getTagId() || is_scalar($value->getTagId()) || is_callable([$value->getTagId(), '__toString']) ? (string) $value->getTagId() : $value->getTagId())]);
 
             } elseif (is_array($value) && count($value) === 2) {
@@ -220,7 +235,7 @@ class ArticleTagsTableMap extends TableMap
 
                 return;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \App\Schema\Crawl\ArticleTags\ArticleTags object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \App\Schema\Crawl\ArticleContentTags\ArticleContentTags object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
                 throw $e;
             }
 
@@ -294,7 +309,7 @@ class ArticleTagsTableMap extends TableMap
      */
     public static function getOMClass(bool $withPrefix = true): string
     {
-        return $withPrefix ? ArticleTagsTableMap::CLASS_DEFAULT : ArticleTagsTableMap::OM_CLASS;
+        return $withPrefix ? ArticleContentTagsTableMap::CLASS_DEFAULT : ArticleContentTagsTableMap::OM_CLASS;
     }
 
     /**
@@ -308,22 +323,22 @@ class ArticleTagsTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (ArticleTags object, last column rank)
+     * @return array (ArticleContentTags object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
-        $key = ArticleTagsTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = ArticleTagsTableMap::getInstanceFromPool($key))) {
+        $key = ArticleContentTagsTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = ArticleContentTagsTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + ArticleTagsTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + ArticleContentTagsTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = ArticleTagsTableMap::OM_CLASS;
-            /** @var ArticleTags $obj */
+            $cls = ArticleContentTagsTableMap::OM_CLASS;
+            /** @var ArticleContentTags $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            ArticleTagsTableMap::addInstanceToPool($obj, $key);
+            ArticleContentTagsTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -346,18 +361,18 @@ class ArticleTagsTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = ArticleTagsTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = ArticleTagsTableMap::getInstanceFromPool($key))) {
+            $key = ArticleContentTagsTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = ArticleContentTagsTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var ArticleTags $obj */
+                /** @var ArticleContentTags $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                ArticleTagsTableMap::addInstanceToPool($obj, $key);
+                ArticleContentTagsTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -379,8 +394,8 @@ class ArticleTagsTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(ArticleTagsTableMap::COL_ARTICLE_ID);
-            $criteria->addSelectColumn(ArticleTagsTableMap::COL_TAG_ID);
+            $criteria->addSelectColumn(ArticleContentTagsTableMap::COL_ARTICLE_ID);
+            $criteria->addSelectColumn(ArticleContentTagsTableMap::COL_TAG_ID);
         } else {
             $criteria->addSelectColumn($alias . '.article_id');
             $criteria->addSelectColumn($alias . '.tag_id');
@@ -402,8 +417,8 @@ class ArticleTagsTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->removeSelectColumn(ArticleTagsTableMap::COL_ARTICLE_ID);
-            $criteria->removeSelectColumn(ArticleTagsTableMap::COL_TAG_ID);
+            $criteria->removeSelectColumn(ArticleContentTagsTableMap::COL_ARTICLE_ID);
+            $criteria->removeSelectColumn(ArticleContentTagsTableMap::COL_TAG_ID);
         } else {
             $criteria->removeSelectColumn($alias . '.article_id');
             $criteria->removeSelectColumn($alias . '.tag_id');
@@ -419,13 +434,13 @@ class ArticleTagsTableMap extends TableMap
      */
     public static function getTableMap(): TableMap
     {
-        return Propel::getServiceContainer()->getDatabaseMap(ArticleTagsTableMap::DATABASE_NAME)->getTable(ArticleTagsTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(ArticleContentTagsTableMap::DATABASE_NAME)->getTable(ArticleContentTagsTableMap::TABLE_NAME);
     }
 
     /**
-     * Performs a DELETE on the database, given a ArticleTags or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a ArticleContentTags or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or ArticleTags object or primary key or array of primary keys
+     * @param mixed $values Criteria or ArticleContentTags object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -436,17 +451,17 @@ class ArticleTagsTableMap extends TableMap
      public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ArticleTagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ArticleContentTagsTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \App\Schema\Crawl\ArticleTags\ArticleTags) { // it's a model object
+        } elseif ($values instanceof \App\Schema\Crawl\ArticleContentTags\ArticleContentTags) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(ArticleTagsTableMap::DATABASE_NAME);
+            $criteria = new Criteria(ArticleContentTagsTableMap::DATABASE_NAME);
             // primary key is composite; we therefore, expect
             // the primary key passed to be an array of pkey values
             if (count($values) == count($values, COUNT_RECURSIVE)) {
@@ -454,19 +469,19 @@ class ArticleTagsTableMap extends TableMap
                 $values = [$values];
             }
             foreach ($values as $value) {
-                $criterion = $criteria->getNewCriterion(ArticleTagsTableMap::COL_ARTICLE_ID, $value[0]);
-                $criterion->addAnd($criteria->getNewCriterion(ArticleTagsTableMap::COL_TAG_ID, $value[1]));
+                $criterion = $criteria->getNewCriterion(ArticleContentTagsTableMap::COL_ARTICLE_ID, $value[0]);
+                $criterion->addAnd($criteria->getNewCriterion(ArticleContentTagsTableMap::COL_TAG_ID, $value[1]));
                 $criteria->addOr($criterion);
             }
         }
 
-        $query = ArticleTagsQuery::create()->mergeWith($criteria);
+        $query = ArticleContentTagsQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            ArticleTagsTableMap::clearInstancePool();
+            ArticleContentTagsTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                ArticleTagsTableMap::removeInstanceFromPool($singleval);
+                ArticleContentTagsTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -481,13 +496,13 @@ class ArticleTagsTableMap extends TableMap
      */
     public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
-        return ArticleTagsQuery::create()->doDeleteAll($con);
+        return ArticleContentTagsQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a ArticleTags or Criteria object.
+     * Performs an INSERT on the database, given a ArticleContentTags or Criteria object.
      *
-     * @param mixed $criteria Criteria or ArticleTags object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or ArticleContentTags object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -496,18 +511,18 @@ class ArticleTagsTableMap extends TableMap
     public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ArticleTagsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ArticleContentTagsTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from ArticleTags object
+            $criteria = $criteria->buildCriteria(); // build Criteria from ArticleContentTags object
         }
 
 
         // Set the correct dbName
-        $query = ArticleTagsQuery::create()->mergeWith($criteria);
+        $query = ArticleContentTagsQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)

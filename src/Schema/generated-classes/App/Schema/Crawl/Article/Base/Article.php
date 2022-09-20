@@ -4,13 +4,25 @@ namespace App\Schema\Crawl\Article\Base;
 
 use \Exception;
 use \PDO;
+use App\Schema\Crawl\Article\Article as ChildArticle;
 use App\Schema\Crawl\Article\ArticleQuery as ChildArticleQuery;
+use App\Schema\Crawl\ArticleContentTags\ArticleContentTags;
+use App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery;
+use App\Schema\Crawl\ArticleContentTags\Base\ArticleContentTags as BaseArticleContentTags;
+use App\Schema\Crawl\ArticleContentTags\Map\ArticleContentTagsTableMap;
+use App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags;
+use App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery;
+use App\Schema\Crawl\ArticleTitleTags\Base\ArticleTitleTags as BaseArticleTitleTags;
+use App\Schema\Crawl\ArticleTitleTags\Map\ArticleTitleTagsTableMap;
 use App\Schema\Crawl\Article\Map\ArticleTableMap;
+use App\Schema\Crawl\Tag\Tag;
+use App\Schema\Crawl\Tag\TagQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -132,12 +144,76 @@ abstract class Article implements ActiveRecordInterface
     protected $type;
 
     /**
+     * @var        ObjectCollection|ArticleContentTags[] Collection to store aggregation of ArticleContentTags objects.
+     * @phpstan-var ObjectCollection&\Traversable<ArticleContentTags> Collection to store aggregation of ArticleContentTags objects.
+     */
+    protected $collContentArticles;
+    protected $collContentArticlesPartial;
+
+    /**
+     * @var        ObjectCollection|ArticleTitleTags[] Collection to store aggregation of ArticleTitleTags objects.
+     * @phpstan-var ObjectCollection&\Traversable<ArticleTitleTags> Collection to store aggregation of ArticleTitleTags objects.
+     */
+    protected $collTitleArticles;
+    protected $collTitleArticlesPartial;
+
+    /**
+     * @var        ObjectCollection|Tag[] Cross Collection to store aggregation of Tag objects.
+     * @phpstan-var ObjectCollection&\Traversable<Tag> Cross Collection to store aggregation of Tag objects.
+     */
+    protected $collContentTags;
+
+    /**
+     * @var bool
+     */
+    protected $collContentTagsPartial;
+
+    /**
+     * @var        ObjectCollection|Tag[] Cross Collection to store aggregation of Tag objects.
+     * @phpstan-var ObjectCollection&\Traversable<Tag> Cross Collection to store aggregation of Tag objects.
+     */
+    protected $collTitleTags;
+
+    /**
+     * @var bool
+     */
+    protected $collTitleTagsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
      * @var bool
      */
     protected $alreadyInSave = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|Tag[]
+     * @phpstan-var ObjectCollection&\Traversable<Tag>
+     */
+    protected $contentTagsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|Tag[]
+     * @phpstan-var ObjectCollection&\Traversable<Tag>
+     */
+    protected $titleTagsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ArticleContentTags[]
+     * @phpstan-var ObjectCollection&\Traversable<ArticleContentTags>
+     */
+    protected $contentArticlesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ArticleTitleTags[]
+     * @phpstan-var ObjectCollection&\Traversable<ArticleTitleTags>
+     */
+    protected $titleArticlesScheduledForDeletion = null;
 
     /**
      * Initializes internal state of App\Schema\Crawl\Article\Base\Article object.
@@ -800,6 +876,12 @@ abstract class Article implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collContentArticles = null;
+
+            $this->collTitleArticles = null;
+
+            $this->collContentTags = null;
+            $this->collTitleTags = null;
         } // if (deep)
     }
 
@@ -912,6 +994,98 @@ abstract class Article implements ActiveRecordInterface
                     $affectedRows += $this->doUpdate($con);
                 }
                 $this->resetModified();
+            }
+
+            if ($this->contentTagsScheduledForDeletion !== null) {
+                if (!$this->contentTagsScheduledForDeletion->isEmpty()) {
+                    $pks = [];
+                    foreach ($this->contentTagsScheduledForDeletion as $entry) {
+                        $entryPk = [];
+
+                        $entryPk[0] = $this->getId();
+                        $entryPk[1] = $entry->getId();
+                        $pks[] = $entryPk;
+                    }
+
+                    \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery::create()
+                        ->filterByPrimaryKeys($pks)
+                        ->delete($con);
+
+                    $this->contentTagsScheduledForDeletion = null;
+                }
+
+            }
+
+            if ($this->collContentTags) {
+                foreach ($this->collContentTags as $contentTag) {
+                    if (!$contentTag->isDeleted() && ($contentTag->isNew() || $contentTag->isModified())) {
+                        $contentTag->save($con);
+                    }
+                }
+            }
+
+
+            if ($this->titleTagsScheduledForDeletion !== null) {
+                if (!$this->titleTagsScheduledForDeletion->isEmpty()) {
+                    $pks = [];
+                    foreach ($this->titleTagsScheduledForDeletion as $entry) {
+                        $entryPk = [];
+
+                        $entryPk[0] = $this->getId();
+                        $entryPk[1] = $entry->getId();
+                        $pks[] = $entryPk;
+                    }
+
+                    \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery::create()
+                        ->filterByPrimaryKeys($pks)
+                        ->delete($con);
+
+                    $this->titleTagsScheduledForDeletion = null;
+                }
+
+            }
+
+            if ($this->collTitleTags) {
+                foreach ($this->collTitleTags as $titleTag) {
+                    if (!$titleTag->isDeleted() && ($titleTag->isNew() || $titleTag->isModified())) {
+                        $titleTag->save($con);
+                    }
+                }
+            }
+
+
+            if ($this->contentArticlesScheduledForDeletion !== null) {
+                if (!$this->contentArticlesScheduledForDeletion->isEmpty()) {
+                    \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery::create()
+                        ->filterByPrimaryKeys($this->contentArticlesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->contentArticlesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collContentArticles !== null) {
+                foreach ($this->collContentArticles as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->titleArticlesScheduledForDeletion !== null) {
+                if (!$this->titleArticlesScheduledForDeletion->isEmpty()) {
+                    \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery::create()
+                        ->filterByPrimaryKeys($this->titleArticlesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->titleArticlesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collTitleArticles !== null) {
+                foreach ($this->collTitleArticles as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -1119,10 +1293,11 @@ abstract class Article implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param bool $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param bool $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array An associative array containing the field names (as keys) and field values
      */
-    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = []): array
+    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
         if (isset($alreadyDumpedObjects['Article'][$this->hashCode()])) {
             return ['*RECURSION*'];
@@ -1146,6 +1321,38 @@ abstract class Article implements ActiveRecordInterface
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->collContentArticles) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'articleContentTagss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'article_tagss';
+                        break;
+                    default:
+                        $key = 'ContentArticles';
+                }
+
+                $result[$key] = $this->collContentArticles->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collTitleArticles) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'articleTitleTagss';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'article_title_tagss';
+                        break;
+                    default:
+                        $key = 'TitleArticles';
+                }
+
+                $result[$key] = $this->collTitleArticles->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -1437,6 +1644,26 @@ abstract class Article implements ActiveRecordInterface
         $copyObj->setCats($this->getCats());
         $copyObj->setLastTagged($this->getLastTagged());
         $copyObj->setType($this->getType());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getContentArticles() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addContentArticle($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getTitleArticles() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addTitleArticle($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1463,6 +1690,1051 @@ abstract class Article implements ActiveRecordInterface
         $this->copyInto($copyObj, $deepCopy);
 
         return $copyObj;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName): void
+    {
+        if ('ContentArticle' === $relationName) {
+            $this->initContentArticles();
+            return;
+        }
+        if ('TitleArticle' === $relationName) {
+            $this->initTitleArticles();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collContentArticles collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addContentArticles()
+     */
+    public function clearContentArticles()
+    {
+        $this->collContentArticles = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collContentArticles collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialContentArticles($v = true): void
+    {
+        $this->collContentArticlesPartial = $v;
+    }
+
+    /**
+     * Initializes the collContentArticles collection.
+     *
+     * By default this just sets the collContentArticles collection to an empty array (like clearcollContentArticles());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initContentArticles(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collContentArticles && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ArticleContentTagsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collContentArticles = new $collectionClassName;
+        $this->collContentArticles->setModel('\App\Schema\Crawl\ArticleContentTags\ArticleContentTags');
+    }
+
+    /**
+     * Gets an array of ArticleContentTags objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildArticle is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ArticleContentTags[] List of ArticleContentTags objects
+     * @phpstan-return ObjectCollection&\Traversable<ArticleContentTags> List of ArticleContentTags objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getContentArticles(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collContentArticlesPartial && !$this->isNew();
+        if (null === $this->collContentArticles || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collContentArticles) {
+                    $this->initContentArticles();
+                } else {
+                    $collectionClassName = ArticleContentTagsTableMap::getTableMap()->getCollectionClassName();
+
+                    $collContentArticles = new $collectionClassName;
+                    $collContentArticles->setModel('\App\Schema\Crawl\ArticleContentTags\ArticleContentTags');
+
+                    return $collContentArticles;
+                }
+            } else {
+                $collContentArticles = ArticleContentTagsQuery::create(null, $criteria)
+                    ->filterByContentArticle($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collContentArticlesPartial && count($collContentArticles)) {
+                        $this->initContentArticles(false);
+
+                        foreach ($collContentArticles as $obj) {
+                            if (false == $this->collContentArticles->contains($obj)) {
+                                $this->collContentArticles->append($obj);
+                            }
+                        }
+
+                        $this->collContentArticlesPartial = true;
+                    }
+
+                    return $collContentArticles;
+                }
+
+                if ($partial && $this->collContentArticles) {
+                    foreach ($this->collContentArticles as $obj) {
+                        if ($obj->isNew()) {
+                            $collContentArticles[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collContentArticles = $collContentArticles;
+                $this->collContentArticlesPartial = false;
+            }
+        }
+
+        return $this->collContentArticles;
+    }
+
+    /**
+     * Sets a collection of ArticleContentTags objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $contentArticles A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setContentArticles(Collection $contentArticles, ?ConnectionInterface $con = null)
+    {
+        /** @var ArticleContentTags[] $contentArticlesToDelete */
+        $contentArticlesToDelete = $this->getContentArticles(new Criteria(), $con)->diff($contentArticles);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->contentArticlesScheduledForDeletion = clone $contentArticlesToDelete;
+
+        foreach ($contentArticlesToDelete as $contentArticleRemoved) {
+            $contentArticleRemoved->setContentArticle(null);
+        }
+
+        $this->collContentArticles = null;
+        foreach ($contentArticles as $contentArticle) {
+            $this->addContentArticle($contentArticle);
+        }
+
+        $this->collContentArticles = $contentArticles;
+        $this->collContentArticlesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related BaseArticleContentTags objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related BaseArticleContentTags objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countContentArticles(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collContentArticlesPartial && !$this->isNew();
+        if (null === $this->collContentArticles || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collContentArticles) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getContentArticles());
+            }
+
+            $query = ArticleContentTagsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByContentArticle($this)
+                ->count($con);
+        }
+
+        return count($this->collContentArticles);
+    }
+
+    /**
+     * Method called to associate a ArticleContentTags object to this object
+     * through the ArticleContentTags foreign key attribute.
+     *
+     * @param ArticleContentTags $l ArticleContentTags
+     * @return $this The current object (for fluent API support)
+     */
+    public function addContentArticle(ArticleContentTags $l)
+    {
+        if ($this->collContentArticles === null) {
+            $this->initContentArticles();
+            $this->collContentArticlesPartial = true;
+        }
+
+        if (!$this->collContentArticles->contains($l)) {
+            $this->doAddContentArticle($l);
+
+            if ($this->contentArticlesScheduledForDeletion and $this->contentArticlesScheduledForDeletion->contains($l)) {
+                $this->contentArticlesScheduledForDeletion->remove($this->contentArticlesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ArticleContentTags $contentArticle The ArticleContentTags object to add.
+     */
+    protected function doAddContentArticle(ArticleContentTags $contentArticle): void
+    {
+        $this->collContentArticles[]= $contentArticle;
+        $contentArticle->setContentArticle($this);
+    }
+
+    /**
+     * @param ArticleContentTags $contentArticle The ArticleContentTags object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeContentArticle(ArticleContentTags $contentArticle)
+    {
+        if ($this->getContentArticles()->contains($contentArticle)) {
+            $pos = $this->collContentArticles->search($contentArticle);
+            $this->collContentArticles->remove($pos);
+            if (null === $this->contentArticlesScheduledForDeletion) {
+                $this->contentArticlesScheduledForDeletion = clone $this->collContentArticles;
+                $this->contentArticlesScheduledForDeletion->clear();
+            }
+            $this->contentArticlesScheduledForDeletion[]= clone $contentArticle;
+            $contentArticle->setContentArticle(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Article is new, it will return
+     * an empty collection; or if this Article has previously
+     * been saved, it will retrieve related ContentArticles from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Article.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ArticleContentTags[] List of ArticleContentTags objects
+     * @phpstan-return ObjectCollection&\Traversable<ArticleContentTags}> List of ArticleContentTags objects
+     */
+    public function getContentArticlesJoinContentTag(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ArticleContentTagsQuery::create(null, $criteria);
+        $query->joinWith('ContentTag', $joinBehavior);
+
+        return $this->getContentArticles($query, $con);
+    }
+
+    /**
+     * Clears out the collTitleArticles collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addTitleArticles()
+     */
+    public function clearTitleArticles()
+    {
+        $this->collTitleArticles = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collTitleArticles collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialTitleArticles($v = true): void
+    {
+        $this->collTitleArticlesPartial = $v;
+    }
+
+    /**
+     * Initializes the collTitleArticles collection.
+     *
+     * By default this just sets the collTitleArticles collection to an empty array (like clearcollTitleArticles());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initTitleArticles(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collTitleArticles && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = ArticleTitleTagsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collTitleArticles = new $collectionClassName;
+        $this->collTitleArticles->setModel('\App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags');
+    }
+
+    /**
+     * Gets an array of ArticleTitleTags objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildArticle is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ArticleTitleTags[] List of ArticleTitleTags objects
+     * @phpstan-return ObjectCollection&\Traversable<ArticleTitleTags> List of ArticleTitleTags objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getTitleArticles(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collTitleArticlesPartial && !$this->isNew();
+        if (null === $this->collTitleArticles || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collTitleArticles) {
+                    $this->initTitleArticles();
+                } else {
+                    $collectionClassName = ArticleTitleTagsTableMap::getTableMap()->getCollectionClassName();
+
+                    $collTitleArticles = new $collectionClassName;
+                    $collTitleArticles->setModel('\App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags');
+
+                    return $collTitleArticles;
+                }
+            } else {
+                $collTitleArticles = ArticleTitleTagsQuery::create(null, $criteria)
+                    ->filterByTitleArticle($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collTitleArticlesPartial && count($collTitleArticles)) {
+                        $this->initTitleArticles(false);
+
+                        foreach ($collTitleArticles as $obj) {
+                            if (false == $this->collTitleArticles->contains($obj)) {
+                                $this->collTitleArticles->append($obj);
+                            }
+                        }
+
+                        $this->collTitleArticlesPartial = true;
+                    }
+
+                    return $collTitleArticles;
+                }
+
+                if ($partial && $this->collTitleArticles) {
+                    foreach ($this->collTitleArticles as $obj) {
+                        if ($obj->isNew()) {
+                            $collTitleArticles[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collTitleArticles = $collTitleArticles;
+                $this->collTitleArticlesPartial = false;
+            }
+        }
+
+        return $this->collTitleArticles;
+    }
+
+    /**
+     * Sets a collection of ArticleTitleTags objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $titleArticles A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setTitleArticles(Collection $titleArticles, ?ConnectionInterface $con = null)
+    {
+        /** @var ArticleTitleTags[] $titleArticlesToDelete */
+        $titleArticlesToDelete = $this->getTitleArticles(new Criteria(), $con)->diff($titleArticles);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->titleArticlesScheduledForDeletion = clone $titleArticlesToDelete;
+
+        foreach ($titleArticlesToDelete as $titleArticleRemoved) {
+            $titleArticleRemoved->setTitleArticle(null);
+        }
+
+        $this->collTitleArticles = null;
+        foreach ($titleArticles as $titleArticle) {
+            $this->addTitleArticle($titleArticle);
+        }
+
+        $this->collTitleArticles = $titleArticles;
+        $this->collTitleArticlesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related BaseArticleTitleTags objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related BaseArticleTitleTags objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countTitleArticles(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collTitleArticlesPartial && !$this->isNew();
+        if (null === $this->collTitleArticles || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collTitleArticles) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getTitleArticles());
+            }
+
+            $query = ArticleTitleTagsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByTitleArticle($this)
+                ->count($con);
+        }
+
+        return count($this->collTitleArticles);
+    }
+
+    /**
+     * Method called to associate a ArticleTitleTags object to this object
+     * through the ArticleTitleTags foreign key attribute.
+     *
+     * @param ArticleTitleTags $l ArticleTitleTags
+     * @return $this The current object (for fluent API support)
+     */
+    public function addTitleArticle(ArticleTitleTags $l)
+    {
+        if ($this->collTitleArticles === null) {
+            $this->initTitleArticles();
+            $this->collTitleArticlesPartial = true;
+        }
+
+        if (!$this->collTitleArticles->contains($l)) {
+            $this->doAddTitleArticle($l);
+
+            if ($this->titleArticlesScheduledForDeletion and $this->titleArticlesScheduledForDeletion->contains($l)) {
+                $this->titleArticlesScheduledForDeletion->remove($this->titleArticlesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ArticleTitleTags $titleArticle The ArticleTitleTags object to add.
+     */
+    protected function doAddTitleArticle(ArticleTitleTags $titleArticle): void
+    {
+        $this->collTitleArticles[]= $titleArticle;
+        $titleArticle->setTitleArticle($this);
+    }
+
+    /**
+     * @param ArticleTitleTags $titleArticle The ArticleTitleTags object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeTitleArticle(ArticleTitleTags $titleArticle)
+    {
+        if ($this->getTitleArticles()->contains($titleArticle)) {
+            $pos = $this->collTitleArticles->search($titleArticle);
+            $this->collTitleArticles->remove($pos);
+            if (null === $this->titleArticlesScheduledForDeletion) {
+                $this->titleArticlesScheduledForDeletion = clone $this->collTitleArticles;
+                $this->titleArticlesScheduledForDeletion->clear();
+            }
+            $this->titleArticlesScheduledForDeletion[]= clone $titleArticle;
+            $titleArticle->setTitleArticle(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Article is new, it will return
+     * an empty collection; or if this Article has previously
+     * been saved, it will retrieve related TitleArticles from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Article.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ArticleTitleTags[] List of ArticleTitleTags objects
+     * @phpstan-return ObjectCollection&\Traversable<ArticleTitleTags}> List of ArticleTitleTags objects
+     */
+    public function getTitleArticlesJoinTitleTag(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ArticleTitleTagsQuery::create(null, $criteria);
+        $query->joinWith('TitleTag', $joinBehavior);
+
+        return $this->getTitleArticles($query, $con);
+    }
+
+    /**
+     * Clears out the collContentTags collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addContentTags()
+     */
+    public function clearContentTags()
+    {
+        $this->collContentTags = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Initializes the collContentTags crossRef collection.
+     *
+     * By default this just sets the collContentTags collection to an empty collection (like clearContentTags());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @return void
+     */
+    public function initContentTags()
+    {
+        $collectionClassName = ArticleContentTagsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collContentTags = new $collectionClassName;
+        $this->collContentTagsPartial = true;
+        $this->collContentTags->setModel('\App\Schema\Crawl\Tag\Tag');
+    }
+
+    /**
+     * Checks if the collContentTags collection is loaded.
+     *
+     * @return bool
+     */
+    public function isContentTagsLoaded(): bool
+    {
+        return null !== $this->collContentTags;
+    }
+
+    /**
+     * Gets a collection of Tag objects related by a many-to-many relationship
+     * to the current object by way of the article_tags cross-reference table.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildArticle is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria Optional query object to filter the query
+     * @param ConnectionInterface $con Optional connection object
+     *
+     * @return ObjectCollection|Tag[] List of Tag objects
+     * @phpstan-return ObjectCollection&\Traversable<Tag> List of Tag objects
+     */
+    public function getContentTags(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collContentTagsPartial && !$this->isNew();
+        if (null === $this->collContentTags || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collContentTags) {
+                    $this->initContentTags();
+                }
+            } else {
+
+                $query = TagQuery::create(null, $criteria)
+                    ->filterByContentArticle($this);
+                $collContentTags = $query->find($con);
+                if (null !== $criteria) {
+                    return $collContentTags;
+                }
+
+                if ($partial && $this->collContentTags) {
+                    //make sure that already added objects gets added to the list of the database.
+                    foreach ($this->collContentTags as $obj) {
+                        if (!$collContentTags->contains($obj)) {
+                            $collContentTags[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collContentTags = $collContentTags;
+                $this->collContentTagsPartial = false;
+            }
+        }
+
+        return $this->collContentTags;
+    }
+
+    /**
+     * Sets a collection of Tag objects related by a many-to-many relationship
+     * to the current object by way of the article_tags cross-reference table.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $contentTags A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setContentTags(Collection $contentTags, ?ConnectionInterface $con = null)
+    {
+        $this->clearContentTags();
+        $currentContentTags = $this->getContentTags();
+
+        $contentTagsScheduledForDeletion = $currentContentTags->diff($contentTags);
+
+        foreach ($contentTagsScheduledForDeletion as $toDelete) {
+            $this->removeContentTag($toDelete);
+        }
+
+        foreach ($contentTags as $contentTag) {
+            if (!$currentContentTags->contains($contentTag)) {
+                $this->doAddContentTag($contentTag);
+            }
+        }
+
+        $this->collContentTagsPartial = false;
+        $this->collContentTags = $contentTags;
+
+        return $this;
+    }
+
+    /**
+     * Gets the number of Tag objects related by a many-to-many relationship
+     * to the current object by way of the article_tags cross-reference table.
+     *
+     * @param Criteria $criteria Optional query object to filter the query
+     * @param bool $distinct Set to true to force count distinct
+     * @param ConnectionInterface $con Optional connection object
+     *
+     * @return int The number of related Tag objects
+     */
+    public function countContentTags(?Criteria $criteria = null, $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collContentTagsPartial && !$this->isNew();
+        if (null === $this->collContentTags || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collContentTags) {
+                return 0;
+            } else {
+
+                if ($partial && !$criteria) {
+                    return count($this->getContentTags());
+                }
+
+                $query = TagQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByContentArticle($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collContentTags);
+        }
+    }
+
+    /**
+     * Associate a Tag to this object
+     * through the article_tags cross reference table.
+     *
+     * @param Tag $contentTag
+     * @return ChildArticle The current object (for fluent API support)
+     */
+    public function addContentTag(Tag $contentTag)
+    {
+        if ($this->collContentTags === null) {
+            $this->initContentTags();
+        }
+
+        if (!$this->getContentTags()->contains($contentTag)) {
+            // only add it if the **same** object is not already associated
+            $this->collContentTags->push($contentTag);
+            $this->doAddContentTag($contentTag);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param Tag $contentTag
+     */
+    protected function doAddContentTag(Tag $contentTag)
+    {
+        $articleContentTags = new ArticleContentTags();
+
+        $articleContentTags->setContentTag($contentTag);
+
+        $articleContentTags->setContentArticle($this);
+
+        $this->addContentArticle($articleContentTags);
+
+        // set the back reference to this object directly as using provided method either results
+        // in endless loop or in multiple relations
+        if (!$contentTag->isContentArticlesLoaded()) {
+            $contentTag->initContentArticles();
+            $contentTag->getContentArticles()->push($this);
+        } elseif (!$contentTag->getContentArticles()->contains($this)) {
+            $contentTag->getContentArticles()->push($this);
+        }
+
+    }
+
+    /**
+     * Remove contentTag of this object
+     * through the article_tags cross reference table.
+     *
+     * @param Tag $contentTag
+     * @return ChildArticle The current object (for fluent API support)
+     */
+    public function removeContentTag(Tag $contentTag)
+    {
+        if ($this->getContentTags()->contains($contentTag)) {
+            $articleContentTags = new ArticleContentTags();
+            $articleContentTags->setContentTag($contentTag);
+            if ($contentTag->isContentArticlesLoaded()) {
+                //remove the back reference if available
+                $contentTag->getContentArticles()->removeObject($this);
+            }
+
+            $articleContentTags->setContentArticle($this);
+            $this->removeContentArticle(clone $articleContentTags);
+            $articleContentTags->clear();
+
+            $this->collContentTags->remove($this->collContentTags->search($contentTag));
+
+            if (null === $this->contentTagsScheduledForDeletion) {
+                $this->contentTagsScheduledForDeletion = clone $this->collContentTags;
+                $this->contentTagsScheduledForDeletion->clear();
+            }
+
+            $this->contentTagsScheduledForDeletion->push($contentTag);
+        }
+
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collTitleTags collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addTitleTags()
+     */
+    public function clearTitleTags()
+    {
+        $this->collTitleTags = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Initializes the collTitleTags crossRef collection.
+     *
+     * By default this just sets the collTitleTags collection to an empty collection (like clearTitleTags());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @return void
+     */
+    public function initTitleTags()
+    {
+        $collectionClassName = ArticleTitleTagsTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collTitleTags = new $collectionClassName;
+        $this->collTitleTagsPartial = true;
+        $this->collTitleTags->setModel('\App\Schema\Crawl\Tag\Tag');
+    }
+
+    /**
+     * Checks if the collTitleTags collection is loaded.
+     *
+     * @return bool
+     */
+    public function isTitleTagsLoaded(): bool
+    {
+        return null !== $this->collTitleTags;
+    }
+
+    /**
+     * Gets a collection of Tag objects related by a many-to-many relationship
+     * to the current object by way of the article_title_tags cross-reference table.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildArticle is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria Optional query object to filter the query
+     * @param ConnectionInterface $con Optional connection object
+     *
+     * @return ObjectCollection|Tag[] List of Tag objects
+     * @phpstan-return ObjectCollection&\Traversable<Tag> List of Tag objects
+     */
+    public function getTitleTags(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collTitleTagsPartial && !$this->isNew();
+        if (null === $this->collTitleTags || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collTitleTags) {
+                    $this->initTitleTags();
+                }
+            } else {
+
+                $query = TagQuery::create(null, $criteria)
+                    ->filterByTitleArticle($this);
+                $collTitleTags = $query->find($con);
+                if (null !== $criteria) {
+                    return $collTitleTags;
+                }
+
+                if ($partial && $this->collTitleTags) {
+                    //make sure that already added objects gets added to the list of the database.
+                    foreach ($this->collTitleTags as $obj) {
+                        if (!$collTitleTags->contains($obj)) {
+                            $collTitleTags[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collTitleTags = $collTitleTags;
+                $this->collTitleTagsPartial = false;
+            }
+        }
+
+        return $this->collTitleTags;
+    }
+
+    /**
+     * Sets a collection of Tag objects related by a many-to-many relationship
+     * to the current object by way of the article_title_tags cross-reference table.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $titleTags A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setTitleTags(Collection $titleTags, ?ConnectionInterface $con = null)
+    {
+        $this->clearTitleTags();
+        $currentTitleTags = $this->getTitleTags();
+
+        $titleTagsScheduledForDeletion = $currentTitleTags->diff($titleTags);
+
+        foreach ($titleTagsScheduledForDeletion as $toDelete) {
+            $this->removeTitleTag($toDelete);
+        }
+
+        foreach ($titleTags as $titleTag) {
+            if (!$currentTitleTags->contains($titleTag)) {
+                $this->doAddTitleTag($titleTag);
+            }
+        }
+
+        $this->collTitleTagsPartial = false;
+        $this->collTitleTags = $titleTags;
+
+        return $this;
+    }
+
+    /**
+     * Gets the number of Tag objects related by a many-to-many relationship
+     * to the current object by way of the article_title_tags cross-reference table.
+     *
+     * @param Criteria $criteria Optional query object to filter the query
+     * @param bool $distinct Set to true to force count distinct
+     * @param ConnectionInterface $con Optional connection object
+     *
+     * @return int The number of related Tag objects
+     */
+    public function countTitleTags(?Criteria $criteria = null, $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collTitleTagsPartial && !$this->isNew();
+        if (null === $this->collTitleTags || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collTitleTags) {
+                return 0;
+            } else {
+
+                if ($partial && !$criteria) {
+                    return count($this->getTitleTags());
+                }
+
+                $query = TagQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByTitleArticle($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collTitleTags);
+        }
+    }
+
+    /**
+     * Associate a Tag to this object
+     * through the article_title_tags cross reference table.
+     *
+     * @param Tag $titleTag
+     * @return ChildArticle The current object (for fluent API support)
+     */
+    public function addTitleTag(Tag $titleTag)
+    {
+        if ($this->collTitleTags === null) {
+            $this->initTitleTags();
+        }
+
+        if (!$this->getTitleTags()->contains($titleTag)) {
+            // only add it if the **same** object is not already associated
+            $this->collTitleTags->push($titleTag);
+            $this->doAddTitleTag($titleTag);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param Tag $titleTag
+     */
+    protected function doAddTitleTag(Tag $titleTag)
+    {
+        $articleTitleTags = new ArticleTitleTags();
+
+        $articleTitleTags->setTitleTag($titleTag);
+
+        $articleTitleTags->setTitleArticle($this);
+
+        $this->addTitleArticle($articleTitleTags);
+
+        // set the back reference to this object directly as using provided method either results
+        // in endless loop or in multiple relations
+        if (!$titleTag->isTitleArticlesLoaded()) {
+            $titleTag->initTitleArticles();
+            $titleTag->getTitleArticles()->push($this);
+        } elseif (!$titleTag->getTitleArticles()->contains($this)) {
+            $titleTag->getTitleArticles()->push($this);
+        }
+
+    }
+
+    /**
+     * Remove titleTag of this object
+     * through the article_title_tags cross reference table.
+     *
+     * @param Tag $titleTag
+     * @return ChildArticle The current object (for fluent API support)
+     */
+    public function removeTitleTag(Tag $titleTag)
+    {
+        if ($this->getTitleTags()->contains($titleTag)) {
+            $articleTitleTags = new ArticleTitleTags();
+            $articleTitleTags->setTitleTag($titleTag);
+            if ($titleTag->isTitleArticlesLoaded()) {
+                //remove the back reference if available
+                $titleTag->getTitleArticles()->removeObject($this);
+            }
+
+            $articleTitleTags->setTitleArticle($this);
+            $this->removeTitleArticle(clone $articleTitleTags);
+            $articleTitleTags->clear();
+
+            $this->collTitleTags->remove($this->collTitleTags->search($titleTag));
+
+            if (null === $this->titleTagsScheduledForDeletion) {
+                $this->titleTagsScheduledForDeletion = clone $this->collTitleTags;
+                $this->titleTagsScheduledForDeletion->clear();
+            }
+
+            $this->titleTagsScheduledForDeletion->push($titleTag);
+        }
+
+
+        return $this;
     }
 
     /**
@@ -1505,8 +2777,32 @@ abstract class Article implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
+            if ($this->collContentArticles) {
+                foreach ($this->collContentArticles as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collTitleArticles) {
+                foreach ($this->collTitleArticles as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collContentTags) {
+                foreach ($this->collContentTags as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collTitleTags) {
+                foreach ($this->collTitleTags as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collContentArticles = null;
+        $this->collTitleArticles = null;
+        $this->collContentTags = null;
+        $this->collTitleTags = null;
         return $this;
     }
 

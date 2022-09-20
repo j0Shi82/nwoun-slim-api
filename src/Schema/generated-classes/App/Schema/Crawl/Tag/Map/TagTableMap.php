@@ -165,6 +165,22 @@ class TagTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('ContentTag', '\\App\\Schema\\Crawl\\ArticleContentTags\\ArticleContentTags', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':tag_id',
+    1 => ':id',
+  ),
+), null, null, 'ContentTags', false);
+        $this->addRelation('TitleTag', '\\App\\Schema\\Crawl\\ArticleTitleTags\\ArticleTitleTags', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':tag_id',
+    1 => ':id',
+  ),
+), null, null, 'TitleTags', false);
+        $this->addRelation('ContentArticle', '\\App\\Schema\\Crawl\\Article\\Article', RelationMap::MANY_TO_MANY, array(), null, null, 'ContentArticles');
+        $this->addRelation('TitleArticle', '\\App\\Schema\\Crawl\\Article\\Article', RelationMap::MANY_TO_MANY, array(), null, null, 'TitleArticles');
     }
 
     /**

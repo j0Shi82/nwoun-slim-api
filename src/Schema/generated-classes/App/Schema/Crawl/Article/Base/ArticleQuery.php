@@ -6,11 +6,15 @@ use \Exception;
 use \PDO;
 use App\Schema\Crawl\Article\Article as ChildArticle;
 use App\Schema\Crawl\Article\ArticleQuery as ChildArticleQuery;
+use App\Schema\Crawl\ArticleContentTags\ArticleContentTags;
+use App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags;
 use App\Schema\Crawl\Article\Map\ArticleTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\ActiveQuery\ModelJoin;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
@@ -48,6 +52,28 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticleQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
  * @method     ChildArticleQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
  * @method     ChildArticleQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ *
+ * @method     ChildArticleQuery leftJoinContentArticle($relationAlias = null) Adds a LEFT JOIN clause to the query using the ContentArticle relation
+ * @method     ChildArticleQuery rightJoinContentArticle($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ContentArticle relation
+ * @method     ChildArticleQuery innerJoinContentArticle($relationAlias = null) Adds a INNER JOIN clause to the query using the ContentArticle relation
+ *
+ * @method     ChildArticleQuery joinWithContentArticle($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the ContentArticle relation
+ *
+ * @method     ChildArticleQuery leftJoinWithContentArticle() Adds a LEFT JOIN clause and with to the query using the ContentArticle relation
+ * @method     ChildArticleQuery rightJoinWithContentArticle() Adds a RIGHT JOIN clause and with to the query using the ContentArticle relation
+ * @method     ChildArticleQuery innerJoinWithContentArticle() Adds a INNER JOIN clause and with to the query using the ContentArticle relation
+ *
+ * @method     ChildArticleQuery leftJoinTitleArticle($relationAlias = null) Adds a LEFT JOIN clause to the query using the TitleArticle relation
+ * @method     ChildArticleQuery rightJoinTitleArticle($relationAlias = null) Adds a RIGHT JOIN clause to the query using the TitleArticle relation
+ * @method     ChildArticleQuery innerJoinTitleArticle($relationAlias = null) Adds a INNER JOIN clause to the query using the TitleArticle relation
+ *
+ * @method     ChildArticleQuery joinWithTitleArticle($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the TitleArticle relation
+ *
+ * @method     ChildArticleQuery leftJoinWithTitleArticle() Adds a LEFT JOIN clause and with to the query using the TitleArticle relation
+ * @method     ChildArticleQuery rightJoinWithTitleArticle() Adds a RIGHT JOIN clause and with to the query using the TitleArticle relation
+ * @method     ChildArticleQuery innerJoinWithTitleArticle() Adds a INNER JOIN clause and with to the query using the TitleArticle relation
+ *
+ * @method     \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery|\App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildArticle|null findOne(?ConnectionInterface $con = null) Return the first ChildArticle matching the query
  * @method     ChildArticle findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildArticle matching the query, or a new ChildArticle object populated from the query conditions when no match is found
@@ -613,6 +639,308 @@ abstract class ArticleQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(ArticleTableMap::COL_TYPE, $type, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query by a related \App\Schema\Crawl\ArticleContentTags\ArticleContentTags object
+     *
+     * @param \App\Schema\Crawl\ArticleContentTags\ArticleContentTags|ObjectCollection $articleContentTags the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByContentArticle($articleContentTags, ?string $comparison = null)
+    {
+        if ($articleContentTags instanceof \App\Schema\Crawl\ArticleContentTags\ArticleContentTags) {
+            $this
+                ->addUsingAlias(ArticleTableMap::COL_ID, $articleContentTags->getArticleId(), $comparison);
+
+            return $this;
+        } elseif ($articleContentTags instanceof ObjectCollection) {
+            $this
+                ->useContentArticleQuery()
+                ->filterByPrimaryKeys($articleContentTags->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByContentArticle() only accepts arguments of type \App\Schema\Crawl\ArticleContentTags\ArticleContentTags or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ContentArticle relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinContentArticle(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ContentArticle');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ContentArticle');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ContentArticle relation ArticleContentTags object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery A secondary query class using the current class as primary query
+     */
+    public function useContentArticleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinContentArticle($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ContentArticle', '\App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery');
+    }
+
+    /**
+     * Use the ContentArticle relation ArticleContentTags object
+     *
+     * @param callable(\App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery):\App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withContentArticleQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useContentArticleQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the ContentArticle relation to the ArticleContentTags table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery The inner query object of the EXISTS statement
+     */
+    public function useContentArticleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('ContentArticle', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the ContentArticle relation to the ArticleContentTags table for a NOT EXISTS query.
+     *
+     * @see useContentArticleExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useContentArticleNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('ContentArticle', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags object
+     *
+     * @param \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags|ObjectCollection $articleTitleTags the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByTitleArticle($articleTitleTags, ?string $comparison = null)
+    {
+        if ($articleTitleTags instanceof \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags) {
+            $this
+                ->addUsingAlias(ArticleTableMap::COL_ID, $articleTitleTags->getArticleId(), $comparison);
+
+            return $this;
+        } elseif ($articleTitleTags instanceof ObjectCollection) {
+            $this
+                ->useTitleArticleQuery()
+                ->filterByPrimaryKeys($articleTitleTags->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByTitleArticle() only accepts arguments of type \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the TitleArticle relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinTitleArticle(?string $relationAlias = null, ?string $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('TitleArticle');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'TitleArticle');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the TitleArticle relation ArticleTitleTags object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery A secondary query class using the current class as primary query
+     */
+    public function useTitleArticleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinTitleArticle($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'TitleArticle', '\App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery');
+    }
+
+    /**
+     * Use the TitleArticle relation ArticleTitleTags object
+     *
+     * @param callable(\App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery):\App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withTitleArticleQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::INNER_JOIN
+    ) {
+        $relatedQuery = $this->useTitleArticleQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+    /**
+     * Use the TitleArticle relation to the ArticleTitleTags table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery The inner query object of the EXISTS statement
+     */
+    public function useTitleArticleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        return $this->useExistsQuery('TitleArticle', $modelAlias, $queryClass, $typeOfExists);
+    }
+
+    /**
+     * Use the TitleArticle relation to the ArticleTitleTags table for a NOT EXISTS query.
+     *
+     * @see useTitleArticleExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useTitleArticleNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        return $this->useExistsQuery('TitleArticle', $modelAlias, $queryClass, 'NOT EXISTS');
+    }
+    /**
+     * Filter the query by a related Tag object
+     * using the article_tags table as cross reference
+     *
+     * @param Tag $tag the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByContentTag($tag, string $comparison = Criteria::EQUAL)
+    {
+        $this
+            ->useContentArticleQuery()
+            ->filterByContentTag($tag, $comparison)
+            ->endUse();
+
+        return $this;
+    }
+
+    /**
+     * Filter the query by a related Tag object
+     * using the article_title_tags table as cross reference
+     *
+     * @param Tag $tag the related object to use as filter
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByTitleTag($tag, string $comparison = Criteria::EQUAL)
+    {
+        $this
+            ->useTitleArticleQuery()
+            ->filterByTitleTag($tag, $comparison)
+            ->endUse();
 
         return $this;
     }

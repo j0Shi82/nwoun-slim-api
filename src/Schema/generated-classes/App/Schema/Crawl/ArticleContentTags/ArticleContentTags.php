@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Schema\Crawl\ArticleTags;
+namespace App\Schema\Crawl\ArticleContentTags;
 
-use App\Schema\Crawl\ArticleTags\Base\ArticleTags as BaseArticleTags;
+use App\Schema\Crawl\ArticleContentTags\Base\ArticleContentTags as BaseArticleContentTags;
 
 /**
  * Skeleton subclass for representing a row from the 'article_tags' table.
@@ -13,7 +13,7 @@ use App\Schema\Crawl\ArticleTags\Base\ArticleTags as BaseArticleTags;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class ArticleTags extends BaseArticleTags
+class ArticleContentTags extends BaseArticleContentTags
 {
 
 }
