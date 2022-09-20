@@ -44,7 +44,7 @@ class Devinfo extends BaseController
         $payload = json_decode($payload);
 
         $return = [
-            'img' => $payload->Profile->PhotoUrl ?? $payload->data->icon_img,
+            'img' => $payload->Profile->PhotoUrl ?? explode('?', $payload->data->icon_img)[0],
         ];
 
         $response->getBody()->write(json_encode($return));
