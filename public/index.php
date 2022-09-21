@@ -18,7 +18,6 @@ $dotenv->load();
 
 $app->addBodyParsingMiddleware();
 
-
 if ($_ENV['ENV'] === 'dev') {
 }
 

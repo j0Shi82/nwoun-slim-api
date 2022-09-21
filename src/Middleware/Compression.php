@@ -15,16 +15,6 @@ class Compression
 
         $accept_encodings = array_map(function ($n) { return trim($n); }, explode(',', $request->getHeader('Accept-Encoding')[0]));
 
-        // if (in_array('br', $accept_encodings)) {
-        //     // br encoding
-        //     $encoded = new SlimResponse();
-        //     $encoded->getBody()->write(brotli_compress($response->getBody(), 11));
-        //     $response = $response->withHeader('content-encoding', 'br');
-        //     return $response
-        //         ->withHeader('content-encoding', 'br')
-        //         ->withBody($encoded->getBody());
-        // }
-
         if (in_array('gzip', $accept_encodings)) {
             // gzip encoding
             $encoded = new SlimResponse();

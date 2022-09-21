@@ -17,6 +17,7 @@ use App\Controller\V1\Auctions\ItemDetails;
 use App\Controller\V1\Auctions\Engine;
 use App\Controller\V1\Auctions\Patreon;
 use App\Services\DB;
+use App\Middleware\Cache;
 use App\Middleware\Cors;
 use App\Middleware\Compression;
 
@@ -34,11 +35,11 @@ class Routes
         $app->group('/v1', function (\Slim\Routing\RouteCollectorProxy $v1Group) {
             Routes::addRoutes($v1Group);
             Routes::add404CatchAll($v1Group);
-        })->add(new Cors());
+        })->add(new Cors())->add(new Cache());
         
         $app->options('/{routes:.+}', function ($request, $response) {
             return $response;
-        })->add(new Cors());
+        })->add(new Cors())->add(new Cache());
         
         Routes::add404CatchAll($app);
     }
