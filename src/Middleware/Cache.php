@@ -25,7 +25,7 @@ class Cache
 
     public function __invoke(Request $request, RequestHandler $handler): Response
     {       
-        if ($request->getMethod() === 'GET') {
+        if ($request->getMethod() === 'GET' && $request->getUri()->getPath() !== '/v1/auctions/assignment') {
             $response = null;
             $cacheKey = md5($request->getUri()->getPath() . $request->getUri()->getQuery() . $request->getMethod());
             $headers = $this->headerCache->get($cacheKey, function (ItemInterface $item) use ($handler, $request, &$response) {
