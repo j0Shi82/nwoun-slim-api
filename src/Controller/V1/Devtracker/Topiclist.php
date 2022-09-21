@@ -7,18 +7,13 @@ use \App\Controller\BaseController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use JBBCode\DefaultCodeDefinitionSet;
+use App\Schema\Crawl\Devtracker\DevtrackerQuery;
 
 class Topiclist extends BaseController
 {
-    /**
-     * @var \App\Services\DB
-     */
-    private $db;
-
-    public function __construct(\App\Services\DB $db, \App\Helpers\RequestHelper $requestHelper)
+    public function __construct(\App\Helpers\RequestHelper $requestHelper)
     {
         parent::__construct($requestHelper);
-        $this->db = $db;
     }
 
     public function get(Request $request, Response $response)
@@ -29,10 +24,18 @@ class Topiclist extends BaseController
         $data_ary = array(
             'threshold' => $this->requestHelper->variable('threshold', 2),
         );
-        
-        $sql = 'SELECT COUNT(*) as post_count, discussion_id, discussion_name, MAX(UNIX_TIMESTAMP(t.date)) as last_active FROM devtracker as t GROUP BY discussion_id HAVING post_count >= ' . $data_ary['threshold'] . ' ORDER BY MAX(UNIX_TIMESTAMP(t.date)) DESC';
 
-        $response->getBody()->write(json_encode($this->db->sql_fetch_array($sql)));
+        $topics = DevtrackerQuery::create()
+            ->withColumn('Count(*)', 'post_count')
+            ->withColumn('MAX(UNIX_TIMESTAMP(date))', 'last_active')
+            ->groupByDiscussionId()
+            ->having('post_count >= ' . $data_ary['threshold'])
+            ->orderBy('last_active', 'DESC')
+            ->select(array('post_count', 'discussion_id', 'discussion_name', 'dev_id'))
+            ->find()
+            ->getData();
+        
+        $response->getBody()->write(json_encode($topics));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');
