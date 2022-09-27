@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\V1\Auctions;
 
-use \App\Controller\BaseController;
+use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -13,25 +15,27 @@ class Patreon extends BaseController
 {
     public function get(Request $request, Response $response)
     {
-        $client_id = "jBcjaRt36vMF6c6rgD6i_qY4OjEi9r9OokZJxEfEolw2BBEHs_nUzqOfV5wCW3K9";      // Replace with your data
-        $client_secret = "QatebjNuvuSeevfXr2h7kJkjV5swBabY2acmaHEPcg59Fw6mPOzj2Ow_j-2uG3Wr";  // Replace with your data
-        // $redirect_uri = null;   // Replace with your data
+        $client_id = $_ENV['PATREON_CLIENT_ID'];
+        $client_secret = $_ENV['PATREON_CLIENT_SECRET'];
 
-        $oauth_client = new OAuth($client_id, $client_secret);
-        // $tokens = $oauth_client->get_tokens($_GET['code'], $redirect_uri);
-        // $access_token = $tokens['access_token'];
-        // $refresh_token = $tokens['refresh_token'];
-        $access_token = "-j2URDMU5bm4LT35BK7wJOoRE-wdWLjZTt4jx6RNEis";
+        $api_client = new API($_ENV['PATREON_ACCESS_TOKEN']);
+        $patron_campaign_response = $api_client->get_data("campaigns/9239090?include=tiers&&fields%5Btier%5D=amount_cents,description,title");
+        $patron_member_response = $api_client->get_data("campaigns/9239090/members?include=currently_entitled_tiers&fields%5Bmember%5D=full_name,is_follower,last_charge_date,last_charge_status,lifetime_support_cents,currently_entitled_amount_cents,patron_status&fields%5Btier%5D=title");
 
-        $api_client = new API($access_token);
-        $patron_response = $api_client->fetch_user();
-        // $patron = $patron_response->get('data');
-        // $pledge = null;
-        // if ($patron->has('relationships.pledges')) {
-            // $pledge = $patron->relationship('pledges')->get(0)->resolve($patron_response);
-        // }
+        $tier_map = array_map(function ($tier) use ($patron_member_response) {
+            return [
+                'title' => $tier['attributes']['title'],
+                'members' => array_map(function ($member) {
+                    return [
+                        'name' => $member['attributes']['full_name']
+                    ];
+                }, array_filter($patron_member_response['data'], function ($member) use ($tier) {
+                    return $member['relationships']['currently_entitled_tiers']['data'][0]['id'] == $tier['id'];
+                })),
+            ];
+        }, $patron_campaign_response['included']);
 
-        $response->getBody()->write(json_encode('hi'));
+        $response->getBody()->write(json_encode($tier_map));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');
