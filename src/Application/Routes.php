@@ -10,6 +10,7 @@ use App\Controller\V1\Devtracker\Topiclist;
 use App\Controller\V1\Neverwinterfeeds;
 use App\Controller\V1\Infohub\Articles;
 use App\Controller\V1\Infohub\Infohub;
+use App\Controller\V1\Infohub\Whoami;
 use App\Controller\V1\Auctions\Assignment;
 use App\Controller\V1\Auctions\Data;
 use App\Controller\V1\Auctions\Items;
@@ -36,14 +37,14 @@ class Routes
             Routes::addRoutes($v1Group);
             Routes::add404CatchAll($v1Group);
         })->add(new Cors())->add(new Cache());
-        
+
         $app->options('/{routes:.+}', function ($request, $response) {
             return $response;
         })->add(new Cors())->add(new Cache());
-        
+
         Routes::add404CatchAll($app);
     }
-    
+
     /**
      * add devtracker routes
      *
@@ -88,6 +89,7 @@ class Routes
 
         $v1Group->group('/infohub', function (\Slim\Routing\RouteCollectorProxy $infohubGroup) {
             $infohubGroup->post('/source', [Infohub::class, 'post_source']);
+            $infohubGroup->get('/whoami', [Whoami::class, 'get']);
             Routes::add404CatchAll($infohubGroup);
         })->add(new Compression());
     }
