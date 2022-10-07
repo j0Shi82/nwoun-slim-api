@@ -29,16 +29,21 @@ class Whoami extends BaseController
         ->find();
 
         $tag_id = null;
+        $tag_name = null;
 
         foreach ($tags->getData() as $tag) {
             // this strips all non numeric non alpha chars from the term and converts it to lowercase with hyphens instead of spaces
             $url_from_term = strtolower(preg_replace("/\s/", "-", preg_replace("/[^0-9a-zA-Z\s]/", "", $tag->getTerm())));
             if ($data_ary['url'] === $url_from_term) {
                 $tag_id = $tag->getId();
+                $tag_name = $tag->getTerm();
             }
         }
 
-        $response->getBody()->write(json_encode($tag_id));
+        $response->getBody()->write(json_encode([
+            'id' => $tag_id,
+            'name' => $tag_name
+        ]));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');
