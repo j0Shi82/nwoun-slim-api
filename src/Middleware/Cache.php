@@ -24,19 +24,20 @@ class Cache
     }
 
     public function __invoke(Request $request, RequestHandler $handler): Response
-    {       
+    {
         if (
-            $request->getMethod() === 'GET' 
+            $request->getMethod() === 'GET'
             && $request->getUri()->getPath() !== '/v1/auctions/assignment'
+            && $request->getUri()->getPath() !== '/v1/auth/login'
             && $request->getHeaders()['Cache-Control'][0] !== 'no-cache'
         ) {
             $response = null;
             $cacheKey = md5($request->getUri()->getPath() . $request->getUri()->getQuery() . $request->getMethod());
             $headers = $this->headerCache->get($cacheKey, function (ItemInterface $item) use ($handler, $request, &$response) {
                 $item->expiresAfter(3600);
-            
+
                 $response = $handler->handle($request);
-            
+
                 return $response->getHeaders();
             });
 
@@ -46,7 +47,7 @@ class Cache
                 if ($reponse === null) {
                     $response = $handler->handle($request);
                 }
-            
+
                 return $response->getBody()->__toString();
             });
 

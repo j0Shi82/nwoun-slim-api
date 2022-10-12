@@ -12,5 +12,6 @@ $serviceContainer->initDatabaseMaps(array (
     6 => '\\App\\Schema\\Crawl\\Devtracker\\Map\\DevtrackerTableMap',
     7 => '\\App\\Schema\\Crawl\\Settings\\Map\\SettingsTableMap',
     8 => '\\App\\Schema\\Crawl\\Tag\\Map\\TagTableMap',
+    9 => '\\App\\Schema\\Crawl\\User\\Map\\UserTableMap',
   ),
 ));

@@ -1,5 +1,6 @@
 vendor
 cache/*
+key/*
 .env
 .env.prod
 src/Schema/generated-conf/*

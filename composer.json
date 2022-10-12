@@ -21,7 +21,8 @@
         "vlucas/valitron": "^1.4",
         "propel/propel": "^2.0@beta",
         "patreon/patreon": "^1.0",
-        "symfony/cache": "^6.0"
+        "symfony/cache": "^6.0",
+        "firebase/php-jwt": "^6.3"
     },
     "autoload": {
         "psr-4": {

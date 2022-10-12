@@ -17,7 +17,9 @@ use App\Controller\V1\Auctions\Items;
 use App\Controller\V1\Auctions\ItemDetails;
 use App\Controller\V1\Auctions\Engine;
 use App\Controller\V1\Auctions\Patreon;
+use App\Controller\V1\Auth\Login;
 use App\Services\DB;
+use App\Middleware\Auth;
 use App\Middleware\Cache;
 use App\Middleware\Cors;
 use App\Middleware\Compression;
@@ -91,6 +93,12 @@ class Routes
             $infohubGroup->post('/source', [Infohub::class, 'post_source']);
             $infohubGroup->get('/whoami', [Whoami::class, 'get']);
             Routes::add404CatchAll($infohubGroup);
+        })->add(new Compression());
+
+        $v1Group->group('/auth', function (\Slim\Routing\RouteCollectorProxy $authGroup) {
+            $authGroup->get('/test', [Login::class, 'securedEndpoint'])->add(new Auth());
+            $authGroup->get('/login', [Login::class, 'post']);
+            Routes::add404CatchAll($authGroup);
         })->add(new Compression());
     }
 

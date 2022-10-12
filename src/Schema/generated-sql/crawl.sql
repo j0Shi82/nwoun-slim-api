@@ -165,7 +165,22 @@ CREATE TABLE `tag`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `term` VARCHAR(100) NOT NULL,
     PRIMARY KEY (`id`),
+    UNIQUE INDEX `term` (`term`),
     INDEX `id` (`id`, `term`)
+) ENGINE=MyISAM;
+
+-- ---------------------------------------------------------------------
+-- user
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `user`;
+
+CREATE TABLE `user`
+(
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `username` VARCHAR(50) NOT NULL,
+    `password` VARCHAR(100) NOT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
 
 # This restores the fkey checks, after having unset them earlier
