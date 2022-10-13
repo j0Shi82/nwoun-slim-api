@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\V1\Auctions;
 
-use \App\Controller\BaseController;
+use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -16,15 +18,8 @@ use App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery;
 
 class Data extends BaseController
 {
-    public function __construct(\App\Helpers\RequestHelper $requestHelper)
-    {
-        parent::__construct($requestHelper);
-    }
-
     public function post(Request $request, Response $response)
     {
-        $this->attachRequestToRequestHelper($request);
-
         $parseBody = $request->getParsedBody();
 
         // check for item in crawl database

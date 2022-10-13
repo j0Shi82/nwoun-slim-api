@@ -65,10 +65,10 @@ class Routes
         })->add(new Compression());
 
         $v1Group->group('/auctions', function (\Slim\Routing\RouteCollectorProxy $auctionsGroup) {
-            $auctionsGroup->get('/assignment', [Assignment::class, 'get']);
+            $auctionsGroup->get('/assignment', [Assignment::class, 'get'])->add(new Auth());
             $auctionsGroup->get('/items', [Items::class, 'get'])->add(new Compression());
             $auctionsGroup->get('/itemdetails', [ItemDetails::class, 'get'])->add(new Compression());
-            $auctionsGroup->post('/data', [Data::class, 'post']);
+            $auctionsGroup->post('/data', [Data::class, 'post'])->add(new Auth());
             $auctionsGroup->get('/engine', [Engine::class, 'get'])->add(new Compression());
             $auctionsGroup->get('/patreon', [Patreon::class, 'get'])->add(new Compression());
             Routes::add404CatchAll($auctionsGroup);
@@ -96,8 +96,7 @@ class Routes
         })->add(new Compression());
 
         $v1Group->group('/auth', function (\Slim\Routing\RouteCollectorProxy $authGroup) {
-            $authGroup->get('/test', [Login::class, 'securedEndpoint'])->add(new Auth());
-            $authGroup->get('/login', [Login::class, 'post']);
+            $authGroup->post('/login', [Login::class, 'post']);
             Routes::add404CatchAll($authGroup);
         })->add(new Compression());
     }
