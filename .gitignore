@@ -6,3 +6,6 @@ key/*
 src/Schema/generated-conf/*
 dev/php.ini
 !cache/.gitkeep
+vuepress-docs/node_modules
+vuepress-docs/src/.vuepress/.cache
+vuepress-docs/src/.vuepress/.temp

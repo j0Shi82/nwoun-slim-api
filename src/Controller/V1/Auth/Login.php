@@ -18,7 +18,7 @@ class Login extends BaseController
     {
         $parseBody = $request->getParsedBody();
 
-        $user = UserQuery::create()->filterByUsername($parseBody['username'])->filterByPassword(hash('sha256', $parseBody['password']))->findOne();
+        $user = UserQuery::create()->filterByUsername($parseBody['username'] ?? '')->filterByPassword(hash('sha256', $parseBody['password'] ?? ''))->findOne();
         if (is_null($user)) {
             $response->getBody()->write(json_encode([
                 'status' => 401,
