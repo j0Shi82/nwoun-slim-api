@@ -1,0 +1,23 @@
+:root {
+    --c-brand: #b51208;
+    --c-brand-light: #d9251a;
+}
+
+html.dark {
+    --c-brand: #b51208;
+    --c-brand-light: #b51208;
+}
+
+.hljs.json {
+    .hljs-attr {
+        color: #f8c555;
+    }
+
+    .hljs-number {
+        color: #f08d49;
+    }    
+
+    .hljs-string {
+        color: #7ec699;
+    }
+}

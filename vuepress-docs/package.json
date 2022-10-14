@@ -9,6 +9,9 @@
     "docs:build": "vuepress build src"
   },
   "dependencies": {
-    "axios": "^1.1.2"
+    "@highlightjs/vue-plugin": "^2.1.0",
+    "axios": "^1.1.2",
+    "highlight.js": "^11.6.0",
+    "js-beautify": "^1.14.6"
   }
 }
