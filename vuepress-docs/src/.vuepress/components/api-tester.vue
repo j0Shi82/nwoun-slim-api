@@ -68,7 +68,7 @@ const request = () => {
     
     axios({
         method: props.method,
-        url: 'http://localhost:8084' + props.endpoint + query.value,
+        url: 'https://api.uncnso.red' + props.endpoint + query.value,
         data: {
             ...p
         }

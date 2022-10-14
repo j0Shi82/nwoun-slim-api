@@ -9,3 +9,4 @@ dev/php.ini
 vuepress-docs/node_modules
 vuepress-docs/src/.vuepress/.cache
 vuepress-docs/src/.vuepress/.temp
+vuepress-docs/src/.vuepress/dist

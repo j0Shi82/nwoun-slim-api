@@ -83,3 +83,34 @@ Gets the latest crawled info for items within a certain date range
 ### Live Test
 
 <api-tester endpoint="/v1/auctions/items" method="GET" :hasQuery="true" />
+
+## GET /v1/auctions/itemdetails
+
+Gets all datapoints for a specific item
+
+### Parameters
+
+| Name | Value | Optional
+| ----------- | ----------- | ----------- |
+| item_def | String | true |
+| server | "GLOBAL" | true |
+
+### Response <`application/json`>
+
+```json
+[
+    {
+        "InsertedDate": "YYYY-MM-DD",
+        "InsertedTimestamp": Timestamp,
+        "AvgLow": Number,
+        "AvgMean": Number,
+        "AvgMedian": Number,
+        "AvgCount": Number
+    }
+    //...
+]
+```
+
+### Live Test
+
+<api-tester endpoint="/v1/auctions/itemdetails" method="GET" :hasQuery="true" />
