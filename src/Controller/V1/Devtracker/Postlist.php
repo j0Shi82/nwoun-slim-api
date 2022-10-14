@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\V1\Devtracker;
 
-use \App\Controller\BaseController;
+use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -15,7 +17,7 @@ class Postlist extends BaseController
      * @var \JBBCode\Parser
      */
     private $jbb_parser;
-    
+
     /**
      * @param \App\Helpers\RequestHelper $requestHelper
      * @param \JBBCode\Parser $jbb_parser
@@ -28,7 +30,7 @@ class Postlist extends BaseController
         $this->jbb_parser = $jbb_parser;
         $this->jbb_parser->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
     }
-    
+
     /**
      * @param Request $request
      * @param Response $response
@@ -42,7 +44,7 @@ class Postlist extends BaseController
         // define all possible GET data
         $data_ary = array(
             'dev' => $this->requestHelper->variable('dev', ''),
-            'discussion_id' => $this->requestHelper->variable('discussion_id', 0),
+            'discussion_id' => $this->requestHelper->variable('discussion_id', '0'),
             'search_term' => $this->requestHelper->variable('search_term', ''),
             'count' => $this->requestHelper->variable('count', 20),
             'page' => $this->requestHelper->variable('page', 1)

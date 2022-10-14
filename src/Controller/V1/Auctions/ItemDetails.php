@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\V1\Auctions;
 
-use \App\Controller\BaseController;
+use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -41,12 +43,25 @@ class ItemDetails extends BaseController
             ->withColumn("DATE_FORMAT(inserted, '%Y-%m-%d')", 'InsertedDate')
             ->withColumn('UNIX_TIMESTAMP(inserted)', 'InsertedTimestamp')
             ->withColumn("ROUND(AVG(Low))", 'AvgLow')
+            ->withColumn("ROUND(AVG(Mean))", 'AvgMean')
+            ->withColumn("ROUND(AVG(Median))", 'AvgMedian')
             ->withColumn("ROUND(AVG(Count))", 'AvgCount')
             ->orderBy('InsertedDate', 'asc')
             ->groupBy('InsertedDate')
-            ->find();
+            ->select('InsertedDate', 'InsertedTimestamp', 'AvgLow', 'AvgMean', 'AvgMedian', 'AvgCount')
+            ->find()
+            ->getData();
 
-        $response->getBody()->write(json_encode($result->toArray()));
+        $result = array_map(function ($row) {
+            return array_merge($row, [
+                'AvgLow' => intval($row['AvgLow']),
+                'AvgMean' => intval($row['AvgMean']),
+                'AvgMedian' => intval($row['AvgMedian']),
+                'AvgCount' => intval($row['AvgCount']),
+            ]);
+        }, $result);
+
+        $response->getBody()->write(json_encode($result));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');
