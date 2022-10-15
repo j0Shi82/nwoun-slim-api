@@ -68,7 +68,7 @@ class Postlist extends BaseController
                 ->condition('dev_id', 'Devtracker.DevId LIKE ?', $data_ary['dev'])
                 ->where(array('dev_name', 'dev_id'), 'or')
             ->_endif()
-            ->_if($data_ary['discussion_id'] !== 0)
+            ->_if($data_ary['discussion_id'] !== '0')
                 ->filterByDiscussionId($data_ary['discussion_id'])
             ->_endif()
             ->_if($data_ary['search_term'] !== '')
