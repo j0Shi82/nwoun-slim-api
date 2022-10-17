@@ -86,6 +86,7 @@ class Routes
         $v1Group->group('/articles', function (\Slim\Routing\RouteCollectorProxy $articlesGroup) {
             $articlesGroup->get('/discussiontags', [Articles::class, 'get_tags']);
             $articlesGroup->get('/all', [Articles::class, 'get']);
+            $articlesGroup->get('/sites', [Articles::class, 'get_sites']);
             Routes::add404CatchAll($articlesGroup);
         })->add(new Compression());
 

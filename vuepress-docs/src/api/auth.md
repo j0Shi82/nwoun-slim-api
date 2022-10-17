@@ -7,7 +7,7 @@ Some endpoints require authentication. Currently there's not way to create user 
 Once obtained, the bearer token for auth secured endpoints can be delivered using four different methods:
 
 - As `GET` parameter `bearer={TOKEN}`
-- Within a `application/json` type `POST` body using the form `{ "bearer": "{TOKEN}"`
+- Within a `application/json` type `POST` body using the form `{ "bearer": "{TOKEN}" }`
 - Within the `Authorization` header using the form `Bearer: {TOKEN}`
 - As `bearer` Cookie with a value of `{TOKEN}`
 

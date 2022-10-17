@@ -1,11 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\V1\Infohub;
 
-use \App\Controller\BaseController;
+use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use App\Schema\Crawl\Tag\TagQuery;
+use App\Schema\Crawl\Article\ArticleQuery;
 use JBBCode\DefaultCodeDefinitionSet;
 
 class Articles extends BaseController
@@ -32,6 +36,7 @@ class Articles extends BaseController
             'tags' => $this->requestHelper->variable('tags', ''),
             'types' => $this->requestHelper->variable('types', 'official,discussion,news,guides,media,social'),
             'page' => $this->requestHelper->variable('page', 1),
+            'site' => $this->requestHelper->variable('site', ''),
         );
 
         if ($data_ary['tags'] !== '') {
@@ -90,6 +95,7 @@ class Articles extends BaseController
                         atags.article_id = a.id 
                         AND a.type IN ('" . implode("','", $types) . "')
                         AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4') 
+                        " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
                     GROUP BY a.ts, a.title 
                     HAVING count >= " . count($data_ary['tags']) . "
                 )
@@ -113,6 +119,7 @@ class Articles extends BaseController
                         atags.article_id = a.id 
                         AND a.type IN ('" . implode("','", $types) . "')
                         AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4') 
+                        " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
                     GROUP BY a.id 
                     HAVING count >= " . count($data_ary['tags']) . "
                 )
@@ -149,30 +156,41 @@ class Articles extends BaseController
             //     )
             //     ORDER BY ts DESC
             //     LIMIT " . ($data_ary['limit'] * ($data_ary['page'] - 1)) . "," . $data_ary['limit'] . ";
-            // ";
+        // ";
         } else {
             $sql = "
                 (
                     SELECT GROUP_CONCAT(site) as site, link, title, ts, type
                     FROM article as a 
-                    WHERE a.type IN ('" . implode("','", $types) . "') AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4')
+                    WHERE 
+                        a.type IN ('" . implode("','", $types) . "') 
+                        AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4')
+                        " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
                     GROUP BY ts, title
                 )
                     UNION
                 (
                     SELECT site, link, title, ts, type
                     FROM article as a
-                    WHERE a.type IN ('" . implode("','", $types) . "') AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4')
+                    WHERE 
+                        a.type IN ('" . implode("','", $types) . "') 
+                        AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4')
+                        " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
                 ) 
                     ORDER BY ts DESC 
                     LIMIT " . ($data_ary['limit'] * ($data_ary['page'] - 1)) . "," . $data_ary['limit'];
         }
 
         $results = $this->db->sql_fetch_array($sql);
-        foreach ($results as &$row) {
-            $row['title'] = html_entity_decode($row['title']);
-            $row[2] = html_entity_decode($row[2]);
-        }
+        $results = array_map(function ($row) {
+            return [
+                'site' => $row['site'],
+                'title' => html_entity_decode($row['title']),
+                'link' => $row['link'],
+                'timestamp' => intval($row['ts']),
+                'type' => $row['type'],
+            ];
+        }, $results);
 
         $response->getBody()->write(json_encode($results));
         return $response
@@ -180,11 +198,19 @@ class Articles extends BaseController
             ->withHeader('charset', 'utf-8');
     }
 
+    public function get_sites(Request $request, Response $response)
+    {
+        $response->getBody()->write(json_encode(ArticleQuery::create()->select(['link', 'site'])->groupBySite()->find()->getData()));
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withHeader('charset', 'utf-8');
+    }
+
     public function get_tags(Request $request, Response $response)
     {
-        $sql = "SELECT t.term, t.id FROM tag as t ORDER BY t.term";
+        $tags = TagQuery::create()->select(['id', 'term'])->orderByTerm()->find();
 
-        $response->getBody()->write(json_encode($this->db->sql_fetch_array($sql)));
+        $response->getBody()->write(json_encode($tags->toArray()));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');

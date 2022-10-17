@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\V1;
 
-use \App\Controller\BaseController;
+use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -73,7 +75,7 @@ class Neverwinterfeeds extends BaseController
         }
 
         $data = call_user_func(array($this, $dataCallbackFunc), $data_ary['limit']);
-        
+
         $response->getBody()->write(json_encode($data, JSON_UNESCAPED_UNICODE));
         return $response
             ->withHeader('Content-Type', 'application/json')
@@ -87,7 +89,7 @@ class Neverwinterfeeds extends BaseController
      *
      * @return array
      */
-    private function get_arcgames_data(int $limit) :array
+    private function get_arcgames_data(int $limit): array
     {
         $data = array();
 
@@ -97,9 +99,9 @@ class Neverwinterfeeds extends BaseController
                 break;
             }
             $data[] = [
-                    'link'            => $item->get_permalink(),
-                    'title'             => html_entity_decode($item->get_title()),
-                    'ts'            => $item->get_date("U"),
+                    'link'         => $item->get_permalink(),
+                    'title'        => html_entity_decode($item->get_title()),
+                    'ts'           => $item->get_date("U"),
             ];
             $count++;
         }
@@ -114,7 +116,7 @@ class Neverwinterfeeds extends BaseController
      *
      * @return array
      */
-    private function get_arcgames_forum_data(int $limit) :array
+    private function get_arcgames_forum_data(int $limit): array
     {
         $data = array();
 
@@ -142,7 +144,7 @@ class Neverwinterfeeds extends BaseController
      *
      * @return array
      */
-    private function get_reddit_data(int $limit) :array
+    private function get_reddit_data(int $limit): array
     {
         $data = array();
 
@@ -162,27 +164,27 @@ class Neverwinterfeeds extends BaseController
         return $data;
     }
 
-    public function get_pc(Request $request, Response $response) :Response
+    public function get_pc(Request $request, Response $response): Response
     {
         return $this->get($request, $response, "https://www.arcgames.com/en/games/neverwinter/news/rss", "get_arcgames_data");
     }
 
-    public function get_xbox(Request $request, Response $response) :Response
+    public function get_xbox(Request $request, Response $response): Response
     {
         return $this->get($request, $response, "https://www.arcgames.com/en/games/xbox/neverwinter/news/rss", "get_arcgames_data");
     }
 
-    public function get_ps4(Request $request, Response $response) :Response
+    public function get_ps4(Request $request, Response $response): Response
     {
         return $this->get($request, $response, "https://www.arcgames.com/en/games/playstation/neverwinter/news/rss", "get_arcgames_data");
     }
 
-    public function get_forum(Request $request, Response $response) :Response
+    public function get_forum(Request $request, Response $response): Response
     {
         return $this->get($request, $response, "https://forum.arcgames.com/neverwinter/discussions/feed.rss", "get_arcgames_forum_data");
     }
 
-    public function get_reddit(Request $request, Response $response) :Response
+    public function get_reddit(Request $request, Response $response): Response
     {
         return $this->get($request, $response, "https://www.reddit.com/r/Neverwinter.rss", "get_reddit_data");
     }

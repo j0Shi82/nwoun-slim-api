@@ -19,6 +19,7 @@ export default defineUserConfig({
     sidebar: {
         '/api/': [
             'README.md',
+            'articles.md',
             'auction.md',
             'auth.md',
         ]

@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\V1\Auctions;
 
-use \App\Controller\BaseController;
+use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -17,9 +19,9 @@ class Engine extends BaseController
             ->filterByServer('GLOBAL')
             ->filterByAllowAuto(true)
             ->filterByUpdateDate(array('min' => date_sub(new \DateTime("now", new \DateTimeZone("UTC")), new \DateInterval("P1D"))))
-            ->withColumn("IF(SUM(IF(update_date >= (UTC_TIMESTAMP - INTERVAL 15 MINUTE), 1, 0)) > 0, true, false)", 'IsActive')
-            ->withColumn("(COUNT(*) / 2) / (UNIX_TIMESTAMP(UTC_TIMESTAMP) - UNIX_TIMESTAMP(MIN(update_date))) * 60 * 60 * 24", 'ItemsPerDay')
-            ->select(array('IsActive', 'ItemsPerDay'))
+            ->withColumn("IF(SUM(IF(update_date >= (UTC_TIMESTAMP - INTERVAL 15 MINUTE), 1, 0)) > 0, true, false)", 'isActive')
+            ->withColumn("(COUNT(*) / 2) / (UNIX_TIMESTAMP(UTC_TIMESTAMP) - UNIX_TIMESTAMP(MIN(update_date))) * 60 * 60 * 24", 'itemsPerDay')
+            ->select(array('isActive', 'itemsPerDay'))
             ->findOne();
 
         $result2 = AuctionItemsQuery::create()
@@ -29,7 +31,7 @@ class Engine extends BaseController
             ->select(array('Count'))
             ->findOne();
 
-        $response->getBody()->write(json_encode(array_merge($result, ['TotalItems'=> $result2])));
+        $response->getBody()->write(json_encode(array_merge($result, ['totalItems'=> $result2])));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');

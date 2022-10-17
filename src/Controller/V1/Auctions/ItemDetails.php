@@ -25,7 +25,7 @@ class ItemDetails extends BaseController
         // define all possible GET data
         $data_ary = array(
             'item_def' => $this->requestHelper->variable('item_def', ''),
-            'server' => $this->requestHelper->variable('server', '')
+            'server' => $this->requestHelper->variable('server', 'GLOBAL')
         );
 
         if (empty($data_ary['item_def']) || empty($data_ary['server'])) {
@@ -40,24 +40,24 @@ class ItemDetails extends BaseController
             ->filterByItemDef($data_ary['item_def'])
             ->filterByServer($data_ary['server'])
             ->filterByCount(array('min' => 1))
-            ->withColumn("DATE_FORMAT(inserted, '%Y-%m-%d')", 'InsertedDate')
-            ->withColumn('UNIX_TIMESTAMP(inserted)', 'InsertedTimestamp')
-            ->withColumn("ROUND(AVG(Low))", 'AvgLow')
-            ->withColumn("ROUND(AVG(Mean))", 'AvgMean')
-            ->withColumn("ROUND(AVG(Median))", 'AvgMedian')
-            ->withColumn("ROUND(AVG(Count))", 'AvgCount')
-            ->orderBy('InsertedDate', 'asc')
-            ->groupBy('InsertedDate')
-            ->select('InsertedDate', 'InsertedTimestamp', 'AvgLow', 'AvgMean', 'AvgMedian', 'AvgCount')
+            ->withColumn("DATE_FORMAT(inserted, '%Y-%m-%d')", 'insertedDate')
+            ->withColumn('UNIX_TIMESTAMP(inserted)', 'insertedTimestamp')
+            ->withColumn("ROUND(AVG(Low))", 'avgLow')
+            ->withColumn("ROUND(AVG(Mean))", 'avgMean')
+            ->withColumn("ROUND(AVG(Median))", 'avgMedian')
+            ->withColumn("ROUND(AVG(Count))", 'avgCount')
+            ->orderBy('insertedDate', 'asc')
+            ->groupBy('insertedDate')
+            ->select('insertedDate', 'insertedTimestamp', 'avgLow', 'avgMean', 'avgMedian', 'avgCount')
             ->find()
             ->getData();
 
         $result = array_map(function ($row) {
             return array_merge($row, [
-                'AvgLow' => intval($row['AvgLow']),
-                'AvgMean' => intval($row['AvgMean']),
-                'AvgMedian' => intval($row['AvgMedian']),
-                'AvgCount' => intval($row['AvgCount']),
+                'avgLow' => intval($row['avgLow']),
+                'avgMean' => intval($row['avgMean']),
+                'avgMedian' => intval($row['avgMedian']),
+                'avgCount' => intval($row['avgCount']),
             ]);
         }, $result);
 

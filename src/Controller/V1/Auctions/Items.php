@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\V1\Auctions;
 
-use \App\Controller\BaseController;
+use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -25,13 +27,20 @@ class Items extends BaseController
             'startDate' => $this->requestHelper->variable('start', '1970-01-01'),
             'endDate' => $this->requestHelper->variable('end', '2070-01-01'),
         );
-        
-        $result = AuctionItemsQuery::create()
+
+        $result = array_map(
+            function ($row) {
+                return array_merge($row, [
+                    'categories' => json_decode($row['categories'])
+                ]);
+            },
+            AuctionItemsQuery::create()
             ->joinAuctionAggregates()
-            ->withColumn('AuctionAggregates.Count', 'Count')
-            ->withColumn('AuctionAggregates.Low', 'Low')
-            ->withColumn('AuctionAggregates.Mean', 'Mean')
-            ->withColumn('UNIX_TIMESTAMP(AuctionAggregates.Inserted)', 'Inserted')
+            ->withColumn('AuctionAggregates.Count', 'count')
+            ->withColumn('AuctionAggregates.Low', 'low')
+            ->withColumn('AuctionAggregates.Mean', 'mean')
+            ->withColumn('UNIX_TIMESTAMP(AuctionAggregates.Inserted)', 'inserted')
+            ->select(['item_def' => 'itemDef', 'quality', 'item_name' => 'itemName', 'categories'])
             ->where("AuctionAggregates.Inserted = (
                 SELECT MAX(inserted) 
                 FROM auction_aggregates 
@@ -43,9 +52,11 @@ class Items extends BaseController
                     AND inserted <= '" . $data_ary['endDate'] . "'
             )")
             ->orderBy('AuctionItems.ItemName', 'asc')
-            ->find();
+            ->find()
+            ->toArray()
+        );
 
-        $response->getBody()->write(json_encode($result->toArray()));
+        $response->getBody()->write(json_encode($result));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');
