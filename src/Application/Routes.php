@@ -23,6 +23,8 @@ use App\Middleware\Auth;
 use App\Middleware\Cache;
 use App\Middleware\Cors;
 use App\Middleware\Compression;
+use App\Middleware\RateLimiter;
+use Middlewares\ClientIp;
 
 class Routes
 {
@@ -99,6 +101,7 @@ class Routes
 
         $v1Group->group('/auth', function (\Slim\Routing\RouteCollectorProxy $authGroup) {
             $authGroup->post('/login', [Login::class, 'post']);
+            $authGroup->get('/login', [Login::class, 'post'])->add(new RateLimiter())->add(new ClientIp());
             Routes::add404CatchAll($authGroup);
         })->add(new Compression());
     }
