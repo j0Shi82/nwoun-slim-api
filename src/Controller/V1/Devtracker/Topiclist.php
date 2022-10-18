@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Controller\V1\Devtracker;
 
-use \App\Controller\BaseController;
+use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -28,13 +30,15 @@ class Topiclist extends BaseController
         $topics = DevtrackerQuery::create()
             ->withColumn('Count(*)', 'post_count')
             ->withColumn('MAX(UNIX_TIMESTAMP(date))', 'last_active')
+            ->withColumn('Count(*)', 'postCount')
+            ->withColumn('MAX(UNIX_TIMESTAMP(date))', 'lastActive')
             ->groupByDiscussionId()
-            ->having('post_count >= ' . $data_ary['threshold'])
-            ->orderBy('last_active', 'DESC')
-            ->select(array('post_count', 'discussion_id', 'discussion_name', 'dev_id'))
+            ->having('postCount >= ' . $data_ary['threshold'])
+            ->orderBy('lastActive', 'DESC')
+            ->select(array('post_count', 'discussion_id', 'discussion_name', 'postCount', 'discussionId', 'discussionName'))
             ->find()
             ->getData();
-        
+
         $response->getBody()->write(json_encode($topics));
         return $response
             ->withHeader('Content-Type', 'application/json')

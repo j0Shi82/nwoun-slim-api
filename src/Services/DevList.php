@@ -12,7 +12,7 @@ class DevList
      *
      * @var array
      */
-    const DEVLIST = [
+    public const DEVLIST = [
         [
             "name" => "badbotlimit",
             "arc" => "126158/badbotlimit",
@@ -486,7 +486,7 @@ class DevList
 
     /**
      * get data based on name
-     * 
+     *
      * @param string $name
      *
      * @return array
@@ -502,7 +502,7 @@ class DevList
         }
 
         if ($devData === null) {
-            throw new Exception("no dev record with provided name " . $name);
+            throw new \Exception("no dev record with provided name " . $name);
         }
 
         return $devData;

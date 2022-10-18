@@ -22,6 +22,7 @@ export default defineUserConfig({
             'articles.md',
             'auction.md',
             'auth.md',
+            'devtracker.md'
         ]
     },
     sidebarDepth: 1

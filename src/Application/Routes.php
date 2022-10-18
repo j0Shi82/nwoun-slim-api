@@ -61,6 +61,7 @@ class Routes
             $devtrackerGroup->get('/devinfo', [Devinfo::class, 'get']);
             $devtrackerGroup->get('/devlist', [Devlist::class, 'get']);
             $devtrackerGroup->get('/topiclist', [Topiclist::class, 'get']);
+            $devtrackerGroup->get('/cats', [Postlist::class, 'get_cats']);
             Routes::add404CatchAll($devtrackerGroup);
         })->add(new Compression());
 
