@@ -12,10 +12,28 @@ use App\Helpers\RateLimitPSR6Adapter;
 
 class RateLimiter
 {
+    /**
+     * @var Symfony\Component\Cache\Adapter\FilesystemAdapter
+     */
     private $cache;
+
+
+    /**
+     * @var App\Helpers\RateLimitPSR6Adapter
+     */
     private $adapter;
+
+
+    /**
+     * @var PalePurple\RateLimit\RateLimit
+     */
     private $rateLimit;
 
+    /**
+     * __construct
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->cache = new FilesystemAdapter('ratelimit', 3600, __DIR__ . '/../../cache');
@@ -24,6 +42,14 @@ class RateLimiter
         $this->rateLimit = new RateLimit("loginratelimit", 3, 60 * 5, $this->adapter);
     }
 
+    /**
+     * __invoke
+     *
+     * @param  mixed $request
+     * @param  mixed $handler
+     *
+     * @return Response
+     */
     public function __invoke(Request $request, RequestHandler $handler): Response
     {
         if ($this->rateLimit->check(md5($request->getAttribute('client-ip')))) {
