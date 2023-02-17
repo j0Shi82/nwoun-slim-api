@@ -62,7 +62,7 @@ class Articles extends BaseController
         $types = explode(',', $data_ary['types']);
         // filter invalid types
         $types = array_filter($types, function ($el) {
-            return in_array($el, ['official','discussion','news','media','social','guides']);
+            return in_array($el, ['official', 'discussion', 'news', 'media', 'social', 'guides']);
         });
 
         // no types no result
@@ -77,7 +77,13 @@ class Articles extends BaseController
             $this->db->query("SET SQL_BIG_SELECTS=1");
             $sql = "
                 (
-                    SELECT GROUP_CONCAT(DISTINCT a.site) as site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts, a.type 
+                    SELECT 
+                        GROUP_CONCAT(DISTINCT a.site) as site, 
+                        CONCAT('https://www.playneverwinter.com/en/news-details/', REPLACE(a.article_id, 'https://www.arcgames.com/en/games/neverwinter/news/detail/', '')) as link, 
+                        a.title, 
+                        COUNT(DISTINCT a.id) as count, 
+                        a.ts, 
+                        a.type 
                     FROM 
                         (
                                 SELECT article_tags.* 
@@ -126,7 +132,7 @@ class Articles extends BaseController
                 ORDER BY ts DESC 
                 LIMIT " . ($data_ary['limit'] * ($data_ary['page'] - 1)) . "," . $data_ary['limit'] . ";
             ";
-        // $sql = "
+            // $sql = "
             //     (
             //         SELECT GROUP_CONCAT(DISTINCT a.site) as site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts, a.type
             //         FROM article as a, article_tags as atags, article_title_tags as ttags, tag as t
@@ -156,11 +162,16 @@ class Articles extends BaseController
             //     )
             //     ORDER BY ts DESC
             //     LIMIT " . ($data_ary['limit'] * ($data_ary['page'] - 1)) . "," . $data_ary['limit'] . ";
-        // ";
+            // ";
         } else {
             $sql = "
                 (
-                    SELECT GROUP_CONCAT(site) as site, link, title, ts, type
+                    SELECT 
+                        GROUP_CONCAT(site) as site, 
+                        CONCAT('https://www.playneverwinter.com/en/news-details/', REPLACE(article_id, 'https://www.arcgames.com/en/games/neverwinter/news/detail/', '')) as link, 
+                        title, 
+                        ts, 
+                        type
                     FROM article as a 
                     WHERE 
                         a.type IN ('" . implode("','", $types) . "') 
