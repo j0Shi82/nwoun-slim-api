@@ -40,8 +40,7 @@
             "php -S localhost:8084 -t public -c dev/php.ini"
         ],
         "vercel": [
-            "@php composer install",
-            "@php ./vendor/bin/propel config:convert --config-dir src/Schema --output-dir src/Schema/generated-conf"
+            "@php -v"
         ]
     },
     "minimum-stability": "dev",
