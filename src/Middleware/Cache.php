@@ -44,7 +44,7 @@ class Cache
             $body = $this->bodyCache->get($cacheKey, function (ItemInterface $item) use ($handler, $request, &$response) {
                 $item->expiresAfter(3600);
 
-                if ($reponse === null) {
+                if ($response === null) {
                     $response = $handler->handle($request);
                 }
 

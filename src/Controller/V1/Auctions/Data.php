@@ -134,7 +134,7 @@ class Data extends BaseController
             $auctionItem->save();
         }
 
-        $response->getBody()->write("");
+        $response->getBody()->write("done");
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');

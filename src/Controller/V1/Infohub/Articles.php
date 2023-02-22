@@ -79,10 +79,11 @@ class Articles extends BaseController
                 (
                     SELECT 
                         GROUP_CONCAT(DISTINCT a.site) as site, 
-                        CONCAT('https://www.playneverwinter.com/en/news-details/', REPLACE(a.article_id, 'https://www.arcgames.com/en/games/neverwinter/news/detail/', '')) as link, 
+                        CONCAT('https://www.playneverwinter.com/en/news-details/', a.article_id) as link, 
                         a.title, 
                         COUNT(DISTINCT a.id) as count, 
                         a.ts, 
+                        CONCAT('[', GROUP_CONCAT(a.cats), ']') as cats, 
                         a.type 
                     FROM 
                         (
@@ -100,14 +101,14 @@ class Articles extends BaseController
                     WHERE 
                         atags.article_id = a.id 
                         AND a.type IN ('" . implode("','", $types) . "')
-                        AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4') 
+                        AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews') 
                         " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
-                    GROUP BY a.ts, a.title 
+                    GROUP BY a.article_id 
                     HAVING count >= " . count($data_ary['tags']) . "
                 )
                 UNION 
                 (
-                    SELECT a.site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts, a.type 
+                    SELECT a.site, a.link, a.title, COUNT(DISTINCT a.id) as count, a.ts, CONCAT('[', a.cats, ']') as cats, a.type 
                     FROM 
                         (
                                 SELECT article_tags.* 
@@ -124,7 +125,7 @@ class Articles extends BaseController
                     WHERE 
                         atags.article_id = a.id 
                         AND a.type IN ('" . implode("','", $types) . "')
-                        AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4') 
+                        AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews') 
                         " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
                     GROUP BY a.id 
                     HAVING count >= " . count($data_ary['tags']) . "
@@ -168,24 +169,25 @@ class Articles extends BaseController
                 (
                     SELECT 
                         GROUP_CONCAT(site) as site, 
-                        CONCAT('https://www.playneverwinter.com/en/news-details/', REPLACE(article_id, 'https://www.arcgames.com/en/games/neverwinter/news/detail/', '')) as link, 
+                        CONCAT('https://www.playneverwinter.com/en/news-details/', article_id) as link, 
                         title, 
                         ts, 
+                        CONCAT('[', GROUP_CONCAT(cats), ']') as cats, 
                         type
                     FROM article as a 
                     WHERE 
                         a.type IN ('" . implode("','", $types) . "') 
-                        AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4')
+                        AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews')
                         " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
-                    GROUP BY ts, title
+                    GROUP BY article_id
                 )
                     UNION
                 (
-                    SELECT site, link, title, ts, type
+                    SELECT site, link, title, ts, CONCAT('[', cats, ']') as cats, type 
                     FROM article as a
                     WHERE 
                         a.type IN ('" . implode("','", $types) . "') 
-                        AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4')
+                        AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews')
                         " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
                 ) 
                     ORDER BY ts DESC 
@@ -194,8 +196,29 @@ class Articles extends BaseController
 
         $results = $this->db->sql_fetch_array($sql);
         $results = array_map(function ($row) {
+            $sites = explode(',', $row['site']);
+            $cats = json_decode($row['cats']);
+            // merge multidimensional array $cats into one array
+            $cats = array_merge(...$cats);
+            // push platform hints into sites array based on cats
+            if (in_array('arcgamesnews', $sites) && in_array("nw-news", $cats)) {
+                $sites[] = 'arcgamespc';
+            }
+            if (in_array('arcgamesnews', $sites) && in_array("nw-xbox", $cats)) {
+                $sites[] = 'arcgamesxbox';
+            }
+            if (in_array('arcgamesnews', $sites) && in_array("nw-playstation", $cats)) {
+                $sites[] = 'arcgamesps4';
+            }
+            // remove arcgamesnews from sites because we know should have platform hints in there instead
+            if (($key = array_search('arcgamesnews', $sites)) !== false) {
+                unset($sites[$key]);
+            }
+            // remove duplicates from sites array
+            $sites = implode(",", array_unique($sites));
+
             return [
-                'site' => $row['site'],
+                'site' => $sites,
                 'title' => html_entity_decode($row['title']),
                 'link' => $row['link'],
                 'timestamp' => intval($row['ts']),

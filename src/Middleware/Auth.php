@@ -22,6 +22,7 @@ class Auth
 
             $user = UserQuery::create()->filterById($decoded->userid)->findOne();
             if (is_null($user)) {
+                $response = new SlimResponse();
                 $response->getBody()->write(json_encode([
                     'status' => 401,
                     'status_msg' => 'user not found'
@@ -53,7 +54,7 @@ class Auth
             $response = new SlimResponse();
             $response->getBody()->write(json_encode([
                 'status' => 401,
-                'status_msg' => 'credential error'
+                'status_msg' => 'credential error',
             ]));
             return $response
                 ->withHeader('Content-Type', 'application/json')

@@ -96,6 +96,15 @@
       <parameter name="Engine" value="MyISAM"/>
     </vendor>
   </table>
+  <table name="auction_crawl_log" idMethod="native" phpName="AuctionCrawlLog" namespace="AuctionCrawlLog">
+    <column name="item_def" phpName="ItemDef" type="VARCHAR" size="100" primaryKey="true" required="true"/>
+    <column name="character_name" phpName="CharacterName" type="VARCHAR" size="100" primaryKey="true" required="true"/>
+    <column name="account_name" phpName="AccountName" type="VARCHAR" size="100" primaryKey="true" required="true"/>
+    <column name="item_count" phpName="ItemCount" type="INTEGER" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="MyISAM"/>
+    </vendor>
+  </table>
   <table name="auction_items" idMethod="native" phpName="AuctionItems" namespace="AuctionItems">
     <column name="item_def" phpName="ItemDef" type="VARCHAR" size="100" primaryKey="true" required="true"/>
     <column name="item_name" phpName="ItemName" type="VARCHAR" size="100" required="true"/>

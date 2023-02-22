@@ -96,6 +96,21 @@ CREATE TABLE `auction_details`
 ) ENGINE=MyISAM;
 
 -- ---------------------------------------------------------------------
+-- auction_crawl_log
+-- ---------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `auction_crawl_log`;
+
+CREATE TABLE `auction_crawl_log`
+(
+    `item_def` VARCHAR(100) NOT NULL,
+    `character_name` VARCHAR(100) NOT NULL,
+    `account_name` VARCHAR(100) NOT NULL,
+    `item_count` INTEGER NOT NULL,
+    PRIMARY KEY (`item_def`,`character_name`,`account_name`)
+) ENGINE=MyISAM;
+
+-- ---------------------------------------------------------------------
 -- auction_items
 -- ---------------------------------------------------------------------
 

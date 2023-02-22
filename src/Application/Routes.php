@@ -14,6 +14,7 @@ use App\Controller\V1\Infohub\Whoami;
 use App\Controller\V1\Auctions\Assignment;
 use App\Controller\V1\Auctions\Data;
 use App\Controller\V1\Auctions\Items;
+use App\Controller\V1\Auctions\ItemCountLog;
 use App\Controller\V1\Auctions\ItemDetails;
 use App\Controller\V1\Auctions\Engine;
 use App\Controller\V1\Auctions\Patreon;
@@ -72,6 +73,7 @@ class Routes
             $auctionsGroup->get('/items', [Items::class, 'get'])->add(new Compression());
             $auctionsGroup->get('/itemdetails', [ItemDetails::class, 'get'])->add(new Compression());
             $auctionsGroup->post('/data', [Data::class, 'post'])->add(new Auth());
+            $auctionsGroup->post('/itemcountlog', [ItemCountLog::class, 'post'])->add(new Auth());
             $auctionsGroup->get('/engine', [Engine::class, 'get'])->add(new Compression());
             $auctionsGroup->get('/patreon', [Patreon::class, 'get'])->add(new Compression());
             Routes::add404CatchAll($auctionsGroup);
