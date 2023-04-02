@@ -36,7 +36,7 @@ class Articles extends BaseController
             'tags' => $this->requestHelper->variable('tags', ''),
             'types' => $this->requestHelper->variable('types', 'official,discussion,news,guides,media,social'),
             'page' => $this->requestHelper->variable('page', 1),
-            'site' => $this->requestHelper->variable('site', ''),
+            'sites' => $this->requestHelper->variable('sites', ''),
         );
 
         if ($data_ary['tags'] !== '') {
@@ -65,6 +65,12 @@ class Articles extends BaseController
             return in_array($el, ['official', 'discussion', 'news', 'media', 'social', 'guides']);
         });
 
+        $sites = explode(',', $data_ary['sites']);
+        // filter invalid types
+        $sites = array_filter($sites, function ($el) {
+            return in_array($el, ['youtube', 'twitch', 'arcgamesforum', 'nwreddit']);
+        });
+
         // no types no result
         if (count($types) === 0) {
             $response->getBody()->write(json_encode([]));
@@ -89,7 +95,9 @@ class Articles extends BaseController
                         (
                                 SELECT article_tags.* 
                                 FROM article_tags, tag 
-                                WHERE tag.id IN (" . implode(",", $data_ary['tags']) . ") AND tag.id = article_tags.tag_id 
+                                WHERE 
+                                    tag.id IN (" . implode(",", $data_ary['tags']) . ") 
+                                    AND tag.id = article_tags.tag_id 
                                 GROUP BY article_tags.tag_id, article_tags.article_id 
                             UNION DISTINCT 
                                 SELECT article_title_tags.* 
@@ -102,7 +110,7 @@ class Articles extends BaseController
                         atags.article_id = a.id 
                         AND a.type IN ('" . implode("','", $types) . "')
                         AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews') 
-                        " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
+                        " . (count($sites) > 0 ? "AND site IN ('" . implode("','", $sites) . "')" : "") . "
                     GROUP BY a.article_id 
                     HAVING count >= " . count($data_ary['tags']) . "
                 )
@@ -126,7 +134,7 @@ class Articles extends BaseController
                         atags.article_id = a.id 
                         AND a.type IN ('" . implode("','", $types) . "')
                         AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews') 
-                        " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
+                        " . (count($sites) > 0 ? "AND site IN ('" . implode("','", $sites) . "')" : "") . "
                     GROUP BY a.id 
                     HAVING count >= " . count($data_ary['tags']) . "
                 )
@@ -178,7 +186,7 @@ class Articles extends BaseController
                     WHERE 
                         a.type IN ('" . implode("','", $types) . "') 
                         AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews')
-                        " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
+                        " . (count($sites) > 0 ? "AND site IN ('" . implode("','", $sites) . "')" : "") . "
                     GROUP BY article_id
                 )
                     UNION
@@ -188,7 +196,7 @@ class Articles extends BaseController
                     WHERE 
                         a.type IN ('" . implode("','", $types) . "') 
                         AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews')
-                        " . ($data_ary['site'] !== "" ? "AND site = \"" . $data_ary['site'] . "\"" : "") . "
+                        " . (count($sites) > 0 ? "AND site IN ('" . implode("','", $sites) . "')" : "") . "
                 ) 
                     ORDER BY ts DESC 
                     LIMIT " . ($data_ary['limit'] * ($data_ary['page'] - 1)) . "," . $data_ary['limit'];
