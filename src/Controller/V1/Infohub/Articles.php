@@ -111,7 +111,7 @@ class Articles extends BaseController
                         AND a.type IN ('" . implode("','", $types) . "')
                         AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews') 
                         " . (count($sites) > 0 ? "AND site IN ('" . implode("','", $sites) . "')" : "") . "
-                    GROUP BY a.article_id 
+                    GROUP BY a.article_id, a.title, a.ts, a.type 
                     HAVING count >= " . count($data_ary['tags']) . "
                 )
                 UNION 
@@ -135,7 +135,7 @@ class Articles extends BaseController
                         AND a.type IN ('" . implode("','", $types) . "')
                         AND site NOT IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews') 
                         " . (count($sites) > 0 ? "AND site IN ('" . implode("','", $sites) . "')" : "") . "
-                    GROUP BY a.id 
+                    GROUP BY a.id, a.title, a.ts, a.type, a.site, a.link 
                     HAVING count >= " . count($data_ary['tags']) . "
                 )
                 ORDER BY ts DESC 
@@ -187,7 +187,7 @@ class Articles extends BaseController
                         a.type IN ('" . implode("','", $types) . "') 
                         AND site IN ('arcgamespc','arcgamesxbox','arcgamesps4','arcgamesnews')
                         " . (count($sites) > 0 ? "AND site IN ('" . implode("','", $sites) . "')" : "") . "
-                    GROUP BY article_id
+                    GROUP BY article_id, title, ts, type
                 )
                     UNION
                 (

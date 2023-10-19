@@ -48,6 +48,7 @@ class ItemDetails extends BaseController
             ->withColumn("ROUND(AVG(Count))", 'avgCount')
             ->orderBy('insertedDate', 'asc')
             ->groupBy('insertedDate')
+            ->groupBy('inserted')
             ->select('insertedDate', 'insertedTimestamp', 'avgLow', 'avgMean', 'avgMedian', 'avgCount')
             ->find()
             ->getData();

@@ -33,6 +33,7 @@ class Topiclist extends BaseController
             ->withColumn('Count(*)', 'postCount')
             ->withColumn('MAX(UNIX_TIMESTAMP(date))', 'lastActive')
             ->groupByDiscussionId()
+            ->groupByDiscussionName()
             ->having('postCount >= ' . $data_ary['threshold'])
             ->orderBy('lastActive', 'DESC')
             ->select(array('post_count', 'discussion_id', 'discussion_name', 'postCount', 'discussionId', 'discussionName'))

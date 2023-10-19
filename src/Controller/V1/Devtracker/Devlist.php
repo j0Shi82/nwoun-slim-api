@@ -20,18 +20,21 @@ class Devlist
             ->withColumn('Count(*)', 'postCount')
             ->withColumn('MAX(UNIX_TIMESTAMP(date))', 'last_active')
             ->withColumn('MAX(UNIX_TIMESTAMP(date))', 'lastActive')
+            ->groupByDevId()
             ->groupByDevName()
             ->orderByDevName()
-            ->select(array(
-                'post_count',
-                'last_active',
-                'dev_name',
-                'dev_id',
-                'post_count' => 'postCount',
-                'last_active' => 'lastActive',
-                'dev_name' => 'devName',
-                'dev_id' => 'devId'
-            ))
+            ->select(
+                array(
+                    'post_count',
+                    'last_active',
+                    'dev_name',
+                    'dev_id',
+                    'post_count' => 'postCount',
+                    'last_active' => 'lastActive',
+                    'dev_name' => 'devName',
+                    'dev_id' => 'devId'
+                )
+            )
             ->find();
 
         $response->getBody()->write(json_encode($devs->getData()));
