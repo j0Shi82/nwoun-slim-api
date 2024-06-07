@@ -490,8 +490,8 @@ abstract class AuctionCrawlLog implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : AuctionCrawlLogTableMap::translateFieldName('ItemCount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->item_count = (null !== $col) ? (int) $col : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -721,15 +721,19 @@ abstract class AuctionCrawlLog implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'item_def':
                         $stmt->bindValue($identifier, $this->item_def, PDO::PARAM_STR);
+
                         break;
                     case 'character_name':
                         $stmt->bindValue($identifier, $this->character_name, PDO::PARAM_STR);
+
                         break;
                     case 'account_name':
                         $stmt->bindValue($identifier, $this->account_name, PDO::PARAM_STR);
+
                         break;
                     case 'item_count':
                         $stmt->bindValue($identifier, $this->item_count, PDO::PARAM_INT);
+
                         break;
                 }
             }

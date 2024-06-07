@@ -665,8 +665,8 @@ abstract class AuctionDetails implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : AuctionDetailsTableMap::translateFieldName('PricePer', TableMap::TYPE_PHPNAME, $indexType)];
             $this->price_per = (null !== $col) ? (double) $col : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -927,27 +927,35 @@ abstract class AuctionDetails implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'item_def':
                         $stmt->bindValue($identifier, $this->item_def, PDO::PARAM_STR);
+
                         break;
                     case 'server':
                         $stmt->bindValue($identifier, $this->server, PDO::PARAM_STR);
+
                         break;
                     case 'seller_name':
                         $stmt->bindValue($identifier, $this->seller_name, PDO::PARAM_STR);
+
                         break;
                     case 'seller_handle':
                         $stmt->bindValue($identifier, $this->seller_handle, PDO::PARAM_STR);
+
                         break;
                     case 'expire_time':
                         $stmt->bindValue($identifier, $this->expire_time, PDO::PARAM_INT);
+
                         break;
                     case 'price':
                         $stmt->bindValue($identifier, $this->price, PDO::PARAM_INT);
+
                         break;
                     case 'count':
                         $stmt->bindValue($identifier, $this->count, PDO::PARAM_INT);
+
                         break;
                     case 'price_per':
                         $stmt->bindValue($identifier, $this->price_per, PDO::PARAM_STR);
+
                         break;
                 }
             }

@@ -19,7 +19,6 @@ use App\Controller\V1\Auctions\ItemDetails;
 use App\Controller\V1\Auctions\Engine;
 use App\Controller\V1\Auctions\Patreon;
 use App\Controller\V1\Auth\Login;
-use App\Services\DB;
 use App\Middleware\Auth;
 use App\Middleware\Cache;
 use App\Middleware\Cors;

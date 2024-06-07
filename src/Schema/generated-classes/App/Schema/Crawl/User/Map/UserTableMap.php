@@ -46,6 +46,11 @@ class UserTableMap extends TableMap
     public const TABLE_NAME = 'user';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'User';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\App\\Schema\\Crawl\\User\\User';
@@ -268,7 +273,7 @@ class UserTableMap extends TableMap
             UserTableMap::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**

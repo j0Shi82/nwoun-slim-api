@@ -31,7 +31,8 @@ class Auth
                     ->withHeader('Content-Type', 'application/json')
                     ->withHeader('charset', 'utf-8')
                     ->withStatus(401);
-            };
+            }
+            ;
 
             $jwt = AuthService::encode([
                 'username' => $decoded->username,
@@ -40,7 +41,7 @@ class Auth
 
             $response = $handler->handle($request);
             return $response
-                ->withHeader('Set-Cookie', 'jwt=' . $jwt . '; Max-Age=' . $maxAge);
+                ->withHeader('Set-Cookie', 'jwt=' . $jwt . '; Max-Age=604800');
         } catch (ExpiredException $e) {
             $response = new SlimResponse();
             $response->getBody()->write(json_encode([

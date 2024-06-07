@@ -8,7 +8,6 @@ use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use JBBCode\DefaultCodeDefinitionSet;
 use App\Schema\Crawl\AuctionItems\AuctionItemsQuery;
 
 class Engine extends BaseController
@@ -31,7 +30,7 @@ class Engine extends BaseController
             ->select(array('Count'))
             ->findOne();
 
-        $response->getBody()->write(json_encode(array_merge($result, ['totalItems'=> $result2])));
+        $response->getBody()->write(json_encode(array_merge($result, ['totalItems' => $result2])));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');

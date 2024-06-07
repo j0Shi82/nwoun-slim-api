@@ -6,7 +6,6 @@ use \App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use JBBCode\DefaultCodeDefinitionSet;
 use App\Schema\Crawl\AuctionItems\AuctionItemsQuery;
 
 class Assignment extends BaseController
@@ -25,9 +24,10 @@ class Assignment extends BaseController
 
         $result = $result->toArray();
         $result['ItemName'] = $result['SearchTerm'];
-                  
+
         $response->getBody()->write(
-            str_replace("\/", "/", json_encode($result)));
+            str_replace("\/", "/", json_encode($result))
+        );
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withHeader('charset', 'utf-8');

@@ -46,6 +46,11 @@ class DevtrackerTableMap extends TableMap
     public const TABLE_NAME = 'devtracker';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'Devtracker';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\App\\Schema\\Crawl\\Devtracker\\Devtracker';
@@ -396,7 +401,7 @@ class DevtrackerTableMap extends TableMap
             DevtrackerTableMap::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**

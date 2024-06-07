@@ -8,7 +8,6 @@ use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use JBBCode\DefaultCodeDefinitionSet;
 use App\Schema\Crawl\AuctionCrawlLog\AuctionCrawlLog;
 use App\Schema\Crawl\AuctionCrawlLog\AuctionCrawlLogQuery;
 

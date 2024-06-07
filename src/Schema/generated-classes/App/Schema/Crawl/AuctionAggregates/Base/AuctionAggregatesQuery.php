@@ -17,9 +17,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'auction_aggregates' table.
- *
- *
+ * Base class that represents a query for the `auction_aggregates` table.
  *
  * @method     ChildAuctionAggregatesQuery orderByItemDef($order = Criteria::ASC) Order by the item_def column
  * @method     ChildAuctionAggregatesQuery orderByServer($order = Criteria::ASC) Order by the server column
@@ -66,8 +64,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuctionAggregates|null findOneByMean(double $mean) Return the first ChildAuctionAggregates filtered by the mean column
  * @method     ChildAuctionAggregates|null findOneByMedian(double $median) Return the first ChildAuctionAggregates filtered by the median column
  * @method     ChildAuctionAggregates|null findOneByCount(int $count) Return the first ChildAuctionAggregates filtered by the count column
- * @method     ChildAuctionAggregates|null findOneByInserted(string $inserted) Return the first ChildAuctionAggregates filtered by the inserted column *
-
+ * @method     ChildAuctionAggregates|null findOneByInserted(string $inserted) Return the first ChildAuctionAggregates filtered by the inserted column
+ *
  * @method     ChildAuctionAggregates requirePk($key, ?ConnectionInterface $con = null) Return the ChildAuctionAggregates by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuctionAggregates requireOne(?ConnectionInterface $con = null) Return the first ChildAuctionAggregates matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -81,23 +79,24 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildAuctionAggregates[]|Collection find(?ConnectionInterface $con = null) Return ChildAuctionAggregates objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildAuctionAggregates> find(?ConnectionInterface $con = null) Return ChildAuctionAggregates objects based on current ModelCriteria
- * @method     ChildAuctionAggregates[]|Collection findByItemDef(string $item_def) Return ChildAuctionAggregates objects filtered by the item_def column
- * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByItemDef(string $item_def) Return ChildAuctionAggregates objects filtered by the item_def column
- * @method     ChildAuctionAggregates[]|Collection findByServer(string $server) Return ChildAuctionAggregates objects filtered by the server column
- * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByServer(string $server) Return ChildAuctionAggregates objects filtered by the server column
- * @method     ChildAuctionAggregates[]|Collection findByLow(int $low) Return ChildAuctionAggregates objects filtered by the low column
- * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByLow(int $low) Return ChildAuctionAggregates objects filtered by the low column
- * @method     ChildAuctionAggregates[]|Collection findByMean(double $mean) Return ChildAuctionAggregates objects filtered by the mean column
- * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByMean(double $mean) Return ChildAuctionAggregates objects filtered by the mean column
- * @method     ChildAuctionAggregates[]|Collection findByMedian(double $median) Return ChildAuctionAggregates objects filtered by the median column
- * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByMedian(double $median) Return ChildAuctionAggregates objects filtered by the median column
- * @method     ChildAuctionAggregates[]|Collection findByCount(int $count) Return ChildAuctionAggregates objects filtered by the count column
- * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByCount(int $count) Return ChildAuctionAggregates objects filtered by the count column
- * @method     ChildAuctionAggregates[]|Collection findByInserted(string $inserted) Return ChildAuctionAggregates objects filtered by the inserted column
- * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByInserted(string $inserted) Return ChildAuctionAggregates objects filtered by the inserted column
+ *
+ * @method     ChildAuctionAggregates[]|Collection findByItemDef(string|array<string> $item_def) Return ChildAuctionAggregates objects filtered by the item_def column
+ * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByItemDef(string|array<string> $item_def) Return ChildAuctionAggregates objects filtered by the item_def column
+ * @method     ChildAuctionAggregates[]|Collection findByServer(string|array<string> $server) Return ChildAuctionAggregates objects filtered by the server column
+ * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByServer(string|array<string> $server) Return ChildAuctionAggregates objects filtered by the server column
+ * @method     ChildAuctionAggregates[]|Collection findByLow(int|array<int> $low) Return ChildAuctionAggregates objects filtered by the low column
+ * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByLow(int|array<int> $low) Return ChildAuctionAggregates objects filtered by the low column
+ * @method     ChildAuctionAggregates[]|Collection findByMean(double|array<double> $mean) Return ChildAuctionAggregates objects filtered by the mean column
+ * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByMean(double|array<double> $mean) Return ChildAuctionAggregates objects filtered by the mean column
+ * @method     ChildAuctionAggregates[]|Collection findByMedian(double|array<double> $median) Return ChildAuctionAggregates objects filtered by the median column
+ * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByMedian(double|array<double> $median) Return ChildAuctionAggregates objects filtered by the median column
+ * @method     ChildAuctionAggregates[]|Collection findByCount(int|array<int> $count) Return ChildAuctionAggregates objects filtered by the count column
+ * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByCount(int|array<int> $count) Return ChildAuctionAggregates objects filtered by the count column
+ * @method     ChildAuctionAggregates[]|Collection findByInserted(string|array<string> $inserted) Return ChildAuctionAggregates objects filtered by the inserted column
+ * @psalm-method Collection&\Traversable<ChildAuctionAggregates> findByInserted(string|array<string> $inserted) Return ChildAuctionAggregates objects filtered by the inserted column
+ *
  * @method     ChildAuctionAggregates[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildAuctionAggregates> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- *
  */
 abstract class AuctionAggregatesQuery extends ModelCriteria
 {
@@ -671,20 +670,23 @@ abstract class AuctionAggregatesQuery extends ModelCriteria
 
         return $this;
     }
+
     /**
      * Use the relation to AuctionItems table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
      *
      * @return \App\Schema\Crawl\AuctionItems\AuctionItemsQuery The inner query object of the EXISTS statement
      */
     public function useAuctionItemsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('AuctionItems', $modelAlias, $queryClass, $typeOfExists);
+        /** @var $q \App\Schema\Crawl\AuctionItems\AuctionItemsQuery */
+        $q = $this->useExistsQuery('AuctionItems', $modelAlias, $queryClass, $typeOfExists);
+        return $q;
     }
 
     /**
@@ -699,8 +701,46 @@ abstract class AuctionAggregatesQuery extends ModelCriteria
      */
     public function useAuctionItemsNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('AuctionItems', $modelAlias, $queryClass, 'NOT EXISTS');
+        /** @var $q \App\Schema\Crawl\AuctionItems\AuctionItemsQuery */
+        $q = $this->useExistsQuery('AuctionItems', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $q;
     }
+
+    /**
+     * Use the relation to AuctionItems table for an IN query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
+     * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
+     *
+     * @return \App\Schema\Crawl\AuctionItems\AuctionItemsQuery The inner query object of the IN statement
+     */
+    public function useInAuctionItemsQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    {
+        /** @var $q \App\Schema\Crawl\AuctionItems\AuctionItemsQuery */
+        $q = $this->useInQuery('AuctionItems', $modelAlias, $queryClass, $typeOfIn);
+        return $q;
+    }
+
+    /**
+     * Use the relation to AuctionItems table for a NOT IN query.
+     *
+     * @see useAuctionItemsInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\AuctionItems\AuctionItemsQuery The inner query object of the NOT IN statement
+     */
+    public function useNotInAuctionItemsQuery($modelAlias = null, $queryClass = null)
+    {
+        /** @var $q \App\Schema\Crawl\AuctionItems\AuctionItemsQuery */
+        $q = $this->useInQuery('AuctionItems', $modelAlias, $queryClass, 'NOT IN');
+        return $q;
+    }
+
     /**
      * Exclude object from result
      *

@@ -46,6 +46,11 @@ class AuctionItemsTableMap extends TableMap
     public const TABLE_NAME = 'auction_items';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'AuctionItems';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\App\\Schema\\Crawl\\AuctionItems\\AuctionItems';
@@ -459,7 +464,7 @@ class AuctionItemsTableMap extends TableMap
             AuctionItemsTableMap::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**

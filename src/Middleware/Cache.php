@@ -13,9 +13,14 @@ use Symfony\Component\Cache\Marshaller\DefaultMarshaller;
 class Cache
 {
     /**
-     * @var Symfony\Component\Cache\Adapter\FilesystemAdapter
+     * @var \Symfony\Component\Cache\Adapter\FilesystemAdapter
      */
-    private $cache;
+    private $headerCache;
+
+    /**
+     * @var \Symfony\Component\Cache\Adapter\FilesystemAdapter
+     */
+    private $bodyCache;
 
     public function __construct()
     {
@@ -55,9 +60,10 @@ class Cache
             $response->getBody()->write($body);
             foreach ($headers as $key => $values) {
                 $response = $response->withHeader($key, $values[0]);
-            };
+            }
+            ;
 
-            return $response->withHeader('Cache-Control', 'max-age='.round($this->headerCache->getItem($cacheKey)->getMetadata()['expiry'] - microtime(true)).', must-revalidate');
+            return $response->withHeader('Cache-Control', 'max-age=' . round($this->headerCache->getItem($cacheKey)->getMetadata()['expiry'] - microtime(true)) . ', must-revalidate');
         }
 
         $response = $handler->handle($request);

@@ -46,6 +46,11 @@ class AuctionAggregatesTableMap extends TableMap
     public const TABLE_NAME = 'auction_aggregates';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'AuctionAggregates';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\App\\Schema\\Crawl\\AuctionAggregates\\AuctionAggregates';
@@ -407,7 +412,7 @@ class AuctionAggregatesTableMap extends TableMap
             AuctionAggregatesTableMap::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**

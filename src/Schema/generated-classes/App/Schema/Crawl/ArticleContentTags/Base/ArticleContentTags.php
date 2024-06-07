@@ -432,8 +432,8 @@ abstract class ArticleContentTags implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ArticleContentTagsTableMap::translateFieldName('TagId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->tag_id = (null !== $col) ? (int) $col : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -684,9 +684,11 @@ abstract class ArticleContentTags implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'article_id':
                         $stmt->bindValue($identifier, $this->article_id, PDO::PARAM_INT);
+
                         break;
                     case 'tag_id':
                         $stmt->bindValue($identifier, $this->tag_id, PDO::PARAM_INT);
+
                         break;
                 }
             }

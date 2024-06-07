@@ -847,8 +847,8 @@ abstract class AuctionItems implements ActiveRecordInterface
                 $col = null;
             }
             $this->locked_date = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -1134,33 +1134,43 @@ abstract class AuctionItems implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'item_def':
                         $stmt->bindValue($identifier, $this->item_def, PDO::PARAM_STR);
+
                         break;
                     case 'item_name':
                         $stmt->bindValue($identifier, $this->item_name, PDO::PARAM_STR);
+
                         break;
                     case 'search_term':
                         $stmt->bindValue($identifier, $this->search_term, PDO::PARAM_STR);
+
                         break;
                     case 'quality':
                         $stmt->bindValue($identifier, $this->quality, PDO::PARAM_STR);
+
                         break;
                     case 'categories':
                         $stmt->bindValue($identifier, $this->categories, PDO::PARAM_STR);
+
                         break;
                     case 'crawl_category':
                         $stmt->bindValue($identifier, $this->crawl_category, PDO::PARAM_STR);
+
                         break;
                     case 'allow_auto':
                         $stmt->bindValue($identifier, (int) $this->allow_auto, PDO::PARAM_INT);
+
                         break;
                     case 'server':
                         $stmt->bindValue($identifier, $this->server, PDO::PARAM_STR);
+
                         break;
                     case 'update_date':
                         $stmt->bindValue($identifier, $this->update_date ? $this->update_date->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+
                         break;
                     case 'locked_date':
                         $stmt->bindValue($identifier, $this->locked_date ? $this->locked_date->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+
                         break;
                 }
             }

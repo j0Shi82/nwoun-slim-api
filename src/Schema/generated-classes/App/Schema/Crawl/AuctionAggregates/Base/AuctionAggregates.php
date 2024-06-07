@@ -655,8 +655,8 @@ abstract class AuctionAggregates implements ActiveRecordInterface
                 $col = null;
             }
             $this->inserted = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -914,24 +914,31 @@ abstract class AuctionAggregates implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'item_def':
                         $stmt->bindValue($identifier, $this->item_def, PDO::PARAM_STR);
+
                         break;
                     case 'server':
                         $stmt->bindValue($identifier, $this->server, PDO::PARAM_STR);
+
                         break;
                     case 'low':
                         $stmt->bindValue($identifier, $this->low, PDO::PARAM_INT);
+
                         break;
                     case 'mean':
                         $stmt->bindValue($identifier, $this->mean, PDO::PARAM_STR);
+
                         break;
                     case 'median':
                         $stmt->bindValue($identifier, $this->median, PDO::PARAM_STR);
+
                         break;
                     case 'count':
                         $stmt->bindValue($identifier, $this->count, PDO::PARAM_INT);
+
                         break;
                     case 'inserted':
                         $stmt->bindValue($identifier, $this->inserted ? $this->inserted->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+
                         break;
                 }
             }

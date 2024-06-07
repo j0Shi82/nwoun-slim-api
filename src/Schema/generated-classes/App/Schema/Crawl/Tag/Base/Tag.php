@@ -486,8 +486,8 @@ abstract class Tag implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : TagTableMap::translateFieldName('Term', TableMap::TYPE_PHPNAME, $indexType)];
             $this->term = (null !== $col) ? (string) $col : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -813,9 +813,11 @@ abstract class Tag implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+
                         break;
                     case 'term':
                         $stmt->bindValue($identifier, $this->term, PDO::PARAM_STR);
+
                         break;
                 }
             }

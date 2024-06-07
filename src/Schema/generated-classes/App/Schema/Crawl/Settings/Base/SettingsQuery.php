@@ -15,9 +15,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'settings' table.
- *
- *
+ * Base class that represents a query for the `settings` table.
  *
  * @method     ChildSettingsQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method     ChildSettingsQuery orderByValue($order = Criteria::ASC) Order by the value column
@@ -37,8 +35,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildSettings findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildSettings matching the query, or a new ChildSettings object populated from the query conditions when no match is found
  *
  * @method     ChildSettings|null findOneByName(string $name) Return the first ChildSettings filtered by the name column
- * @method     ChildSettings|null findOneByValue(string $value) Return the first ChildSettings filtered by the value column *
-
+ * @method     ChildSettings|null findOneByValue(string $value) Return the first ChildSettings filtered by the value column
+ *
  * @method     ChildSettings requirePk($key, ?ConnectionInterface $con = null) Return the ChildSettings by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildSettings requireOne(?ConnectionInterface $con = null) Return the first ChildSettings matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -47,13 +45,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildSettings[]|Collection find(?ConnectionInterface $con = null) Return ChildSettings objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildSettings> find(?ConnectionInterface $con = null) Return ChildSettings objects based on current ModelCriteria
- * @method     ChildSettings[]|Collection findByName(string $name) Return ChildSettings objects filtered by the name column
- * @psalm-method Collection&\Traversable<ChildSettings> findByName(string $name) Return ChildSettings objects filtered by the name column
- * @method     ChildSettings[]|Collection findByValue(string $value) Return ChildSettings objects filtered by the value column
- * @psalm-method Collection&\Traversable<ChildSettings> findByValue(string $value) Return ChildSettings objects filtered by the value column
+ *
+ * @method     ChildSettings[]|Collection findByName(string|array<string> $name) Return ChildSettings objects filtered by the name column
+ * @psalm-method Collection&\Traversable<ChildSettings> findByName(string|array<string> $name) Return ChildSettings objects filtered by the name column
+ * @method     ChildSettings[]|Collection findByValue(string|array<string> $value) Return ChildSettings objects filtered by the value column
+ * @psalm-method Collection&\Traversable<ChildSettings> findByValue(string|array<string> $value) Return ChildSettings objects filtered by the value column
+ *
  * @method     ChildSettings[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildSettings> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- *
  */
 abstract class SettingsQuery extends ModelCriteria
 {

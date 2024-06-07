@@ -410,8 +410,8 @@ abstract class Settings implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : SettingsTableMap::translateFieldName('Value', TableMap::TYPE_PHPNAME, $indexType)];
             $this->value = (null !== $col) ? (string) $col : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -635,9 +635,11 @@ abstract class Settings implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'name':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+
                         break;
                     case 'value':
                         $stmt->bindValue($identifier, $this->value, PDO::PARAM_STR);
+
                         break;
                 }
             }

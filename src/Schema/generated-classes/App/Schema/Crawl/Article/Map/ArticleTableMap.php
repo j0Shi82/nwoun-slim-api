@@ -46,6 +46,11 @@ class ArticleTableMap extends TableMap
     public const TABLE_NAME = 'article';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'Article';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\App\\Schema\\Crawl\\Article\\Article';
@@ -372,7 +377,7 @@ class ArticleTableMap extends TableMap
             ArticleTableMap::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**

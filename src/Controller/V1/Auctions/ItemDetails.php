@@ -8,7 +8,6 @@ use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use JBBCode\DefaultCodeDefinitionSet;
 use App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery;
 
 class ItemDetails extends BaseController
@@ -49,7 +48,7 @@ class ItemDetails extends BaseController
             ->orderBy('insertedDate', 'asc')
             ->groupBy('insertedDate')
             ->groupBy('inserted')
-            ->select('insertedDate', 'insertedTimestamp', 'avgLow', 'avgMean', 'avgMedian', 'avgCount')
+            ->select(['insertedDate', 'insertedTimestamp', 'avgLow', 'avgMean', 'avgMedian', 'avgCount'])
             ->find()
             ->getData();
 

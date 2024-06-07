@@ -13,19 +13,19 @@ use App\Helpers\RateLimitPSR6Adapter;
 class RateLimiter
 {
     /**
-     * @var Symfony\Component\Cache\Adapter\FilesystemAdapter
+     * @var \Symfony\Component\Cache\Adapter\FilesystemAdapter
      */
     private $cache;
 
 
     /**
-     * @var App\Helpers\RateLimitPSR6Adapter
+     * @var \App\Helpers\RateLimitPSR6Adapter
      */
     private $adapter;
 
 
     /**
-     * @var PalePurple\RateLimit\RateLimit
+     * @var \PalePurple\RateLimit\RateLimit
      */
     private $rateLimit;
 

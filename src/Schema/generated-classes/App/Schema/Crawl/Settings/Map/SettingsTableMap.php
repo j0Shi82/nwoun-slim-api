@@ -46,6 +46,11 @@ class SettingsTableMap extends TableMap
     public const TABLE_NAME = 'settings';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'Settings';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\App\\Schema\\Crawl\\Settings\\Settings';
@@ -256,7 +261,7 @@ class SettingsTableMap extends TableMap
             SettingsTableMap::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**

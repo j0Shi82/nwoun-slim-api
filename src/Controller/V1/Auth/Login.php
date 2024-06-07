@@ -8,8 +8,6 @@ use App\Controller\BaseController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\Schema\Crawl\User\UserQuery;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use App\Services\Auth as AuthService;
 
 class Login extends BaseController
@@ -28,7 +26,8 @@ class Login extends BaseController
                 ->withHeader('Content-Type', 'application/json')
                 ->withHeader('charset', 'utf-8')
                 ->withStatus(401);
-        };
+        }
+        ;
 
         $jwt = AuthService::encode([
             'username' => $user->getUsername(),
@@ -38,7 +37,7 @@ class Login extends BaseController
         $response->getBody()->write($jwt);
         return $response
             ->withHeader('Content-Type', 'application/json')
-            ->withHeader('Set-Cookie', 'jwt=' . $jwt . '; Max-Age=' . $maxAge)
+            ->withHeader('Set-Cookie', 'jwt=' . $jwt . '; Max-Age=604800')
             ->withHeader('charset', 'utf-8');
     }
 }

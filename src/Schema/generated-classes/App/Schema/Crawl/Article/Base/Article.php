@@ -806,8 +806,8 @@ abstract class Article implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : ArticleTableMap::translateFieldName('Type', TableMap::TYPE_PHPNAME, $indexType)];
             $this->type = (null !== $col) ? (string) $col : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -1157,33 +1157,43 @@ abstract class Article implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+
                         break;
                     case 'article_id':
                         $stmt->bindValue($identifier, $this->article_id, PDO::PARAM_STR);
+
                         break;
                     case 'link':
                         $stmt->bindValue($identifier, $this->link, PDO::PARAM_STR);
+
                         break;
                     case 'site':
                         $stmt->bindValue($identifier, $this->site, PDO::PARAM_STR);
+
                         break;
                     case 'ts':
                         $stmt->bindValue($identifier, $this->ts, PDO::PARAM_INT);
+
                         break;
                     case 'title':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
+
                         break;
                     case 'content':
                         $stmt->bindValue($identifier, $this->content, PDO::PARAM_STR);
+
                         break;
                     case 'cats':
                         $stmt->bindValue($identifier, $this->cats, PDO::PARAM_STR);
+
                         break;
                     case 'last_tagged':
                         $stmt->bindValue($identifier, $this->last_tagged, PDO::PARAM_INT);
+
                         break;
                     case 'type':
                         $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
+
                         break;
                 }
             }

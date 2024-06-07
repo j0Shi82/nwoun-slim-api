@@ -10,7 +10,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use App\Schema\Crawl\Tag\TagQuery;
 use App\Schema\Crawl\Article\ArticleQuery;
-use JBBCode\DefaultCodeDefinitionSet;
 
 class Articles extends BaseController
 {

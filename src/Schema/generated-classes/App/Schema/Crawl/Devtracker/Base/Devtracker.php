@@ -899,8 +899,8 @@ abstract class Devtracker implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : DevtrackerTableMap::translateFieldName('IsClosed', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_closed = (null !== $col) ? (boolean) $col : null;
-            $this->resetModified();
 
+            $this->resetModified();
             $this->setNew(false);
 
             if ($rehydrate) {
@@ -1158,39 +1158,51 @@ abstract class Devtracker implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'ID':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+
                         break;
                     case 'dev_name':
                         $stmt->bindValue($identifier, $this->dev_name, PDO::PARAM_STR);
+
                         break;
                     case 'dev_id':
                         $stmt->bindValue($identifier, $this->dev_id, PDO::PARAM_INT);
+
                         break;
                     case 'category_id':
                         $stmt->bindValue($identifier, $this->category_id, PDO::PARAM_INT);
+
                         break;
                     case 'discussion_id':
                         $stmt->bindValue($identifier, $this->discussion_id, PDO::PARAM_STR);
+
                         break;
                     case 'discussion_name':
                         $stmt->bindValue($identifier, $this->discussion_name, PDO::PARAM_STR);
+
                         break;
                     case 'comment_id':
                         $stmt->bindValue($identifier, $this->comment_id, PDO::PARAM_STR);
+
                         break;
                     case 'body':
                         $stmt->bindValue($identifier, $this->body, PDO::PARAM_STR);
+
                         break;
                     case 'date':
                         $stmt->bindValue($identifier, $this->date ? $this->date->format("Y-m-d H:i:s.u") : null, PDO::PARAM_STR);
+
                         break;
                     case 'is_poll':
                         $stmt->bindValue($identifier, (int) $this->is_poll, PDO::PARAM_INT);
+
                         break;
                     case 'is_announce':
                         $stmt->bindValue($identifier, (int) $this->is_announce, PDO::PARAM_INT);
+
                         break;
                     case 'is_closed':
                         $stmt->bindValue($identifier, (int) $this->is_closed, PDO::PARAM_INT);
+
                         break;
                 }
             }

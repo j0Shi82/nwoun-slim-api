@@ -15,9 +15,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'user' table.
- *
- *
+ * Base class that represents a query for the `user` table.
  *
  * @method     ChildUserQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildUserQuery orderByUsername($order = Criteria::ASC) Order by the username column
@@ -40,8 +38,8 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUser|null findOneById(int $id) Return the first ChildUser filtered by the id column
  * @method     ChildUser|null findOneByUsername(string $username) Return the first ChildUser filtered by the username column
- * @method     ChildUser|null findOneByPassword(string $password) Return the first ChildUser filtered by the password column *
-
+ * @method     ChildUser|null findOneByPassword(string $password) Return the first ChildUser filtered by the password column
+ *
  * @method     ChildUser requirePk($key, ?ConnectionInterface $con = null) Return the ChildUser by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildUser requireOne(?ConnectionInterface $con = null) Return the first ChildUser matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -51,15 +49,16 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildUser[]|Collection find(?ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildUser> find(?ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
- * @method     ChildUser[]|Collection findById(int $id) Return ChildUser objects filtered by the id column
- * @psalm-method Collection&\Traversable<ChildUser> findById(int $id) Return ChildUser objects filtered by the id column
- * @method     ChildUser[]|Collection findByUsername(string $username) Return ChildUser objects filtered by the username column
- * @psalm-method Collection&\Traversable<ChildUser> findByUsername(string $username) Return ChildUser objects filtered by the username column
- * @method     ChildUser[]|Collection findByPassword(string $password) Return ChildUser objects filtered by the password column
- * @psalm-method Collection&\Traversable<ChildUser> findByPassword(string $password) Return ChildUser objects filtered by the password column
+ *
+ * @method     ChildUser[]|Collection findById(int|array<int> $id) Return ChildUser objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildUser> findById(int|array<int> $id) Return ChildUser objects filtered by the id column
+ * @method     ChildUser[]|Collection findByUsername(string|array<string> $username) Return ChildUser objects filtered by the username column
+ * @psalm-method Collection&\Traversable<ChildUser> findByUsername(string|array<string> $username) Return ChildUser objects filtered by the username column
+ * @method     ChildUser[]|Collection findByPassword(string|array<string> $password) Return ChildUser objects filtered by the password column
+ * @psalm-method Collection&\Traversable<ChildUser> findByPassword(string|array<string> $password) Return ChildUser objects filtered by the password column
+ *
  * @method     ChildUser[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildUser> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- *
  */
 abstract class UserQuery extends ModelCriteria
 {

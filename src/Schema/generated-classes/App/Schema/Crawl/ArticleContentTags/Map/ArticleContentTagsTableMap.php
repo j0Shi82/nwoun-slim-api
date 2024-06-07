@@ -46,6 +46,11 @@ class ArticleContentTagsTableMap extends TableMap
     public const TABLE_NAME = 'article_tags';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'ArticleContentTags';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\App\\Schema\\Crawl\\ArticleContentTags\\ArticleContentTags';
@@ -341,7 +346,7 @@ class ArticleContentTagsTableMap extends TableMap
             ArticleContentTagsTableMap::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**

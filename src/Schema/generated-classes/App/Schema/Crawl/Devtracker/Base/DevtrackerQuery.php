@@ -15,9 +15,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'devtracker' table.
- *
- *
+ * Base class that represents a query for the `devtracker` table.
  *
  * @method     ChildDevtrackerQuery orderById($order = Criteria::ASC) Order by the ID column
  * @method     ChildDevtrackerQuery orderByDevName($order = Criteria::ASC) Order by the dev_name column
@@ -67,8 +65,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildDevtracker|null findOneByDate(string $date) Return the first ChildDevtracker filtered by the date column
  * @method     ChildDevtracker|null findOneByIsPoll(boolean $is_poll) Return the first ChildDevtracker filtered by the is_poll column
  * @method     ChildDevtracker|null findOneByIsAnnounce(boolean $is_announce) Return the first ChildDevtracker filtered by the is_announce column
- * @method     ChildDevtracker|null findOneByIsClosed(boolean $is_closed) Return the first ChildDevtracker filtered by the is_closed column *
-
+ * @method     ChildDevtracker|null findOneByIsClosed(boolean $is_closed) Return the first ChildDevtracker filtered by the is_closed column
+ *
  * @method     ChildDevtracker requirePk($key, ?ConnectionInterface $con = null) Return the ChildDevtracker by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildDevtracker requireOne(?ConnectionInterface $con = null) Return the first ChildDevtracker matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -87,33 +85,34 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildDevtracker[]|Collection find(?ConnectionInterface $con = null) Return ChildDevtracker objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildDevtracker> find(?ConnectionInterface $con = null) Return ChildDevtracker objects based on current ModelCriteria
- * @method     ChildDevtracker[]|Collection findById(int $ID) Return ChildDevtracker objects filtered by the ID column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findById(int $ID) Return ChildDevtracker objects filtered by the ID column
- * @method     ChildDevtracker[]|Collection findByDevName(string $dev_name) Return ChildDevtracker objects filtered by the dev_name column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByDevName(string $dev_name) Return ChildDevtracker objects filtered by the dev_name column
- * @method     ChildDevtracker[]|Collection findByDevId(int $dev_id) Return ChildDevtracker objects filtered by the dev_id column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByDevId(int $dev_id) Return ChildDevtracker objects filtered by the dev_id column
- * @method     ChildDevtracker[]|Collection findByCategoryId(int $category_id) Return ChildDevtracker objects filtered by the category_id column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByCategoryId(int $category_id) Return ChildDevtracker objects filtered by the category_id column
- * @method     ChildDevtracker[]|Collection findByDiscussionId(string $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByDiscussionId(string $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
- * @method     ChildDevtracker[]|Collection findByDiscussionName(string $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByDiscussionName(string $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
- * @method     ChildDevtracker[]|Collection findByCommentId(string $comment_id) Return ChildDevtracker objects filtered by the comment_id column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByCommentId(string $comment_id) Return ChildDevtracker objects filtered by the comment_id column
- * @method     ChildDevtracker[]|Collection findByBody(string $body) Return ChildDevtracker objects filtered by the body column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByBody(string $body) Return ChildDevtracker objects filtered by the body column
- * @method     ChildDevtracker[]|Collection findByDate(string $date) Return ChildDevtracker objects filtered by the date column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByDate(string $date) Return ChildDevtracker objects filtered by the date column
- * @method     ChildDevtracker[]|Collection findByIsPoll(boolean $is_poll) Return ChildDevtracker objects filtered by the is_poll column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByIsPoll(boolean $is_poll) Return ChildDevtracker objects filtered by the is_poll column
- * @method     ChildDevtracker[]|Collection findByIsAnnounce(boolean $is_announce) Return ChildDevtracker objects filtered by the is_announce column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByIsAnnounce(boolean $is_announce) Return ChildDevtracker objects filtered by the is_announce column
- * @method     ChildDevtracker[]|Collection findByIsClosed(boolean $is_closed) Return ChildDevtracker objects filtered by the is_closed column
- * @psalm-method Collection&\Traversable<ChildDevtracker> findByIsClosed(boolean $is_closed) Return ChildDevtracker objects filtered by the is_closed column
+ *
+ * @method     ChildDevtracker[]|Collection findById(int|array<int> $ID) Return ChildDevtracker objects filtered by the ID column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findById(int|array<int> $ID) Return ChildDevtracker objects filtered by the ID column
+ * @method     ChildDevtracker[]|Collection findByDevName(string|array<string> $dev_name) Return ChildDevtracker objects filtered by the dev_name column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDevName(string|array<string> $dev_name) Return ChildDevtracker objects filtered by the dev_name column
+ * @method     ChildDevtracker[]|Collection findByDevId(int|array<int> $dev_id) Return ChildDevtracker objects filtered by the dev_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDevId(int|array<int> $dev_id) Return ChildDevtracker objects filtered by the dev_id column
+ * @method     ChildDevtracker[]|Collection findByCategoryId(int|array<int> $category_id) Return ChildDevtracker objects filtered by the category_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByCategoryId(int|array<int> $category_id) Return ChildDevtracker objects filtered by the category_id column
+ * @method     ChildDevtracker[]|Collection findByDiscussionId(string|array<string> $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDiscussionId(string|array<string> $discussion_id) Return ChildDevtracker objects filtered by the discussion_id column
+ * @method     ChildDevtracker[]|Collection findByDiscussionName(string|array<string> $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDiscussionName(string|array<string> $discussion_name) Return ChildDevtracker objects filtered by the discussion_name column
+ * @method     ChildDevtracker[]|Collection findByCommentId(string|array<string> $comment_id) Return ChildDevtracker objects filtered by the comment_id column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByCommentId(string|array<string> $comment_id) Return ChildDevtracker objects filtered by the comment_id column
+ * @method     ChildDevtracker[]|Collection findByBody(string|array<string> $body) Return ChildDevtracker objects filtered by the body column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByBody(string|array<string> $body) Return ChildDevtracker objects filtered by the body column
+ * @method     ChildDevtracker[]|Collection findByDate(string|array<string> $date) Return ChildDevtracker objects filtered by the date column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByDate(string|array<string> $date) Return ChildDevtracker objects filtered by the date column
+ * @method     ChildDevtracker[]|Collection findByIsPoll(boolean|array<boolean> $is_poll) Return ChildDevtracker objects filtered by the is_poll column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByIsPoll(boolean|array<boolean> $is_poll) Return ChildDevtracker objects filtered by the is_poll column
+ * @method     ChildDevtracker[]|Collection findByIsAnnounce(boolean|array<boolean> $is_announce) Return ChildDevtracker objects filtered by the is_announce column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByIsAnnounce(boolean|array<boolean> $is_announce) Return ChildDevtracker objects filtered by the is_announce column
+ * @method     ChildDevtracker[]|Collection findByIsClosed(boolean|array<boolean> $is_closed) Return ChildDevtracker objects filtered by the is_closed column
+ * @psalm-method Collection&\Traversable<ChildDevtracker> findByIsClosed(boolean|array<boolean> $is_closed) Return ChildDevtracker objects filtered by the is_closed column
+ *
  * @method     ChildDevtracker[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildDevtracker> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- *
  */
 abstract class DevtrackerQuery extends ModelCriteria
 {
@@ -639,7 +638,7 @@ abstract class DevtrackerQuery extends ModelCriteria
     public function filterByIsPoll($isPoll = null, ?string $comparison = null)
     {
         if (is_string($isPoll)) {
-            $isPoll = in_array(strtolower($isPoll), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            $isPoll = in_array(strtolower($isPoll), array('false', 'off', '-', 'no', 'n', '0', ''), true) ? false : true;
         }
 
         $this->addUsingAlias(DevtrackerTableMap::COL_IS_POLL, $isPoll, $comparison);
@@ -668,7 +667,7 @@ abstract class DevtrackerQuery extends ModelCriteria
     public function filterByIsAnnounce($isAnnounce = null, ?string $comparison = null)
     {
         if (is_string($isAnnounce)) {
-            $isAnnounce = in_array(strtolower($isAnnounce), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            $isAnnounce = in_array(strtolower($isAnnounce), array('false', 'off', '-', 'no', 'n', '0', ''), true) ? false : true;
         }
 
         $this->addUsingAlias(DevtrackerTableMap::COL_IS_ANNOUNCE, $isAnnounce, $comparison);
@@ -697,7 +696,7 @@ abstract class DevtrackerQuery extends ModelCriteria
     public function filterByIsClosed($isClosed = null, ?string $comparison = null)
     {
         if (is_string($isClosed)) {
-            $isClosed = in_array(strtolower($isClosed), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            $isClosed = in_array(strtolower($isClosed), array('false', 'off', '-', 'no', 'n', '0', ''), true) ? false : true;
         }
 
         $this->addUsingAlias(DevtrackerTableMap::COL_IS_CLOSED, $isClosed, $comparison);

@@ -2,14 +2,10 @@
 
 namespace App\Controller\V1\Infohub;
 
-use \App\Controller\BaseController;
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use JBBCode\DefaultCodeDefinitionSet;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 class Infohub
@@ -62,19 +58,19 @@ class Infohub
 
                 $this->mailer->send();
             } catch (Exception $e) {
-                throw($e);
+                throw ($e);
             }
 
             $response->getBody()->write(json_encode(['success' => $validationSuccess, 'error' => []]));
             return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withHeader('charset', 'utf-8');
+                ->withHeader('Content-Type', 'application/json')
+                ->withHeader('charset', 'utf-8');
         } else {
             $response->getBody()->write(json_encode(['success' => $validationSuccess, 'error' => $this->validator->errors()]));
             return $response
-            ->withStatus(400)
-            ->withHeader('Content-Type', 'application/json')
-            ->withHeader('charset', 'utf-8');
+                ->withStatus(400)
+                ->withHeader('Content-Type', 'application/json')
+                ->withHeader('charset', 'utf-8');
         }
     }
 }

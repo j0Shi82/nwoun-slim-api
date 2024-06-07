@@ -15,9 +15,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'auction_crawl_log' table.
- *
- *
+ * Base class that represents a query for the `auction_crawl_log` table.
  *
  * @method     ChildAuctionCrawlLogQuery orderByItemDef($order = Criteria::ASC) Order by the item_def column
  * @method     ChildAuctionCrawlLogQuery orderByCharacterName($order = Criteria::ASC) Order by the character_name column
@@ -43,8 +41,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuctionCrawlLog|null findOneByItemDef(string $item_def) Return the first ChildAuctionCrawlLog filtered by the item_def column
  * @method     ChildAuctionCrawlLog|null findOneByCharacterName(string $character_name) Return the first ChildAuctionCrawlLog filtered by the character_name column
  * @method     ChildAuctionCrawlLog|null findOneByAccountName(string $account_name) Return the first ChildAuctionCrawlLog filtered by the account_name column
- * @method     ChildAuctionCrawlLog|null findOneByItemCount(int $item_count) Return the first ChildAuctionCrawlLog filtered by the item_count column *
-
+ * @method     ChildAuctionCrawlLog|null findOneByItemCount(int $item_count) Return the first ChildAuctionCrawlLog filtered by the item_count column
+ *
  * @method     ChildAuctionCrawlLog requirePk($key, ?ConnectionInterface $con = null) Return the ChildAuctionCrawlLog by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuctionCrawlLog requireOne(?ConnectionInterface $con = null) Return the first ChildAuctionCrawlLog matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -55,17 +53,18 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildAuctionCrawlLog[]|Collection find(?ConnectionInterface $con = null) Return ChildAuctionCrawlLog objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildAuctionCrawlLog> find(?ConnectionInterface $con = null) Return ChildAuctionCrawlLog objects based on current ModelCriteria
- * @method     ChildAuctionCrawlLog[]|Collection findByItemDef(string $item_def) Return ChildAuctionCrawlLog objects filtered by the item_def column
- * @psalm-method Collection&\Traversable<ChildAuctionCrawlLog> findByItemDef(string $item_def) Return ChildAuctionCrawlLog objects filtered by the item_def column
- * @method     ChildAuctionCrawlLog[]|Collection findByCharacterName(string $character_name) Return ChildAuctionCrawlLog objects filtered by the character_name column
- * @psalm-method Collection&\Traversable<ChildAuctionCrawlLog> findByCharacterName(string $character_name) Return ChildAuctionCrawlLog objects filtered by the character_name column
- * @method     ChildAuctionCrawlLog[]|Collection findByAccountName(string $account_name) Return ChildAuctionCrawlLog objects filtered by the account_name column
- * @psalm-method Collection&\Traversable<ChildAuctionCrawlLog> findByAccountName(string $account_name) Return ChildAuctionCrawlLog objects filtered by the account_name column
- * @method     ChildAuctionCrawlLog[]|Collection findByItemCount(int $item_count) Return ChildAuctionCrawlLog objects filtered by the item_count column
- * @psalm-method Collection&\Traversable<ChildAuctionCrawlLog> findByItemCount(int $item_count) Return ChildAuctionCrawlLog objects filtered by the item_count column
+ *
+ * @method     ChildAuctionCrawlLog[]|Collection findByItemDef(string|array<string> $item_def) Return ChildAuctionCrawlLog objects filtered by the item_def column
+ * @psalm-method Collection&\Traversable<ChildAuctionCrawlLog> findByItemDef(string|array<string> $item_def) Return ChildAuctionCrawlLog objects filtered by the item_def column
+ * @method     ChildAuctionCrawlLog[]|Collection findByCharacterName(string|array<string> $character_name) Return ChildAuctionCrawlLog objects filtered by the character_name column
+ * @psalm-method Collection&\Traversable<ChildAuctionCrawlLog> findByCharacterName(string|array<string> $character_name) Return ChildAuctionCrawlLog objects filtered by the character_name column
+ * @method     ChildAuctionCrawlLog[]|Collection findByAccountName(string|array<string> $account_name) Return ChildAuctionCrawlLog objects filtered by the account_name column
+ * @psalm-method Collection&\Traversable<ChildAuctionCrawlLog> findByAccountName(string|array<string> $account_name) Return ChildAuctionCrawlLog objects filtered by the account_name column
+ * @method     ChildAuctionCrawlLog[]|Collection findByItemCount(int|array<int> $item_count) Return ChildAuctionCrawlLog objects filtered by the item_count column
+ * @psalm-method Collection&\Traversable<ChildAuctionCrawlLog> findByItemCount(int|array<int> $item_count) Return ChildAuctionCrawlLog objects filtered by the item_count column
+ *
  * @method     ChildAuctionCrawlLog[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildAuctionCrawlLog> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- *
  */
 abstract class AuctionCrawlLogQuery extends ModelCriteria
 {

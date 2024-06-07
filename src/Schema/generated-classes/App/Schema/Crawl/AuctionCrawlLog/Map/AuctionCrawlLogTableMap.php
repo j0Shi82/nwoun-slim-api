@@ -46,6 +46,11 @@ class AuctionCrawlLogTableMap extends TableMap
     public const TABLE_NAME = 'auction_crawl_log';
 
     /**
+     * The PHP name of this class (PascalCase)
+     */
+    public const TABLE_PHP_NAME = 'AuctionCrawlLog';
+
+    /**
      * The related Propel class for this table
      */
     public const OM_CLASS = '\\App\\Schema\\Crawl\\AuctionCrawlLog\\AuctionCrawlLog';
@@ -359,7 +364,7 @@ class AuctionCrawlLogTableMap extends TableMap
             AuctionCrawlLogTableMap::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**

@@ -19,9 +19,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'article' table.
- *
- *
+ * Base class that represents a query for the `article` table.
  *
  * @method     ChildArticleQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildArticleQuery orderByArticleId($order = Criteria::ASC) Order by the article_id column
@@ -87,8 +85,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildArticle|null findOneByContent(string $content) Return the first ChildArticle filtered by the content column
  * @method     ChildArticle|null findOneByCats(string $cats) Return the first ChildArticle filtered by the cats column
  * @method     ChildArticle|null findOneByLastTagged(int $last_tagged) Return the first ChildArticle filtered by the last_tagged column
- * @method     ChildArticle|null findOneByType(string $type) Return the first ChildArticle filtered by the type column *
-
+ * @method     ChildArticle|null findOneByType(string $type) Return the first ChildArticle filtered by the type column
+ *
  * @method     ChildArticle requirePk($key, ?ConnectionInterface $con = null) Return the ChildArticle by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildArticle requireOne(?ConnectionInterface $con = null) Return the first ChildArticle matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -105,29 +103,30 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildArticle[]|Collection find(?ConnectionInterface $con = null) Return ChildArticle objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildArticle> find(?ConnectionInterface $con = null) Return ChildArticle objects based on current ModelCriteria
- * @method     ChildArticle[]|Collection findById(int $id) Return ChildArticle objects filtered by the id column
- * @psalm-method Collection&\Traversable<ChildArticle> findById(int $id) Return ChildArticle objects filtered by the id column
- * @method     ChildArticle[]|Collection findByArticleId(string $article_id) Return ChildArticle objects filtered by the article_id column
- * @psalm-method Collection&\Traversable<ChildArticle> findByArticleId(string $article_id) Return ChildArticle objects filtered by the article_id column
- * @method     ChildArticle[]|Collection findByLink(string $link) Return ChildArticle objects filtered by the link column
- * @psalm-method Collection&\Traversable<ChildArticle> findByLink(string $link) Return ChildArticle objects filtered by the link column
- * @method     ChildArticle[]|Collection findBySite(string $site) Return ChildArticle objects filtered by the site column
- * @psalm-method Collection&\Traversable<ChildArticle> findBySite(string $site) Return ChildArticle objects filtered by the site column
- * @method     ChildArticle[]|Collection findByTs(int $ts) Return ChildArticle objects filtered by the ts column
- * @psalm-method Collection&\Traversable<ChildArticle> findByTs(int $ts) Return ChildArticle objects filtered by the ts column
- * @method     ChildArticle[]|Collection findByTitle(string $title) Return ChildArticle objects filtered by the title column
- * @psalm-method Collection&\Traversable<ChildArticle> findByTitle(string $title) Return ChildArticle objects filtered by the title column
- * @method     ChildArticle[]|Collection findByContent(string $content) Return ChildArticle objects filtered by the content column
- * @psalm-method Collection&\Traversable<ChildArticle> findByContent(string $content) Return ChildArticle objects filtered by the content column
- * @method     ChildArticle[]|Collection findByCats(string $cats) Return ChildArticle objects filtered by the cats column
- * @psalm-method Collection&\Traversable<ChildArticle> findByCats(string $cats) Return ChildArticle objects filtered by the cats column
- * @method     ChildArticle[]|Collection findByLastTagged(int $last_tagged) Return ChildArticle objects filtered by the last_tagged column
- * @psalm-method Collection&\Traversable<ChildArticle> findByLastTagged(int $last_tagged) Return ChildArticle objects filtered by the last_tagged column
- * @method     ChildArticle[]|Collection findByType(string $type) Return ChildArticle objects filtered by the type column
- * @psalm-method Collection&\Traversable<ChildArticle> findByType(string $type) Return ChildArticle objects filtered by the type column
+ *
+ * @method     ChildArticle[]|Collection findById(int|array<int> $id) Return ChildArticle objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildArticle> findById(int|array<int> $id) Return ChildArticle objects filtered by the id column
+ * @method     ChildArticle[]|Collection findByArticleId(string|array<string> $article_id) Return ChildArticle objects filtered by the article_id column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByArticleId(string|array<string> $article_id) Return ChildArticle objects filtered by the article_id column
+ * @method     ChildArticle[]|Collection findByLink(string|array<string> $link) Return ChildArticle objects filtered by the link column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByLink(string|array<string> $link) Return ChildArticle objects filtered by the link column
+ * @method     ChildArticle[]|Collection findBySite(string|array<string> $site) Return ChildArticle objects filtered by the site column
+ * @psalm-method Collection&\Traversable<ChildArticle> findBySite(string|array<string> $site) Return ChildArticle objects filtered by the site column
+ * @method     ChildArticle[]|Collection findByTs(int|array<int> $ts) Return ChildArticle objects filtered by the ts column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByTs(int|array<int> $ts) Return ChildArticle objects filtered by the ts column
+ * @method     ChildArticle[]|Collection findByTitle(string|array<string> $title) Return ChildArticle objects filtered by the title column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByTitle(string|array<string> $title) Return ChildArticle objects filtered by the title column
+ * @method     ChildArticle[]|Collection findByContent(string|array<string> $content) Return ChildArticle objects filtered by the content column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByContent(string|array<string> $content) Return ChildArticle objects filtered by the content column
+ * @method     ChildArticle[]|Collection findByCats(string|array<string> $cats) Return ChildArticle objects filtered by the cats column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByCats(string|array<string> $cats) Return ChildArticle objects filtered by the cats column
+ * @method     ChildArticle[]|Collection findByLastTagged(int|array<int> $last_tagged) Return ChildArticle objects filtered by the last_tagged column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByLastTagged(int|array<int> $last_tagged) Return ChildArticle objects filtered by the last_tagged column
+ * @method     ChildArticle[]|Collection findByType(string|array<string> $type) Return ChildArticle objects filtered by the type column
+ * @psalm-method Collection&\Traversable<ChildArticle> findByType(string|array<string> $type) Return ChildArticle objects filtered by the type column
+ *
  * @method     ChildArticle[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildArticle> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- *
  */
 abstract class ArticleQuery extends ModelCriteria
 {
@@ -745,20 +744,23 @@ abstract class ArticleQuery extends ModelCriteria
 
         return $this;
     }
+
     /**
      * Use the ContentArticle relation to the ArticleContentTags table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
      *
      * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery The inner query object of the EXISTS statement
      */
     public function useContentArticleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('ContentArticle', $modelAlias, $queryClass, $typeOfExists);
+        /** @var $q \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery */
+        $q = $this->useExistsQuery('ContentArticle', $modelAlias, $queryClass, $typeOfExists);
+        return $q;
     }
 
     /**
@@ -773,8 +775,46 @@ abstract class ArticleQuery extends ModelCriteria
      */
     public function useContentArticleNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('ContentArticle', $modelAlias, $queryClass, 'NOT EXISTS');
+        /** @var $q \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery */
+        $q = $this->useExistsQuery('ContentArticle', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $q;
     }
+
+    /**
+     * Use the ContentArticle relation to the ArticleContentTags table for an IN query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
+     * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
+     *
+     * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery The inner query object of the IN statement
+     */
+    public function useInContentArticleQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    {
+        /** @var $q \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery */
+        $q = $this->useInQuery('ContentArticle', $modelAlias, $queryClass, $typeOfIn);
+        return $q;
+    }
+
+    /**
+     * Use the ContentArticle relation to the ArticleContentTags table for a NOT IN query.
+     *
+     * @see useContentArticleInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery The inner query object of the NOT IN statement
+     */
+    public function useNotInContentArticleQuery($modelAlias = null, $queryClass = null)
+    {
+        /** @var $q \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery */
+        $q = $this->useInQuery('ContentArticle', $modelAlias, $queryClass, 'NOT IN');
+        return $q;
+    }
+
     /**
      * Filter the query by a related \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags object
      *
@@ -877,20 +917,23 @@ abstract class ArticleQuery extends ModelCriteria
 
         return $this;
     }
+
     /**
      * Use the TitleArticle relation to the ArticleTitleTags table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
      *
      * @return \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery The inner query object of the EXISTS statement
      */
     public function useTitleArticleExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('TitleArticle', $modelAlias, $queryClass, $typeOfExists);
+        /** @var $q \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery */
+        $q = $this->useExistsQuery('TitleArticle', $modelAlias, $queryClass, $typeOfExists);
+        return $q;
     }
 
     /**
@@ -905,18 +948,56 @@ abstract class ArticleQuery extends ModelCriteria
      */
     public function useTitleArticleNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('TitleArticle', $modelAlias, $queryClass, 'NOT EXISTS');
+        /** @var $q \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery */
+        $q = $this->useExistsQuery('TitleArticle', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $q;
     }
+
+    /**
+     * Use the TitleArticle relation to the ArticleTitleTags table for an IN query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
+     * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
+     *
+     * @return \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery The inner query object of the IN statement
+     */
+    public function useInTitleArticleQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    {
+        /** @var $q \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery */
+        $q = $this->useInQuery('TitleArticle', $modelAlias, $queryClass, $typeOfIn);
+        return $q;
+    }
+
+    /**
+     * Use the TitleArticle relation to the ArticleTitleTags table for a NOT IN query.
+     *
+     * @see useTitleArticleInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery The inner query object of the NOT IN statement
+     */
+    public function useNotInTitleArticleQuery($modelAlias = null, $queryClass = null)
+    {
+        /** @var $q \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery */
+        $q = $this->useInQuery('TitleArticle', $modelAlias, $queryClass, 'NOT IN');
+        return $q;
+    }
+
     /**
      * Filter the query by a related Tag object
      * using the article_tags table as cross reference
      *
      * @param Tag $tag the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL and Criteria::IN for queries
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByContentTag($tag, string $comparison = Criteria::EQUAL)
+    public function filterByContentTag($tag, string $comparison = null)
     {
         $this
             ->useContentArticleQuery()
@@ -931,11 +1012,11 @@ abstract class ArticleQuery extends ModelCriteria
      * using the article_title_tags table as cross reference
      *
      * @param Tag $tag the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL and Criteria::IN for queries
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByTitleTag($tag, string $comparison = Criteria::EQUAL)
+    public function filterByTitleTag($tag, string $comparison = null)
     {
         $this
             ->useTitleArticleQuery()

@@ -9,15 +9,11 @@ use App\Controller\BaseController;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Patreon\API;
-use Patreon\OAuth;
 
 class Patreon extends BaseController
 {
     public function get(Request $request, Response $response)
     {
-        $client_id = $_ENV['PATREON_CLIENT_ID'];
-        $client_secret = $_ENV['PATREON_CLIENT_SECRET'];
-
         $api_client = new API($_ENV['PATREON_ACCESS_TOKEN']);
         $patron_campaign_response = $api_client->get_data("campaigns/9239090?include=tiers&&fields%5Btier%5D=amount_cents,description,title");
         $patron_member_response = $api_client->get_data("campaigns/9239090/members?include=currently_entitled_tiers&fields%5Bmember%5D=full_name,is_follower,last_charge_date,last_charge_status,lifetime_support_cents,currently_entitled_amount_cents,patron_status&fields%5Btier%5D=title");

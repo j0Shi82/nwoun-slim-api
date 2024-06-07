@@ -8,13 +8,9 @@ use App\Controller\BaseController;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use JBBCode\DefaultCodeDefinitionSet;
 use App\Schema\Crawl\AuctionAggregates\AuctionAggregates;
 use App\Schema\Crawl\AuctionAggregates\AuctionAggregatesQuery;
-use App\Schema\Crawl\AuctionItems\AuctionItems;
 use App\Schema\Crawl\AuctionItems\AuctionItemsQuery;
-use App\Schema\Crawl\AuctionDetails\AuctionDetails;
-use App\Schema\Crawl\AuctionDetails\AuctionDetailsQuery;
 
 class Data extends BaseController
 {
@@ -55,7 +51,8 @@ class Data extends BaseController
                     ";
                     $itemNames[] = $item['InternalName'];
                 }
-            };
+            }
+            ;
 
             if (count($itemInserts)) {
                 $stmt = $con->prepare("INSERT IGNORE INTO auction_items (item_def, item_name, quality, categories, crawl_category, allow_auto, server, update_date) VALUES " . implode(",", $itemInserts));
@@ -117,7 +114,8 @@ class Data extends BaseController
                         )
                     ";
                 }
-            };
+            }
+            ;
 
             if (count($auctionInserts)) {
                 $stmt = $con->prepare("INSERT IGNORE INTO auction_details (item_def, server, seller_name, seller_handle, expire_time, price, count, price_per) VALUES " . implode(",", $auctionInserts));

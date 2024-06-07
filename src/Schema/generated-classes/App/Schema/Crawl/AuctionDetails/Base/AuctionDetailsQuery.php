@@ -17,9 +17,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'auction_details' table.
- *
- *
+ * Base class that represents a query for the `auction_details` table.
  *
  * @method     ChildAuctionDetailsQuery orderByItemDef($order = Criteria::ASC) Order by the item_def column
  * @method     ChildAuctionDetailsQuery orderByServer($order = Criteria::ASC) Order by the server column
@@ -69,8 +67,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildAuctionDetails|null findOneByExpireTime(string $expire_time) Return the first ChildAuctionDetails filtered by the expire_time column
  * @method     ChildAuctionDetails|null findOneByPrice(int $price) Return the first ChildAuctionDetails filtered by the price column
  * @method     ChildAuctionDetails|null findOneByCount(int $count) Return the first ChildAuctionDetails filtered by the count column
- * @method     ChildAuctionDetails|null findOneByPricePer(double $price_per) Return the first ChildAuctionDetails filtered by the price_per column *
-
+ * @method     ChildAuctionDetails|null findOneByPricePer(double $price_per) Return the first ChildAuctionDetails filtered by the price_per column
+ *
  * @method     ChildAuctionDetails requirePk($key, ?ConnectionInterface $con = null) Return the ChildAuctionDetails by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildAuctionDetails requireOne(?ConnectionInterface $con = null) Return the first ChildAuctionDetails matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -85,25 +83,26 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildAuctionDetails[]|Collection find(?ConnectionInterface $con = null) Return ChildAuctionDetails objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildAuctionDetails> find(?ConnectionInterface $con = null) Return ChildAuctionDetails objects based on current ModelCriteria
- * @method     ChildAuctionDetails[]|Collection findByItemDef(string $item_def) Return ChildAuctionDetails objects filtered by the item_def column
- * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByItemDef(string $item_def) Return ChildAuctionDetails objects filtered by the item_def column
- * @method     ChildAuctionDetails[]|Collection findByServer(string $server) Return ChildAuctionDetails objects filtered by the server column
- * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByServer(string $server) Return ChildAuctionDetails objects filtered by the server column
- * @method     ChildAuctionDetails[]|Collection findBySellerName(string $seller_name) Return ChildAuctionDetails objects filtered by the seller_name column
- * @psalm-method Collection&\Traversable<ChildAuctionDetails> findBySellerName(string $seller_name) Return ChildAuctionDetails objects filtered by the seller_name column
- * @method     ChildAuctionDetails[]|Collection findBySellerHandle(string $seller_handle) Return ChildAuctionDetails objects filtered by the seller_handle column
- * @psalm-method Collection&\Traversable<ChildAuctionDetails> findBySellerHandle(string $seller_handle) Return ChildAuctionDetails objects filtered by the seller_handle column
- * @method     ChildAuctionDetails[]|Collection findByExpireTime(string $expire_time) Return ChildAuctionDetails objects filtered by the expire_time column
- * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByExpireTime(string $expire_time) Return ChildAuctionDetails objects filtered by the expire_time column
- * @method     ChildAuctionDetails[]|Collection findByPrice(int $price) Return ChildAuctionDetails objects filtered by the price column
- * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByPrice(int $price) Return ChildAuctionDetails objects filtered by the price column
- * @method     ChildAuctionDetails[]|Collection findByCount(int $count) Return ChildAuctionDetails objects filtered by the count column
- * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByCount(int $count) Return ChildAuctionDetails objects filtered by the count column
- * @method     ChildAuctionDetails[]|Collection findByPricePer(double $price_per) Return ChildAuctionDetails objects filtered by the price_per column
- * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByPricePer(double $price_per) Return ChildAuctionDetails objects filtered by the price_per column
+ *
+ * @method     ChildAuctionDetails[]|Collection findByItemDef(string|array<string> $item_def) Return ChildAuctionDetails objects filtered by the item_def column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByItemDef(string|array<string> $item_def) Return ChildAuctionDetails objects filtered by the item_def column
+ * @method     ChildAuctionDetails[]|Collection findByServer(string|array<string> $server) Return ChildAuctionDetails objects filtered by the server column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByServer(string|array<string> $server) Return ChildAuctionDetails objects filtered by the server column
+ * @method     ChildAuctionDetails[]|Collection findBySellerName(string|array<string> $seller_name) Return ChildAuctionDetails objects filtered by the seller_name column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findBySellerName(string|array<string> $seller_name) Return ChildAuctionDetails objects filtered by the seller_name column
+ * @method     ChildAuctionDetails[]|Collection findBySellerHandle(string|array<string> $seller_handle) Return ChildAuctionDetails objects filtered by the seller_handle column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findBySellerHandle(string|array<string> $seller_handle) Return ChildAuctionDetails objects filtered by the seller_handle column
+ * @method     ChildAuctionDetails[]|Collection findByExpireTime(string|array<string> $expire_time) Return ChildAuctionDetails objects filtered by the expire_time column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByExpireTime(string|array<string> $expire_time) Return ChildAuctionDetails objects filtered by the expire_time column
+ * @method     ChildAuctionDetails[]|Collection findByPrice(int|array<int> $price) Return ChildAuctionDetails objects filtered by the price column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByPrice(int|array<int> $price) Return ChildAuctionDetails objects filtered by the price column
+ * @method     ChildAuctionDetails[]|Collection findByCount(int|array<int> $count) Return ChildAuctionDetails objects filtered by the count column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByCount(int|array<int> $count) Return ChildAuctionDetails objects filtered by the count column
+ * @method     ChildAuctionDetails[]|Collection findByPricePer(double|array<double> $price_per) Return ChildAuctionDetails objects filtered by the price_per column
+ * @psalm-method Collection&\Traversable<ChildAuctionDetails> findByPricePer(double|array<double> $price_per) Return ChildAuctionDetails objects filtered by the price_per column
+ *
  * @method     ChildAuctionDetails[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildAuctionDetails> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- *
  */
 abstract class AuctionDetailsQuery extends ModelCriteria
 {
@@ -696,20 +695,23 @@ abstract class AuctionDetailsQuery extends ModelCriteria
 
         return $this;
     }
+
     /**
      * Use the relation to AuctionItems table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
      *
      * @return \App\Schema\Crawl\AuctionItems\AuctionItemsQuery The inner query object of the EXISTS statement
      */
     public function useAuctionItemsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('AuctionItems', $modelAlias, $queryClass, $typeOfExists);
+        /** @var $q \App\Schema\Crawl\AuctionItems\AuctionItemsQuery */
+        $q = $this->useExistsQuery('AuctionItems', $modelAlias, $queryClass, $typeOfExists);
+        return $q;
     }
 
     /**
@@ -724,8 +726,46 @@ abstract class AuctionDetailsQuery extends ModelCriteria
      */
     public function useAuctionItemsNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('AuctionItems', $modelAlias, $queryClass, 'NOT EXISTS');
+        /** @var $q \App\Schema\Crawl\AuctionItems\AuctionItemsQuery */
+        $q = $this->useExistsQuery('AuctionItems', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $q;
     }
+
+    /**
+     * Use the relation to AuctionItems table for an IN query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
+     * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
+     *
+     * @return \App\Schema\Crawl\AuctionItems\AuctionItemsQuery The inner query object of the IN statement
+     */
+    public function useInAuctionItemsQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    {
+        /** @var $q \App\Schema\Crawl\AuctionItems\AuctionItemsQuery */
+        $q = $this->useInQuery('AuctionItems', $modelAlias, $queryClass, $typeOfIn);
+        return $q;
+    }
+
+    /**
+     * Use the relation to AuctionItems table for a NOT IN query.
+     *
+     * @see useAuctionItemsInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\AuctionItems\AuctionItemsQuery The inner query object of the NOT IN statement
+     */
+    public function useNotInAuctionItemsQuery($modelAlias = null, $queryClass = null)
+    {
+        /** @var $q \App\Schema\Crawl\AuctionItems\AuctionItemsQuery */
+        $q = $this->useInQuery('AuctionItems', $modelAlias, $queryClass, 'NOT IN');
+        return $q;
+    }
+
     /**
      * Exclude object from result
      *

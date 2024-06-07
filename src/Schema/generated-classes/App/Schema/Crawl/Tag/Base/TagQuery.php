@@ -19,9 +19,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
 
 /**
- * Base class that represents a query for the 'tag' table.
- *
- *
+ * Base class that represents a query for the `tag` table.
  *
  * @method     ChildTagQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildTagQuery orderByTerm($order = Criteria::ASC) Order by the term column
@@ -63,8 +61,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTag findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildTag matching the query, or a new ChildTag object populated from the query conditions when no match is found
  *
  * @method     ChildTag|null findOneById(int $id) Return the first ChildTag filtered by the id column
- * @method     ChildTag|null findOneByTerm(string $term) Return the first ChildTag filtered by the term column *
-
+ * @method     ChildTag|null findOneByTerm(string $term) Return the first ChildTag filtered by the term column
+ *
  * @method     ChildTag requirePk($key, ?ConnectionInterface $con = null) Return the ChildTag by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTag requireOne(?ConnectionInterface $con = null) Return the first ChildTag matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
@@ -73,13 +71,14 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildTag[]|Collection find(?ConnectionInterface $con = null) Return ChildTag objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildTag> find(?ConnectionInterface $con = null) Return ChildTag objects based on current ModelCriteria
- * @method     ChildTag[]|Collection findById(int $id) Return ChildTag objects filtered by the id column
- * @psalm-method Collection&\Traversable<ChildTag> findById(int $id) Return ChildTag objects filtered by the id column
- * @method     ChildTag[]|Collection findByTerm(string $term) Return ChildTag objects filtered by the term column
- * @psalm-method Collection&\Traversable<ChildTag> findByTerm(string $term) Return ChildTag objects filtered by the term column
+ *
+ * @method     ChildTag[]|Collection findById(int|array<int> $id) Return ChildTag objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildTag> findById(int|array<int> $id) Return ChildTag objects filtered by the id column
+ * @method     ChildTag[]|Collection findByTerm(string|array<string> $term) Return ChildTag objects filtered by the term column
+ * @psalm-method Collection&\Traversable<ChildTag> findByTerm(string|array<string> $term) Return ChildTag objects filtered by the term column
+ *
  * @method     ChildTag[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildTag> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- *
  */
 abstract class TagQuery extends ModelCriteria
 {
@@ -443,20 +442,23 @@ abstract class TagQuery extends ModelCriteria
 
         return $this;
     }
+
     /**
      * Use the ContentTag relation to the ArticleContentTags table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
      *
      * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery The inner query object of the EXISTS statement
      */
     public function useContentTagExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('ContentTag', $modelAlias, $queryClass, $typeOfExists);
+        /** @var $q \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery */
+        $q = $this->useExistsQuery('ContentTag', $modelAlias, $queryClass, $typeOfExists);
+        return $q;
     }
 
     /**
@@ -471,8 +473,46 @@ abstract class TagQuery extends ModelCriteria
      */
     public function useContentTagNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('ContentTag', $modelAlias, $queryClass, 'NOT EXISTS');
+        /** @var $q \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery */
+        $q = $this->useExistsQuery('ContentTag', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $q;
     }
+
+    /**
+     * Use the ContentTag relation to the ArticleContentTags table for an IN query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
+     * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
+     *
+     * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery The inner query object of the IN statement
+     */
+    public function useInContentTagQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    {
+        /** @var $q \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery */
+        $q = $this->useInQuery('ContentTag', $modelAlias, $queryClass, $typeOfIn);
+        return $q;
+    }
+
+    /**
+     * Use the ContentTag relation to the ArticleContentTags table for a NOT IN query.
+     *
+     * @see useContentTagInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery The inner query object of the NOT IN statement
+     */
+    public function useNotInContentTagQuery($modelAlias = null, $queryClass = null)
+    {
+        /** @var $q \App\Schema\Crawl\ArticleContentTags\ArticleContentTagsQuery */
+        $q = $this->useInQuery('ContentTag', $modelAlias, $queryClass, 'NOT IN');
+        return $q;
+    }
+
     /**
      * Filter the query by a related \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTags object
      *
@@ -575,20 +615,23 @@ abstract class TagQuery extends ModelCriteria
 
         return $this;
     }
+
     /**
      * Use the TitleTag relation to the ArticleTitleTags table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
-     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      * @param string|null $modelAlias sets an alias for the nested query
-     * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
      *
      * @return \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery The inner query object of the EXISTS statement
      */
     public function useTitleTagExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        return $this->useExistsQuery('TitleTag', $modelAlias, $queryClass, $typeOfExists);
+        /** @var $q \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery */
+        $q = $this->useExistsQuery('TitleTag', $modelAlias, $queryClass, $typeOfExists);
+        return $q;
     }
 
     /**
@@ -603,18 +646,56 @@ abstract class TagQuery extends ModelCriteria
      */
     public function useTitleTagNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        return $this->useExistsQuery('TitleTag', $modelAlias, $queryClass, 'NOT EXISTS');
+        /** @var $q \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery */
+        $q = $this->useExistsQuery('TitleTag', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $q;
     }
+
+    /**
+     * Use the TitleTag relation to the ArticleTitleTags table for an IN query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
+     * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
+     *
+     * @return \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery The inner query object of the IN statement
+     */
+    public function useInTitleTagQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    {
+        /** @var $q \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery */
+        $q = $this->useInQuery('TitleTag', $modelAlias, $queryClass, $typeOfIn);
+        return $q;
+    }
+
+    /**
+     * Use the TitleTag relation to the ArticleTitleTags table for a NOT IN query.
+     *
+     * @see useTitleTagInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
+     *
+     * @return \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery The inner query object of the NOT IN statement
+     */
+    public function useNotInTitleTagQuery($modelAlias = null, $queryClass = null)
+    {
+        /** @var $q \App\Schema\Crawl\ArticleTitleTags\ArticleTitleTagsQuery */
+        $q = $this->useInQuery('TitleTag', $modelAlias, $queryClass, 'NOT IN');
+        return $q;
+    }
+
     /**
      * Filter the query by a related Article object
      * using the article_tags table as cross reference
      *
      * @param Article $article the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL and Criteria::IN for queries
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByContentArticle($article, string $comparison = Criteria::EQUAL)
+    public function filterByContentArticle($article, string $comparison = null)
     {
         $this
             ->useContentTagQuery()
@@ -629,11 +710,11 @@ abstract class TagQuery extends ModelCriteria
      * using the article_title_tags table as cross reference
      *
      * @param Article $article the related object to use as filter
-     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     * @param string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL and Criteria::IN for queries
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByTitleArticle($article, string $comparison = Criteria::EQUAL)
+    public function filterByTitleArticle($article, string $comparison = null)
     {
         $this
             ->useTitleTagQuery()
